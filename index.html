@@ -138,7 +138,7 @@ h1 span{display:block}
 .w__de{font-family:var(--disp);font-weight:700;font-size:17.5px;line-height:1.15}
 .w__pl{font-family:var(--mono);font-size:11px;color:var(--ink-60);margin-left:6px;font-weight:400}
 .w__uk{font-size:14.5px;color:#2B2F36}
-.w__tr{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-30);margin-top:1px;letter-spacing:.02em}
+.w__tr{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-30);margin-top:2px;letter-spacing:.02em}
 .card__tr{display:block;font-family:var(--mono);font-size:14px;color:var(--ink-30);margin-top:8px;letter-spacing:.03em}
 .qopt__tr{display:block;font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--ink-30);margin-top:2px;letter-spacing:.02em}
 .qopt.correct .qopt__tr,.qopt.wrong .qopt__tr{color:rgba(255,255,255,.75)}
@@ -747,7 +747,7 @@ function renderVocab(){
   document.getElementById("vList").innerHTML=Object.entries(themes).map(([th,ws])=>`
    <div class="theme"><h3>${th}<em>${ws.filter(w=>state.known[wid(w)]).length}/${ws.length}</em></h3>
    ${ws.map(w=>`<div class="w${state.known[wid(w)]?" is-known":""}" data-id="${wid(w)}">
-     <div><span class="w__de">${w.de}</span><span class="w__tr">${tr(w.de)}</span>${w.pl!=="—"?`<span class="w__pl">${w.pl}</span>`:""}</div>
+     <div><span class="w__de">${w.de}</span>${w.pl!=="—"?`<span class="w__pl">${w.pl}</span>`:""}<span class="w__tr">${tr(w.de)}</span></div>
      <div class="w__uk">${w.uk}</div><button class="w__b" aria-label="Вивчено">✓</button></div>`).join("")}</div>`).join("")||`<p class="note">Нічого не знайдено.</p>`;
   document.querySelectorAll("#vList .w__b").forEach(b=>b.addEventListener("click",()=>{
     const el=b.closest(".w"),id=el.dataset.id;state.known[id]=!state.known[id];el.classList.toggle("is-known");save();stat();
