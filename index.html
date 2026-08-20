@@ -138,6 +138,11 @@ h1 span{display:block}
 .w__de{font-family:var(--disp);font-weight:700;font-size:17.5px;line-height:1.15}
 .w__pl{font-family:var(--mono);font-size:11px;color:var(--ink-60);margin-left:6px;font-weight:400}
 .w__uk{font-size:14.5px;color:#2B2F36}
+.w__tr{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-30);margin-top:1px;letter-spacing:.02em}
+.card__tr{display:block;font-family:var(--mono);font-size:14px;color:var(--ink-30);margin-top:8px;letter-spacing:.03em}
+.qopt__tr{display:block;font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--ink-30);margin-top:2px;letter-spacing:.02em}
+.qopt.correct .qopt__tr,.qopt.wrong .qopt__tr{color:rgba(255,255,255,.75)}
+.art__tr{font-family:var(--mono);font-size:15px;color:var(--ink-60);margin-top:8px;letter-spacing:.03em}
 .w__b{width:34px;height:34px;border:2px solid var(--line);background:var(--panel);font-family:var(--mono);font-size:15px;line-height:1;color:var(--ink-30)}
 .w.is-known{opacity:.5}
 .w.is-known .w__b{background:var(--das);border-color:var(--das);color:#fff}
@@ -228,7 +233,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
   <div class="hero">
     <span class="eyebrow">Повна програма · українською · 2000 слів · 75 правил</span>
     <h1><span>Von Null</span><span>bis <em class="gelb" style="font-style:normal">C1</em></span></h1>
-    <p class="lede">П'ять станцій, 1000 відібраних слів із артиклями й множиною, повний граматичний довідник і тренажери. Прогрес зберігається — заходь із телефона чи компʼютера й продовжуй.</p>
+    <p class="lede">П'ять станцій, 2000 відібраних слів із транскрипцією із артиклями й множиною, повний граматичний довідник і тренажери. Прогрес зберігається — заходь із телефона чи компʼютера й продовжуй.</p>
     <div class="facts">
       <div class="fact"><b>2000</b><span>слів у модулях</span></div>
       <div class="fact"><b>≈1000</b><span>годин до C1</span></div>
@@ -285,7 +290,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
     <div class="vmeta"><span class="vcount" id="vCount"></span>
       <button class="pill" id="vHideKnown">Сховати вивчені</button></div>
     <div id="vList"></div>
-    <p class="note">Позначення множини: <b>-e</b> → der Tisch/die Tische · <b>¨-e</b> → der Stuhl/die Stühle (умлаут) · <b>-</b> → форма не змінюється · <b>—</b> → множини немає або це не іменник.</p>
+    <p class="note">Під кожним словом — вимова українськими літерами. <b>ґ</b> = німецьке g (тверде, як у «ґанок»), <b>г</b> = h (видих). Наголос майже завжди на першому складі кореня. Це наближення — точну вимову дає тільки жива мова.<br>Позначення множини: <b>-e</b> → der Tisch/die Tische · <b>¨-e</b> → der Stuhl/die Stühle (умлаут) · <b>-</b> → форма не змінюється · <b>—</b> → множини немає або це не іменник.</p>
   </div>
 </section>
 
@@ -650,6 +655,29 @@ rows:[["Nominativ","mein","meine","mein","meine"],["Akkusativ","meinen","meine",
 const ARTRULES={der:"Чоловічий: дні, місяці, пори року, погода; -er, -ling, -ismus, -or; особи чол. статі.",die:"Жіночий: -ung, -heit, -keit, -schaft, -ion, -ei, -ie, -tät; більшість слів на -e; усі множини.",das:"Середній: -chen, -lein, -um, -ment; дієслова-іменники (das Essen); більшість слів на Ge-."};
 /* ================= APP ================= */
 const LV=["A1","A2","B1","B2","C1"];
+const VEX=["universit","variab","interview","investit","revoluti","evident","validit","prävention","privat","aktiv","positiv","negativ","motiv","servi","konserv","provinz","vision","vulkan","vitamin","video"];
+const PRE=["aus","ein","vor","auf","mit","ver","ent","über","unter","frei","früh","bahn","haupt","arbeits","hoch","an","um","zu","wieder","zusammen","fest","land","jahres","staats"];
+function tr(s){
+ var t=s.toLowerCase().replace(/[^a-zäöüß\s'-]/g,"");
+ VEX.forEach(function(x){ if(t.indexOf(x)>-1) t=t.split(x).join(x.replace(/v/g,"в")); });
+ t=t.replace(new RegExp("("+PRE.join("|")+")(sp|st)","g"),function(m,p,q){return p+(q==="st"?"шт":"шп");});
+ t=t.replace(/(^|\s)sp/g,"$1шп").replace(/(^|\s)st/g,"$1шт");
+ t=t.replace(/tsch/g,"ч").replace(/sch/g,"ш");
+ t=t.replace(/chen(?=\s|$)/g,"хен").replace(/chs/g,"кс").replace(/ch/g,"х");
+ t=t.replace(/ck/g,"к").replace(/ph/g,"ф").replace(/th/g,"т").replace(/qu/g,"кв").replace(/pf/g,"пф").replace(/dt/g,"т");
+ t=t.replace(/tion/g,"ціон");
+ t=t.replace(/ß/g,"с").replace(/ss/g,"с");
+ t=t.replace(/s(?=[aeiouäöü])/g,"з");
+ t=t.replace(/([bdfglmnprtz])\1/g,"$1");
+ t=t.replace(/ig(?=keit|lich)/g,"іх");
+ t=t.replace(/ie/g,"і").replace(/ei/g,"ай").replace(/ai/g,"ай").replace(/äu/g,"ой").replace(/eu/g,"ой").replace(/au/g,"ау");
+ t=t.replace(/ig(?=\s|$)/g,"іх");
+ t=t.replace(/([aeiouäöü])h/g,"$1");
+ t=t.replace(/ä/g,"е").replace(/(^|\s)ö/g,"$1о").replace(/ö/g,"ьо").replace(/ü/g,"ю");
+ t=t.replace(/ng/g,"нг").replace(/nk/g,"нк");
+ var M={a:"а",b:"б",c:"к",d:"д",e:"е",f:"ф",g:"ґ",h:"г",i:"і",j:"й",k:"к",l:"л",m:"м",n:"н",o:"о",p:"п",q:"к",r:"р",s:"с",t:"т",u:"у",v:"ф",w:"в",x:"кс",y:"ю",z:"ц"};
+ return t.replace(/[a-z]/g,function(c){return M[c]||c;});
+}
 const parse=s=>s.split(";").map(x=>x.split("|"));
 const ALL={}; let TOTALW=0;
 LV.forEach(l=>{ALL[l]=[];Object.entries(V[l]).forEach(([th,s])=>parse(s).forEach(w=>{ALL[l].push({de:w[0],pl:w[1],uk:w[2],th,lv:l});TOTALW++;}));});
@@ -719,7 +747,7 @@ function renderVocab(){
   document.getElementById("vList").innerHTML=Object.entries(themes).map(([th,ws])=>`
    <div class="theme"><h3>${th}<em>${ws.filter(w=>state.known[wid(w)]).length}/${ws.length}</em></h3>
    ${ws.map(w=>`<div class="w${state.known[wid(w)]?" is-known":""}" data-id="${wid(w)}">
-     <div><span class="w__de">${w.de}</span>${w.pl!=="—"?`<span class="w__pl">${w.pl}</span>`:""}</div>
+     <div><span class="w__de">${w.de}</span><span class="w__tr">${tr(w.de)}</span>${w.pl!=="—"?`<span class="w__pl">${w.pl}</span>`:""}</div>
      <div class="w__uk">${w.uk}</div><button class="w__b" aria-label="Вивчено">✓</button></div>`).join("")}</div>`).join("")||`<p class="note">Нічого не знайдено.</p>`;
   document.querySelectorAll("#vList .w__b").forEach(b=>b.addEventListener("click",()=>{
     const el=b.closest(".w"),id=el.dataset.id;state.known[id]=!state.known[id];el.classList.toggle("is-known");save();stat();
@@ -753,7 +781,7 @@ function renderDecl(){
 /* article trainer */
 let cur,right=0,streak=0,lock=false;
 function nextN(){lock=false;cur=NOUNS[Math.floor(Math.random()*NOUNS.length)];
-  document.getElementById("artWord").textContent=cur.n;document.getElementById("artTr").textContent=cur.uk;
+  document.getElementById("artWord").textContent=cur.n;document.getElementById("artTr").innerHTML=cur.uk+'<div class="art__tr">'+tr(cur.art+" "+cur.n)+'</div>';
   document.querySelectorAll(".artbtn").forEach(b=>b.classList.remove("correct","wrong"));
   document.getElementById("artFb").innerHTML="<b>Обери артикль</b><p>Після відповіді покажу правило.</p>";}
 document.querySelectorAll(".artbtn").forEach(b=>b.addEventListener("click",()=>{
@@ -770,7 +798,7 @@ let fLv="A1",fi=0,flip=false;
 document.getElementById("fcBar").innerHTML=LV.map(l=>`<button class="pill${l==="A1"?" is-on":""}" data-l="${l}">${l}</button>`).join("");
 document.querySelectorAll("#fcBar .pill").forEach(p=>p.addEventListener("click",()=>{fLv=p.dataset.l;fi=0;flip=false;document.querySelectorAll("#fcBar .pill").forEach(x=>x.classList.toggle("is-on",x===p));card();}));
 function card(){const w=ALL[fLv][fi];
-  document.getElementById("fcFront").textContent=w.de+(w.pl!=="—"?"  "+w.pl:"");
+  document.getElementById("fcFront").innerHTML=w.de+(w.pl!=="—"?"  "+w.pl:"")+'<span class="card__tr">'+tr(w.de)+'</span>';
   document.getElementById("fcBack").textContent=w.uk;
   document.getElementById("fcBack").style.display=flip?"block":"none";
   document.getElementById("fcCount").textContent=`${fi+1} / ${ALL[fLv].length}`;}
@@ -788,7 +816,7 @@ function quiz(){qLock=false;const pool=ALL[qLv];const w=pool[Math.floor(Math.ran
   const opts=[w];while(opts.length<4){const o=pool[Math.floor(Math.random()*pool.length)];if(!opts.includes(o))opts.push(o);}
   opts.sort(()=>Math.random()-.5);
   document.getElementById("qzQ").textContent=w.uk;
-  document.getElementById("qzOpts").innerHTML=opts.map(o=>`<button class="qopt" data-de="${o.de}">${o.de}</button>`).join("");
+  document.getElementById("qzOpts").innerHTML=opts.map(o=>`<button class="qopt" data-de="${o.de}">${o.de}<span class="qopt__tr">${tr(o.de)}</span></button>`).join("");
   document.querySelectorAll(".qopt").forEach(b=>b.addEventListener("click",()=>{
     if(qLock)return;qLock=true;qT++;const ok=b.dataset.de===w.de;
     b.classList.add(ok?"correct":"wrong");
