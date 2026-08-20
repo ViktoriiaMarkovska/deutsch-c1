@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16181C">
+<title>Deutsch: Von Null bis C1 — повна програма</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@500;700;800&family=Fira+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16181C; --ink-60:#5A5F68; --ink-30:#A9ADB4;
+  --paper:#E4E5E1; --panel:#FAFAF8; --line:#C9CBC5;
+  --gelb:#FFCE00; --der:#0B4FA8; --die:#C1102A; --das:#137A45;
+  --disp:"Fira Sans Condensed",Arial Narrow,sans-serif;
+  --body:"Fira Sans",system-ui,sans-serif;
+  --mono:"Fira Mono",ui-monospace,monospace;
+  --pad:clamp(14px,4vw,26px);
+  --nav-h:64px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:800;line-height:1.05;margin:0;letter-spacing:-.01em}
+button,input,select{font-family:inherit;font-size:16px}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--der);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 var(--pad)}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-60)}
+
+/* ---- top bar ---- */
+.top{position:sticky;top:0;z-index:60;background:var(--ink);color:var(--panel);padding:10px 0}
+.top__in{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font-family:var(--disp);font-weight:800;font-size:17px;text-transform:uppercase;letter-spacing:.02em}
+.brand i{color:var(--gelb);font-style:normal}
+.topstat{font-family:var(--mono);font-size:11px;color:var(--gelb)}
+
+/* ---- tab nav: bottom on mobile, top row on desktop ---- */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--panel);border-top:2px solid var(--ink);
+  display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom)}
+.tab{background:none;border:0;padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-60);border-top:3px solid transparent;margin-top:-2px}
+.tab svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.9;fill:none}
+.tab span{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.tab.is-on{color:var(--ink);border-top-color:var(--gelb)}
+@media (min-width:820px){
+  .tabs{position:sticky;top:44px;bottom:auto;grid-template-columns:repeat(5,auto);justify-content:center;
+    border-top:0;border-bottom:1px solid var(--line);background:var(--paper);gap:4px;padding:0}
+  .tab{flex-direction:row;gap:8px;padding:12px 18px;border-top:0;border-bottom:3px solid transparent;margin:0}
+  .tab.is-on{border-bottom-color:var(--gelb)}
+  .tab span{font-size:11px}
+}
+main{padding-bottom:calc(var(--nav-h) + 30px)}
+@media (min-width:820px){main{padding-bottom:60px}}
+.view{display:none}
+.view.is-on{display:block}
+
+/* ---- generic ---- */
+.sec{padding:26px 0 0}
+.sec__head{border-top:2px solid var(--ink);padding-top:12px;margin-bottom:18px}
+.sec__head h2{font-size:clamp(26px,7vw,42px);text-transform:uppercase;margin-top:5px}
+.sec__head p{max-width:62ch;color:#2B2F36;margin:10px 0 0;font-size:15.5px}
+.tool{background:var(--panel);border:1px solid var(--line);padding:var(--pad)}
+.btn{border:2px solid var(--ink);background:var(--panel);padding:11px 16px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.btn:active{background:var(--ink);color:var(--panel)}
+.btn--gelb{background:var(--gelb)}
+.pill{border:1px solid var(--ink);background:transparent;padding:7px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.pill.is-on{background:var(--ink);color:var(--panel)}
+.pillrow{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.pillrow::-webkit-scrollbar{display:none}
+.k-der{color:var(--der)}.k-die{color:var(--die)}.k-das{color:var(--das)}
+
+/* ---- hero ---- */
+.hero{padding:22px 0 0}
+h1{font-size:clamp(38px,13vw,104px);text-transform:uppercase;letter-spacing:-.025em;margin:10px 0 0}
+h1 span{display:block}
+.gelb{background:linear-gradient(transparent 60%,var(--gelb) 60%,var(--gelb) 95%,transparent 95%)}
+.lede{max-width:56ch;margin:16px 0 0;font-size:16px;color:#2B2F36}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:22px 0 0}
+@media(min-width:640px){.facts{grid-template-columns:repeat(4,1fr)}}
+.fact{background:var(--panel);padding:12px 14px}
+.fact b{display:block;font-family:var(--disp);font-size:26px;line-height:1}
+.fact span{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-60)}
+
+/* ---- route ---- */
+.route{margin:26px 0 0;padding:20px 0 8px;border-top:2px solid var(--ink)}
+.rline{display:grid;gap:10px;position:relative}
+.rline::before{content:"";position:absolute;top:6px;bottom:6px;left:13px;width:6px;background:var(--ink)}
+.st{display:grid;grid-template-columns:32px 1fr auto;gap:12px;align-items:center;position:relative}
+.st__dot{width:32px;height:32px;border-radius:50%;background:var(--panel);border:6px solid var(--ink);z-index:2}
+.st.is-active .st__dot{background:var(--gelb)}
+.st.is-done .st__dot{background:var(--ink);box-shadow:inset 0 0 0 4px var(--gelb)}
+.st__code{font-family:var(--disp);font-weight:800;font-size:20px}
+.st__name{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-60)}
+.st__pct{font-family:var(--mono);font-size:12px}
+@media(min-width:820px){
+  .rline{grid-template-columns:repeat(5,1fr);gap:0}
+  .rline::before{top:13px;bottom:auto;left:10%;right:10%;width:auto;height:6px}
+  .st{display:block;text-align:center}
+  .st__dot{margin:0 auto}
+  .st__code{margin-top:8px}
+}
+
+/* ---- levels ---- */
+.lvl{border:1px solid var(--line);background:var(--panel);margin-bottom:10px}
+.lvl__btn{width:100%;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:none;border:0;text-align:left;padding:14px;color:inherit}
+.lvl__code{font-family:var(--disp);font-weight:800;font-size:28px;line-height:1;border-right:1px solid var(--line);padding-right:12px;min-width:52px}
+.lvl__title{font-family:var(--disp);font-weight:700;font-size:18px;text-transform:uppercase}
+.lvl__sub{font-family:var(--mono);font-size:10px;color:var(--ink-60);letter-spacing:.06em;text-transform:uppercase;display:block;margin-top:2px}
+.ring{width:36px;height:36px}
+.ring circle{fill:none;stroke-width:6}
+.ring .bg{stroke:var(--line)} .ring .fg{stroke:var(--gelb);transition:stroke-dashoffset .5s}
+.lvl__body{display:none;padding:0 14px 18px;border-top:1px solid var(--line)}
+.lvl.is-open .lvl__body{display:block}
+.block{margin-top:16px}
+.block h4{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-60);margin-bottom:8px}
+.block ul{margin:0;padding-left:17px}.block li{margin-bottom:5px;font-size:15px}
+.goal{border-left:6px solid var(--gelb);padding:8px 0 8px 14px;margin-top:14px;font-size:16px}
+.milestone{background:var(--ink);color:var(--panel);padding:14px;margin-top:16px}
+.milestone .eyebrow{color:var(--gelb)}
+.milestone p{margin:5px 0 0}
+.task{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line)}
+.task input{width:21px;height:21px;margin:1px 0 0;accent-color:var(--ink);flex:0 0 auto}
+.task.is-done label{color:var(--ink-30);text-decoration:line-through}
+.task label{font-size:15px}
+
+/* ---- vocab ---- */
+.vsearch{width:100%;padding:12px 14px;border:2px solid var(--ink);background:var(--panel);margin-bottom:10px}
+.vmeta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0;flex-wrap:wrap}
+.vcount{font-family:var(--mono);font-size:11.5px;color:var(--ink-60)}
+.prog{height:8px;background:var(--line);border:1px solid var(--line);margin:8px 0 14px}
+.prog i{display:block;height:100%;background:var(--gelb)}
+.theme{margin-bottom:18px}
+.theme h3{font-family:var(--disp);font-size:17px;text-transform:uppercase;padding:9px 0 7px;border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.theme h3 em{font-family:var(--mono);font-size:11px;font-style:normal;font-weight:400;color:var(--ink-60)}
+.w{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line)}
+.w__de{font-family:var(--disp);font-weight:700;font-size:17.5px;line-height:1.15}
+.w__pl{font-family:var(--mono);font-size:11px;color:var(--ink-60);margin-left:6px;font-weight:400}
+.w__uk{font-size:14.5px;color:#2B2F36}
+.w__b{width:34px;height:34px;border:2px solid var(--line);background:var(--panel);font-family:var(--mono);font-size:15px;line-height:1;color:var(--ink-30)}
+.w.is-known{opacity:.5}
+.w.is-known .w__b{background:var(--das);border-color:var(--das);color:#fff}
+@media(min-width:640px){.w{grid-template-columns:1fr 1fr auto}.w__uk{text-align:left}}
+
+/* ---- grammar ---- */
+.rule{border:1px solid var(--line);background:var(--panel);margin-bottom:8px}
+.rule__b{width:100%;text-align:left;background:none;border:0;padding:13px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;color:inherit}
+.rule__t{font-family:var(--disp);font-weight:700;font-size:17px}
+.rule__tag{font-family:var(--mono);font-size:10px;color:var(--ink-60);letter-spacing:.08em;text-transform:uppercase;display:block;margin-top:2px}
+.rule__body{display:none;padding:0 14px 16px;border-top:1px solid var(--line)}
+.rule.is-open .rule__body{display:block}
+.rule__body p{margin:12px 0 0;font-size:15px}
+.ex{background:#F1F1ED;border-left:5px solid var(--gelb);padding:9px 12px;margin-top:10px}
+.ex b{font-family:var(--disp);font-weight:700;font-size:16.5px;display:block}
+.ex span{font-size:14px;color:var(--ink-60);font-style:italic}
+.warn{border-left:5px solid var(--die);background:#FBEFF0;padding:9px 12px;margin-top:10px;font-size:14.5px}
+
+/* ---- trainers ---- */
+.word{font-family:var(--disp);font-weight:800;font-size:clamp(36px,10vw,64px);line-height:1}
+.word__tr{font-style:italic;color:var(--ink-60);margin-top:6px}
+.artbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.artbtn{border:2px solid var(--ink);background:var(--panel);padding:15px 4px;font-family:var(--disp);font-weight:800;font-size:22px}
+.artbtn.correct{background:var(--das);color:#fff;border-color:var(--das)}
+.artbtn.wrong{background:var(--die);color:#fff;border-color:var(--die)}
+.feedback{margin-top:16px;min-height:70px;border-left:6px solid var(--line);padding-left:13px}
+.feedback b{font-family:var(--disp);font-size:18px;text-transform:uppercase}
+.feedback p{margin:3px 0 0;font-size:14.5px;color:#2B2F36}
+.score{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:16px}
+.score div{background:var(--panel);padding:10px 12px}
+.score b{display:block;font-family:var(--disp);font-size:24px;line-height:1}
+.card{border:2px solid var(--ink);background:var(--panel);min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:26px 18px;position:relative}
+.card__hint{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--ink-30);text-transform:uppercase}
+.card__de{font-family:var(--disp);font-weight:800;font-size:clamp(26px,7.5vw,44px);line-height:1.05}
+.card__uk{font-size:20px;margin-top:8px}
+.fcnav{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:12px}
+.tbl th,.tbl td{border:1px solid var(--line);padding:9px 8px;text-align:left}
+.tbl thead th{background:var(--ink);color:var(--panel);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.tbl tbody th{font-family:var(--mono);font-size:11px;text-transform:uppercase;background:#F0F0EC;white-space:nowrap}
+.tbl td{font-family:var(--disp);font-weight:700;font-size:16px}
+.tblwrap{overflow-x:auto}
+.note{font-size:14px;color:var(--ink-60);margin-top:10px}
+input[type=range]{width:100%;accent-color:var(--ink);height:30px}
+.split__row{display:grid;grid-template-columns:96px 1fr 48px;gap:9px;align-items:center;margin-bottom:8px}
+.split__row span:first-child{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-60)}
+.bar{height:14px;background:var(--line)} .bar i{display:block;height:100%;background:var(--ink)}
+.split__row:nth-child(1) .bar i{background:var(--der)}.split__row:nth-child(2) .bar i{background:var(--die)}
+.split__row:nth-child(3) .bar i{background:var(--das)}.split__row:nth-child(4) .bar i{background:var(--gelb)}
+.split__row b{font-family:var(--mono);font-size:12px;text-align:right}
+.week{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:14px}
+@media(min-width:700px){.week{grid-template-columns:repeat(4,1fr)}}
+.day{background:var(--panel);padding:14px}
+.day--rest{background:var(--gelb)}
+.day h4{font-family:var(--disp);font-size:16px;text-transform:uppercase}
+.day ul{margin:6px 0 0;padding-left:16px;font-size:14px}
+.method{border:1px solid var(--line);background:var(--panel);padding:var(--pad);margin-top:12px}
+.method ol{padding-left:20px;margin:10px 0 0}
+.method li{margin-bottom:9px;font-size:15px}
+.quiz__q{font-family:var(--disp);font-weight:800;font-size:clamp(24px,6.5vw,38px);line-height:1.1}
+.quiz__opts{display:grid;gap:8px;margin-top:18px}
+.qopt{border:2px solid var(--ink);background:var(--panel);padding:13px;text-align:left;font-family:var(--disp);font-weight:700;font-size:17px}
+.qopt.correct{background:var(--das);color:#fff;border-color:var(--das)}
+.qopt.wrong{background:var(--die);color:#fff;border-color:var(--die)}
+footer{border-top:2px solid var(--ink);margin-top:34px;padding:20px 0 30px}
+footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:60ch}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap top__in">
+  <span class="brand">Von Null bis <i>C1</i></span>
+  <span class="topstat" id="topstat">0 / 1000 слів</span>
+</div></div>
+
+<nav class="tabs" id="tabs">
+  <button class="tab is-on" data-v="plan"><svg viewBox="0 0 24 24"><path d="M4 4v16M4 8h16M4 16h16"/><circle cx="4" cy="8" r="2"/><circle cx="4" cy="16" r="2"/></svg><span>Маршрут</span></button>
+  <button class="tab" data-v="woerter"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 9h16M9 9v10"/></svg><span>Слова</span></button>
+  <button class="tab" data-v="grammatik"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg><span>Правила</span></button>
+  <button class="tab" data-v="training"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span>Тренажер</span></button>
+  <button class="tab" data-v="methode"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5M5 8v8l7 5 7-5V8"/></svg><span>Метод</span></button>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ VIEW: PLAN ============ -->
+<section class="view is-on" id="v-plan">
+  <div class="hero">
+    <span class="eyebrow">Повна програма · українською · 2000 слів · 75 правил</span>
+    <h1><span>Von Null</span><span>bis <em class="gelb" style="font-style:normal">C1</em></span></h1>
+    <p class="lede">П'ять станцій, 1000 відібраних слів із артиклями й множиною, повний граматичний довідник і тренажери. Прогрес зберігається — заходь із телефона чи компʼютера й продовжуй.</p>
+    <div class="facts">
+      <div class="fact"><b>2000</b><span>слів у модулях</span></div>
+      <div class="fact"><b>≈1000</b><span>годин до C1</span></div>
+      <div class="fact"><b>75</b><span>правил граматики</span></div>
+      <div class="fact"><b>5</b><span>рівнів · 30 етапів</span></div>
+    </div>
+    <div class="route">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+        <span class="eyebrow">Streckenplan · де ти зараз</span>
+        <span class="eyebrow" id="totalPct">0%</span>
+      </div>
+      <div class="rline" id="routeLine"></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">01 · Рівні</span><h2>Що і коли вчити</h2>
+      <p>Відкрий рівень: граматика, навички, контрольна точка й чек-лист. Галочки заповнюють станцію на маршруті.</p></div>
+    <div id="levels"></div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">02 · Розрахунок</span><h2>Скільки це займе</h2>
+      <p>Постав, скільки часу маєш реально на день.</p></div>
+    <div class="tool">
+      <span class="eyebrow">Хвилин на день</span>
+      <div style="font-family:var(--disp);font-weight:800;font-size:52px;line-height:1" id="minsOut">60</div>
+      <input type="range" id="mins" min="20" max="240" step="10" value="60" aria-label="Хвилин на день">
+      <div id="split" style="margin-top:14px"></div>
+      <table class="tbl" id="forecast"></table>
+      <p class="note">Пропуски не «доганяються» подвійним заняттям. 30 хвилин щодня сильніші за 4 години в неділю.</p>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">03 · Ритм</span><h2>Тиждень у роботі</h2></div>
+    <div class="week">
+      <div class="day"><span class="eyebrow">Montag</span><h4>Нове</h4><ul><li>Нова граматична тема</li><li>15–20 нових слів</li><li>5 своїх речень уголос</li></ul></div>
+      <div class="day"><span class="eyebrow">Dienstag</span><h4>Слухання</h4><ul><li>Подкаст або епізод</li><li>Повтор слів</li><li>Диктант 5 речень</li></ul></div>
+      <div class="day"><span class="eyebrow">Mittwoch</span><h4>Говоріння</h4><ul><li>Розмова зі мною або носієм</li><li>Записати себе на 2 хв</li></ul></div>
+      <div class="day"><span class="eyebrow">Donnerstag</span><h4>Читання</h4><ul><li>Текст рівня</li><li>Виписати нові слова</li></ul></div>
+      <div class="day"><span class="eyebrow">Freitag</span><h4>Письмо</h4><ul><li>Текст 120–300 слів</li><li>Розбір помилок</li></ul></div>
+      <div class="day"><span class="eyebrow">Samstag</span><h4>Занурення</h4><ul><li>Серія чи відео без підручника</li><li>Тільки для задоволення</li></ul></div>
+      <div class="day day--rest"><span class="eyebrow">Sonntag</span><h4>Ревізія</h4><ul><li>Повтор тижня</li><li>Питання на понеділок</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIEW: WÖRTER ============ -->
+<section class="view" id="v-woerter">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Модуль слів</span><h2>2000 слів</h2>
+      <p>400 слів на кожен рівень у 20 темах. Іменники — з артиклем і закінченням множини. Тисни кружечок, коли слово вже сидить у голові.</p></div>
+    <div class="pillrow" id="vLevels"></div>
+    <input class="vsearch" id="vSearch" type="search" placeholder="Пошук: німецькою або українською…" aria-label="Пошук слова">
+    <div class="prog"><i id="vProg" style="width:0%"></i></div>
+    <div class="vmeta"><span class="vcount" id="vCount"></span>
+      <button class="pill" id="vHideKnown">Сховати вивчені</button></div>
+    <div id="vList"></div>
+    <p class="note">Позначення множини: <b>-e</b> → der Tisch/die Tische · <b>¨-e</b> → der Stuhl/die Stühle (умлаут) · <b>-</b> → форма не змінюється · <b>—</b> → множини немає або це не іменник.</p>
+  </div>
+</section>
+
+<!-- ============ VIEW: GRAMMATIK ============ -->
+<section class="view" id="v-grammatik">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Довідник</span><h2>Уся граматика</h2>
+      <p>75 правил від вимови до Ersatzinfinitiv. Кожне — з поясненням українською й прикладами.</p></div>
+    <div class="pillrow" id="gLevels"></div>
+    <div id="gList" style="margin-top:12px"></div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Таблиця</span><h2>Чотири відмінки</h2></div>
+    <div class="tool">
+      <div class="pillrow" id="declBar"></div>
+      <div class="tblwrap"><table class="tbl" id="declTbl"></table></div>
+      <p class="note" id="declNote"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIEW: TRAINING ============ -->
+<section class="view" id="v-training">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Тренажер 1</span><h2>der · die · das</h2>
+      <p>По 5 хвилин щодня — з першого тижня й до C1.</p></div>
+    <div class="tool">
+      <span class="eyebrow">Який артикль?</span>
+      <div class="word" id="artWord">Fenster</div>
+      <div class="word__tr" id="artTr">вікно</div>
+      <div class="artbtns">
+        <button class="artbtn k-der" data-a="der">der</button>
+        <button class="artbtn k-die" data-a="die">die</button>
+        <button class="artbtn k-das" data-a="das">das</button>
+      </div>
+      <div class="feedback" id="artFb"><b>Обери артикль</b><p>Після відповіді покажу правило, за яким його можна вгадати наступного разу.</p></div>
+      <button class="btn btn--gelb" id="artNext" style="margin-top:14px">Наступне слово →</button>
+      <div class="score"><div><b id="scRight">0</b><span class="eyebrow">правильно</span></div><div><b id="scStreak">0</b><span class="eyebrow">серія</span></div></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Тренажер 2</span><h2>Картки</h2>
+      <p>Тягне слова прямо з модуля на 1000 слів. Обери рівень і тисни на картку.</p></div>
+    <div class="tool">
+      <div class="pillrow" id="fcBar"></div>
+      <div class="card" id="fcCard" tabindex="0" role="button" aria-label="Перевернути картку" style="margin-top:10px">
+        <span class="card__hint">натисни</span>
+        <div class="card__de" id="fcFront">—</div>
+        <div class="card__uk" id="fcBack" style="display:none"></div>
+      </div>
+      <div class="fcnav"><button class="btn" id="fcPrev">←</button>
+        <span class="vcount" id="fcCount">1 / 200</span>
+        <button class="btn" id="fcNext">→</button></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Тренажер 3</span><h2>Переклад</h2>
+      <p>Українською → німецькою. Найкраща перевірка того, чи слово справді активне.</p></div>
+    <div class="tool">
+      <div class="pillrow" id="qzBar"></div>
+      <div class="quiz__q" id="qzQ" style="margin-top:16px">—</div>
+      <div class="quiz__opts" id="qzOpts"></div>
+      <div class="score"><div><b id="qzRight">0</b><span class="eyebrow">правильно</span></div><div><b id="qzTotal">0</b><span class="eyebrow">спроб</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIEW: METHODE ============ -->
+<section class="view" id="v-methode">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Метод</span><h2>Як вивчити 1000 слів</h2>
+      <p>Не «прочитати список», а провести кожне слово через чотири стадії. Ось робоча схема.</p></div>
+    <div class="method">
+      <h4 style="font-family:var(--disp);font-size:19px;text-transform:uppercase">Правило 20 на день</h4>
+      <ol>
+        <li><b>20 нових слів щодня = 2000 слів за 100 днів.</b> Але без повторень із них залишиться близько 100. Тому повторення важливіші за нові слова: якщо часу мало — скорочуй нові, ніколи не повтори.</li>
+        <li><b>Іменник вчиться трійкою:</b> артикль + слово + множина. <i>die Wohnung, -en</i>. Вчити «Wohnung = квартира» — це закласти собі помилку на два роки вперед.</li>
+        <li><b>Одразу в реченні.</b> Слово поза контекстом не має гачка, за який його витягує пам'ять. Придумай своє речення — про себе, а не абстрактне.</li>
+        <li><b>Проговорюй уголос.</b> Слово, яке ти лише бачила, не з'явиться в мовленні. Артикуляція створює м'язову пам'ять.</li>
+        <li><b>Інтервали повторення:</b> сьогодні → завтра → через 3 дні → через тиждень → через 2 тижні → через місяць. Це і робить Anki автоматично.</li>
+      </ol>
+    </div>
+    <div class="method">
+      <h4 style="font-family:var(--disp);font-size:19px;text-transform:uppercase">Чотири стадії слова</h4>
+      <ol>
+        <li><b>Впізнаю в тексті</b> — бачу й розумію. Найлегша стадія, і на ній більшість зупиняється.</li>
+        <li><b>Впізнаю на слух</b> — це вже інша навичка, бо в мовленні слово звучить не так, як виглядає.</li>
+        <li><b>Згадую при потребі</b> — можу дістати з пам'яті, коли пишу.</li>
+        <li><b>Вживаю не думаючи</b> — слово стало твоїм. Тільки тут воно рахується.</li>
+      </ol>
+      <p style="margin-top:12px;font-size:15px">Тренажер «Переклад» у цьому файлі перевіряє саме стадію 3 — тому він некомфортний і тому він працює.</p>
+    </div>
+    <div class="method">
+      <h4 style="font-family:var(--disp);font-size:19px;text-transform:uppercase">Чим працювати</h4>
+      <ul style="padding-left:18px;margin-top:10px">
+        <li style="margin-bottom:8px"><b>Anki</b> — інтервальні повторення. Незамінне. Переноси слова з цього модуля туди пачками по 20.</li>
+        <li style="margin-bottom:8px"><b>Я, Claude</b> — пояснення українською, розбір твоїх помилок, вправи під рівень, діалоги, перевірка есе. Пиши мені німецькою — виправлятиму з поясненням «чому».</li>
+        <li style="margin-bottom:8px"><b>Tandem / italki</b> — живі люди. Те, що я замінити не можу. Заходь туди з B1, не пізніше.</li>
+        <li style="margin-bottom:8px"><b>DW: Nicos Weg</b> — безкоштовний серіал-курс A1–B1.</li>
+        <li style="margin-bottom:8px"><b>DWDS / Duden</b> — з B1 переходь на одномовний словник. Це переламний момент.</li>
+      </ul>
+    </div>
+  </div>
+  <footer>
+    <p>Прогрес зберігається локально. Перше правило: щоденні 30 хвилин перемагають ідеальний план, виконаний уривками.</p>
+    <p class="note" id="savedNote"></p>
+  </footer>
+</section>
+
+</main>
+
+<script>
+/* ================= VOCAB 1000 ================= */
+const V = {};
+V.A1 = {
+"Люди й сім'я":`der Vater|¨|батько;die Mutter|¨|мати;der Sohn|¨-e|син;die Tochter|¨|донька;der Bruder|¨|брат;die Schwester|-n|сестра;die Eltern|—|батьки;das Kind|-er|дитина;der Mann|¨-er|чоловік;die Frau|-en|жінка, дружина;der Freund|-e|друг;die Freundin|-nen|подруга;der Junge|-n|хлопець;das Mädchen|-|дівчинка;die Familie|-n|сім'я;der Opa|-s|дідусь;die Oma|-s|бабуся;der Nachbar|-n|сусід;der Name|-n|ім'я;die Leute|—|люди`,
+"Числа й час":`die Zahl|-en|число;die Uhr|-en|годинник;die Stunde|-n|година;die Minute|-n|хвилина;der Tag|-e|день;die Woche|-n|тиждень;der Monat|-e|місяць;das Jahr|-e|рік;heute|—|сьогодні;morgen|—|завтра;gestern|—|вчора;jetzt|—|зараз;früh|—|рано;spät|—|пізно;der Morgen|-|ранок;der Abend|-e|вечір;die Nacht|¨-e|ніч;der Mittag|-e|полудень;das Datum|Daten|дата;die Zeit|-en|час`,
+"Дім і речі":`das Haus|¨-er|дім;die Wohnung|-en|квартира;das Zimmer|-|кімната;die Küche|-n|кухня;das Bad|¨-er|ванна;das Bett|-en|ліжко;der Tisch|-e|стіл;der Stuhl|¨-e|стілець;die Tür|-en|двері;das Fenster|-|вікно;der Schrank|¨-e|шафа;die Lampe|-n|лампа;der Schlüssel|-|ключ;die Wand|¨-e|стіна;das Sofa|-s|диван;der Spiegel|-|дзеркало;die Treppe|-n|сходи;der Garten|¨|сад;die Miete|-n|орендна плата;der Müll|—|сміття`,
+"Їжа й напої":`das Brot|-e|хліб;die Butter|—|масло;der Käse|-|сир;das Ei|-er|яйце;das Fleisch|—|м'ясо;der Fisch|-e|риба;das Gemüse|-|овочі;das Obst|—|фрукти;der Apfel|¨|яблуко;die Kartoffel|-n|картопля;die Milch|—|молоко;das Wasser|-|вода;der Kaffee|-s|кава;der Tee|-s|чай;das Bier|-e|пиво;der Wein|-e|вино;der Zucker|—|цукор;das Salz|-e|сіль;die Suppe|-n|суп;der Reis|—|рис`,
+"Місто й дорога":`die Stadt|¨-e|місто;das Dorf|¨-er|село;die Straße|-n|вулиця;der Platz|¨-e|площа;der Bahnhof|¨-e|вокзал;der Flughafen|¨|аеропорт;die Haltestelle|-n|зупинка;der Bus|-se|автобус;der Zug|¨-e|потяг;das Auto|-s|автомобіль;das Fahrrad|¨-er|велосипед;die Bank|-en|банк;die Post|—|пошта;das Geschäft|-e|магазин;der Markt|¨-e|ринок;die Apotheke|-n|аптека;das Krankenhaus|¨-er|лікарня;die Schule|-n|школа;die Kirche|-n|церква;der Park|-s|парк`,
+"Одяг і покупки":`die Kleidung|—|одяг;das Hemd|-en|сорочка;die Hose|-n|штани;der Rock|¨-e|спідниця;das Kleid|-er|сукня;der Schuh|-e|черевик;die Jacke|-n|куртка;der Mantel|¨|пальто;die Mütze|-n|шапка;die Tasche|-n|сумка;das T-Shirt|-s|футболка;der Preis|-e|ціна;das Geld|—|гроші;die Kasse|-n|каса;die Größe|-n|розмір;kaufen|—|купувати;kosten|—|коштувати;bezahlen|—|платити;billig|—|дешевий;teuer|—|дорогий`,
+"Тіло і здоров'я":`der Kopf|¨-e|голова;das Auge|-n|око;das Ohr|-en|вухо;die Nase|-n|ніс;der Mund|¨-er|рот;die Hand|¨-e|кисть руки;der Arm|-e|рука;das Bein|-e|нога;der Fuß|¨-e|стопа;der Rücken|-|спина;der Bauch|¨-e|живіт;das Herz|-en|серце;der Zahn|¨-e|зуб;das Haar|-e|волосся;der Arzt|¨-e|лікар;die Krankheit|-en|хвороба;der Schmerz|-en|біль;das Fieber|—|температура;gesund|—|здоровий;krank|—|хворий`,
+"Базові дієслова":`sein|—|бути;haben|—|мати;machen|—|робити;gehen|—|йти;kommen|—|приходити;sehen|—|бачити;hören|—|чути;sprechen|—|розмовляти;sagen|—|казати;essen|—|їсти;trinken|—|пити;schlafen|—|спати;wohnen|—|мешкати;arbeiten|—|працювати;lernen|—|вчити;lesen|—|читати;schreiben|—|писати;fahren|—|їхати;nehmen|—|брати;geben|—|давати`,
+"Базові прикметники":`gut|—|добрий;schlecht|—|поганий;groß|—|великий;klein|—|малий;neu|—|новий;alt|—|старий;jung|—|молодий;schön|—|гарний;lang|—|довгий;kurz|—|короткий;warm|—|теплий;kalt|—|холодний;schnell|—|швидкий;langsam|—|повільний;richtig|—|правильний;falsch|—|неправильний;einfach|—|простий;schwer|—|важкий;wichtig|—|важливий;müde|—|втомлений`,
+"Службові слова":`und|—|і;aber|—|але;oder|—|або;weil|—|тому що;dass|—|що (сполучник);wenn|—|якщо, коли;nicht|—|не;kein|—|жоден, ніякий;auch|—|також;noch|—|ще;schon|—|вже;immer|—|завжди;nie|—|ніколи;oft|—|часто;manchmal|—|іноді;sehr|—|дуже;viel|—|багато;wenig|—|мало;hier|—|тут;dort|—|там`
+};
+V.A2 = {
+"Робота й професії":`der Beruf|-e|професія;die Arbeit|-en|робота;der Chef|-s|начальник;die Kollegin|-nen|колега (ж.);das Büro|-s|офіс;die Firma|Firmen|фірма;der Vertrag|¨-e|договір;das Gehalt|¨-er|зарплата;die Stelle|-n|посада, вакансія;die Bewerbung|-en|заява на роботу;der Lebenslauf|¨-e|резюме;der Termin|-e|призначена зустріч;die Besprechung|-en|нарада;die Aufgabe|-n|завдання;der Kunde|-n|клієнт;die Erfahrung|-en|досвід;die Ausbildung|-en|фахова освіта;der Praktikant|-en|практикант;verdienen|—|заробляти;kündigen|—|звільнятися, розривати`,
+"Гроші й покупки":`das Konto|Konten|рахунок у банку;die Rechnung|-en|рахунок до оплати;die Quittung|-en|квитанція;die Steuer|-n|податок;die Versicherung|-en|страхування;der Rabatt|-e|знижка;das Angebot|-e|пропозиція;die Ware|-n|товар;der Verkäufer|-|продавець;die Bestellung|-en|замовлення;die Lieferung|-en|доставка;die Kreditkarte|-n|кредитна картка;überweisen|—|переказувати;sparen|—|заощаджувати;ausgeben|—|витрачати;leihen|—|позичати;umtauschen|—|обміняти;bar|—|готівкою;kostenlos|—|безкоштовний;günstig|—|вигідний за ціною`,
+"Подорож":`die Reise|-n|подорож;der Urlaub|-e|відпустка;das Ticket|-s|квиток;der Fahrplan|¨-e|розклад;die Verspätung|-en|запізнення;der Koffer|-|валіза;das Gepäck|—|багаж;die Unterkunft|¨-e|помешкання;das Hotel|-s|готель;die Buchung|-en|бронювання;der Ausweis|-e|посвідчення;der Reisepass|¨-e|закордонний паспорт;die Grenze|-n|кордон;die Richtung|-en|напрямок;die Sehenswürdigkeit|-en|пам'ятка;umsteigen|—|пересідати;abfahren|—|відʼїжджати;ankommen|—|прибувати;buchen|—|бронювати;besichtigen|—|оглядати`,
+"Погода й природа":`das Wetter|-|погода;die Sonne|-n|сонце;der Regen|-|дощ;der Schnee|—|сніг;der Wind|-e|вітер;die Wolke|-n|хмара;der Nebel|-|туман;das Gewitter|-|гроза;die Temperatur|-en|температура;der Himmel|-|небо;der Baum|¨-e|дерево;der Wald|¨-er|ліс;die Blume|-n|квітка;das Gras|¨-er|трава;der Berg|-e|гора;der See|-n|озеро;das Meer|-e|море;der Fluss|¨-e|річка;die Insel|-n|острів;das Tier|-e|тварина`,
+"Побут і документи":`das Formular|-e|бланк;der Antrag|¨-e|заява, клопотання;die Anmeldung|-en|реєстрація;die Behörde|-n|установа;die Unterschrift|-en|підпис;die Bescheinigung|-en|довідка;der Nachweis|-e|підтвердження;die Frist|-en|строк;die Adresse|-n|адреса;der Vermieter|-|орендодавець;die Kaution|-en|застава;die Nebenkosten|—|комунальні витрати;der Strom|—|електрика;die Heizung|-en|опалення;gültig|—|дійсний;ausfüllen|—|заповнювати;unterschreiben|—|підписувати;beantragen|—|подавати заяву;sich anmelden|—|реєструватися;abgeben|—|здавати, подавати`,
+"Емоції й стосунки":`das Gefühl|-e|почуття;die Freude|-n|радість;die Angst|¨-e|страх;die Wut|—|лють;die Trauer|—|смуток;die Liebe|—|любов;die Hoffnung|-en|надія;die Beziehung|-en|стосунки;die Hochzeit|-en|весілля;die Scheidung|-en|розлучення;stolz|—|гордий;enttäuscht|—|розчарований;zufrieden|—|задоволений;nervös|—|знервований;sich freuen|—|радіти;sich ärgern|—|злитися;sich verlieben|—|закохатися;streiten|—|сваритися;sich entschuldigen|—|вибачатися;vertrauen|—|довіряти`,
+"Дієслова A2":`bringen|—|приносити;holen|—|забирати;suchen|—|шукати;finden|—|знаходити;verlieren|—|губити;vergessen|—|забувати;sich erinnern|—|згадувати;versuchen|—|намагатися;schaffen|—|встигати, долати;beginnen|—|починати;beenden|—|завершувати;erklären|—|пояснювати;verstehen|—|розуміти;entscheiden|—|вирішувати;wählen|—|обирати;empfehlen|—|радити;helfen|—|допомагати;danken|—|дякувати;warten|—|чекати;treffen|—|зустрічати`,
+"Прикметники A2":`freundlich|—|привітний;höflich|—|ввічливий;ehrlich|—|чесний;faul|—|лінивий;fleißig|—|старанний;ruhig|—|спокійний;laut|—|гучний;sauber|—|чистий;schmutzig|—|брудний;gefährlich|—|небезпечний;sicher|—|безпечний, впевнений;möglich|—|можливий;nötig|—|потрібний;ähnlich|—|схожий;verschieden|—|різний;bekannt|—|відомий;beliebt|—|популярний;pünktlich|—|пунктуальний;zuverlässig|—|надійний;neugierig|—|допитливий`,
+"Прийменники":`mit|—|з (кимось);ohne|—|без;für|—|для;gegen|—|проти;durch|—|крізь;um|—|навколо, о (годині);bei|—|біля, у (когось);nach|—|після, до (міста);seit|—|з (певного часу);von|—|від;zu|—|до;aus|—|з (звідки);während|—|під час;wegen|—|через (причина);trotz|—|попри;zwischen|—|між;über|—|над, про;unter|—|під;vor|—|перед;hinter|—|позаду`,
+"Час і послідовність":`zuerst|—|спершу;dann|—|потім;danach|—|після цього;schließlich|—|нарешті;plötzlich|—|раптом;sofort|—|негайно;bald|—|скоро;gerade|—|саме зараз;damals|—|тоді;vorher|—|раніше;nachher|—|згодом;täglich|—|щоденно;wöchentlich|—|щотижня;normalerweise|—|зазвичай;selten|—|рідко;meistens|—|переважно;gleichzeitig|—|одночасно;endlich|—|нарешті;inzwischen|—|тим часом;ständig|—|постійно`
+};
+V.B1 = {
+"Освіта й навчання":`die Bildung|—|освіта;die Universität|-en|університет;das Studium|Studien|навчання у виші;der Studiengang|¨-e|спеціальність;die Vorlesung|-en|лекція;das Seminar|-e|семінар;die Prüfung|-en|іспит;die Note|-n|оцінка;das Zeugnis|-se|свідоцтво;der Abschluss|¨-e|диплом, завершення;die Kenntnisse|—|знання, навички;die Fähigkeit|-en|здібність;das Wissen|—|знання;der Fortschritt|-e|поступ;sich bewerben|—|подавати заявку;bestehen|—|скласти іспит;scheitern|—|зазнати невдачі;wiederholen|—|повторювати;sich vorbereiten|—|готуватися;teilnehmen|—|брати участь`,
+"Кар'єра":`die Karriere|-n|кар'єра;die Beförderung|-en|підвищення;die Verantwortung|-en|відповідальність;die Leistung|-en|результат, продуктивність;die Herausforderung|-en|виклик;das Ziel|-e|мета;der Auftrag|¨-e|доручення, замовлення;die Zusammenarbeit|—|співпраця;das Team|-s|команда;die Arbeitslosigkeit|—|безробіття;das Praktikum|Praktika|стажування;die Weiterbildung|-en|підвищення кваліфікації;der Wettbewerb|-e|конкуренція;die Branche|-n|галузь;der Vorgesetzte|-n|керівник;selbstständig|—|самостійний;berufstätig|—|працевлаштований;sich durchsetzen|—|відстояти позицію;leiten|—|керувати;betreuen|—|опікуватися`,
+"Житло й побут":`die Umgebung|-en|околиця;der Stadtteil|-e|район міста;die Lage|-n|розташування, ситуація;der Umzug|¨-e|переїзд;die Einrichtung|-en|облаштування;der Mietvertrag|¨-e|договір оренди;die Renovierung|-en|ремонт;der Schaden|¨|пошкодження;die Reparatur|-en|полагодження;der Hausmeister|-|управитель будинку;die Nachbarschaft|-en|сусідство;die Ordnung|-en|порядок;der Lärm|—|шум;die Ruhe|—|тиша;der Zustand|¨-e|стан;einziehen|—|заселятися;ausziehen|—|виїжджати;renovieren|—|робити ремонт;sich beschweren|—|скаржитися;besorgen|—|роздобути`,
+"Здоров'я":`die Behandlung|-en|лікування;die Untersuchung|-en|обстеження;die Diagnose|-n|діагноз;das Rezept|-e|рецепт;das Medikament|-e|ліки;die Nebenwirkung|-en|побічна дія;die Ernährung|—|харчування;die Bewegung|-en|рух;der Schlaf|—|сон;der Stress|—|стрес;die Erholung|—|відновлення;die Vorsorge|—|профілактика;die Wirkung|-en|дія, ефект;die Beschwerden|—|скарги на здоров'я;sich erholen|—|відновлюватися;verschreiben|—|виписувати ліки;heilen|—|зцілювати;leiden|—|страждати;verzichten|—|відмовлятися від;belasten|—|обтяжувати`,
+"Стосунки й суспільство":`die Gesellschaft|-en|суспільство;die Gemeinschaft|-en|спільнота;der Kontakt|-e|контакт;das Verhalten|—|поведінка;die Meinung|-en|думка;der Eindruck|¨-e|враження;das Vertrauen|—|довіра;der Respekt|—|повага;das Missverständnis|-se|непорозуміння;der Konflikt|-e|конфлікт;der Kompromiss|-e|компроміс;die Rücksicht|—|зважання на інших;die Unterstützung|-en|підтримка;sich verstehen|—|порозумітися;sich kümmern|—|піклуватися;beeinflussen|—|впливати;überzeugen|—|переконувати;zustimmen|—|погоджуватися;ablehnen|—|відхиляти;sich anpassen|—|пристосовуватися`,
+"Технології":`das Gerät|-e|пристрій;der Bildschirm|-e|екран;die Anwendung|-en|застосунок;die Datei|-en|файл;die Daten|—|дані;das Netzwerk|-e|мережа;die Verbindung|-en|з'єднання;die Sicherheit|-en|безпека;das Passwort|¨-er|пароль;die Einstellung|-en|налаштування;die Entwicklung|-en|розробка, розвиток;die Nutzung|-en|використання;der Zugang|¨-e|доступ;die Störung|-en|збій;speichern|—|зберігати;löschen|—|видаляти;herunterladen|—|завантажувати;aktualisieren|—|оновлювати;benutzerfreundlich|—|зручний у користуванні;die künstliche Intelligenz|—|штучний інтелект`,
+"Абстрактні поняття":`die Möglichkeit|-en|можливість;die Bedingung|-en|умова;die Voraussetzung|-en|передумова;die Folge|-n|наслідок;der Grund|¨-e|причина;der Zweck|-e|мета, призначення;der Unterschied|-e|різниця;die Ähnlichkeit|-en|схожість;der Zusammenhang|¨-e|взаємозв'язок;die Bedeutung|-en|значення;der Vorteil|-e|перевага;der Nachteil|-e|недолік;die Lösung|-en|рішення;das Problem|-e|проблема;die Absicht|-en|намір;die Entscheidung|-en|рішення (вибір);die Erwartung|-en|очікування;die Gewohnheit|-en|звичка;der Versuch|-e|спроба;die Ausnahme|-n|виняток`,
+"Дієслова з прийменниками":`warten auf|—|чекати на;denken an|—|думати про;sich freuen auf|—|радіти майбутньому;sich freuen über|—|радіти чомусь;sich interessieren für|—|цікавитися;sich beschäftigen mit|—|займатися;sich erinnern an|—|пам'ятати про;sich gewöhnen an|—|звикати до;achten auf|—|звертати увагу на;bestehen aus|—|складатися з;gehören zu|—|належати до;teilnehmen an|—|брати участь у;sich bewerben um|—|претендувати на;es handelt sich um|—|ідеться про;abhängen von|—|залежати від;sich kümmern um|—|піклуватися про;sich verlassen auf|—|покладатися на;bitten um|—|просити про;zweifeln an|—|сумніватися в;sich entscheiden für|—|обрати`,
+"Характер і оцінка":`aufmerksam|—|уважний;gelassen|—|незворушний;ehrgeizig|—|амбітний;großzügig|—|щедрий;geduldig|—|терплячий;hilfsbereit|—|готовий допомогти;misstrauisch|—|недовірливий;rücksichtslos|—|безцеремонний;eingebildet|—|зарозумілий;bescheiden|—|скромний;sinnvoll|—|доцільний;überraschend|—|несподіваний;enttäuschend|—|розчаровуючий;beeindruckend|—|вражаючий;anstrengend|—|виснажливий;lohnend|—|вартий зусиль;umstritten|—|спірний;angemessen|—|доречний;unvermeidlich|—|неминучий;erforderlich|—|необхідний`,
+"Сполучники B1":`obwohl|—|хоча;damit|—|щоб (мета);sodass|—|так що;falls|—|у разі якщо;je … desto|—|чим … тим;entweder … oder|—|або … або;weder … noch|—|ні … ні;nicht nur … sondern auch|—|не тільки … а й;deshalb|—|тому;trotzdem|—|попри це;außerdem|—|крім того;allerdings|—|щоправда;jedoch|—|проте;zwar|—|хоч і;einerseits|—|з одного боку;andererseits|—|з іншого боку;beziehungsweise|—|відповідно, або;insbesondere|—|особливо;im Gegensatz zu|—|на відміну від;im Vergleich zu|—|порівняно з`
+};
+V.B2 = {
+"Суспільство й політика":`die Regierung|-en|уряд;die Wahl|-en|вибори;die Partei|-en|партія;das Gesetz|-e|закон;die Verfassung|-en|конституція;der Bürger|-|громадянин;der Abgeordnete|-n|депутат;die Mehrheit|-en|більшість;die Minderheit|-en|меншість;die Demokratie|-n|демократія;die Macht|¨-e|влада;der Einfluss|¨-e|вплив;die Reform|-en|реформа;die Debatte|-n|дебати;der Protest|-e|протест;die Gerechtigkeit|—|справедливість;die Gleichberechtigung|—|рівноправність;die Integration|-en|інтеграція;die Migration|-en|міграція;die Öffentlichkeit|—|громадськість`,
+"Економіка":`die Wirtschaft|-en|економіка;die Nachfrage|-n|попит;der Gewinn|-e|прибуток;der Verlust|-e|збиток;die Investition|-en|інвестиція;das Unternehmen|-|підприємство;der Umsatz|¨-e|виторг;die Kosten|—|витрати;die Inflation|-en|інфляція;die Krise|-n|криза;das Wachstum|—|зростання;die Schulden|—|борги;der Verbraucher|-|споживач;die Produktion|-en|виробництво;die Konkurrenz|-en|конкуренція;der Anteil|-e|частка;die Rendite|-n|дохідність;der Haushalt|-e|бюджет;finanzieren|—|фінансувати;sich lohnen|—|бути вигідним`,
+"Медіа":`die Nachricht|-en|новина;die Presse|—|преса;der Bericht|-e|репортаж, звіт;die Quelle|-n|джерело;die Schlagzeile|-n|заголовок;der Beitrag|¨-e|допис, внесок;die Sendung|-en|передача;das Interview|-s|інтерв'ю;die Werbung|-en|реклама;das Publikum|—|аудиторія;die Zensur|—|цензура;die Meinungsfreiheit|—|свобода слова;die Fälschung|-en|підробка;glaubwürdig|—|достовірний;sachlich|—|об'єктивний, по суті;berichten|—|повідомляти;veröffentlichen|—|публікувати;recherchieren|—|досліджувати;verbreiten|—|поширювати;manipulieren|—|маніпулювати`,
+"Довкілля":`die Umwelt|—|довкілля;der Klimawandel|—|зміна клімату;die Verschmutzung|-en|забруднення;der Abfall|¨-e|відходи;die Energie|-n|енергія;der Verbrauch|—|споживання;die Ressource|-n|ресурс;der Schutz|—|захист;die Art|-en|біологічний вид;das Aussterben|—|вимирання;die Landwirtschaft|—|сільське господарство;die Dürre|-n|посуха;das Hochwasser|-|повінь;die Emission|-en|викид;erneuerbar|—|відновлюваний;nachhaltig|—|сталий;schädlich|—|шкідливий;umweltfreundlich|—|екологічний;recyceln|—|переробляти;vermeiden|—|уникати`,
+"Наука":`die Forschung|-en|дослідження;die Wissenschaft|-en|наука;die These|-n|теза;der Beweis|-e|доказ;das Ergebnis|-se|результат;die Studie|-n|наукова праця;die Methode|-n|метод;die Analyse|-n|аналіз;die Statistik|-en|статистика;die Erkenntnis|-se|пізнання, висновок;die Theorie|-n|теорія;die Hypothese|-n|гіпотеза;beobachten|—|спостерігати;messen|—|вимірювати;belegen|—|підтверджувати;widerlegen|—|спростовувати;schlussfolgern|—|робити висновок;zutreffen|—|бути слушним;umfassend|—|всеохопний;empirisch|—|емпіричний`,
+"Право":`das Recht|-e|право;die Pflicht|-en|обов'язок;das Gericht|-e|суд;der Anwalt|¨-e|адвокат;das Urteil|-e|вирок, судження;die Strafe|-n|покарання;die Klage|-n|позов;die Haftung|-en|юридична відповідальність;der Verstoß|¨-e|порушення;die Vorschrift|-en|припис;die Auflage|-n|вимога, умова;das Verfahren|-|провадження;zulässig|—|допустимий;verbindlich|—|обов'язковий;verpflichtet|—|зобов'язаний;haften|—|нести відповідальність;verklagen|—|подавати до суду;verstoßen gegen|—|порушувати;gelten|—|бути чинним;in Kraft treten|—|набувати чинності`,
+"Абстрактні дієслова":`berücksichtigen|—|враховувати;nachvollziehen|—|простежити логіку;voraussetzen|—|припускати як умову;hinweisen auf|—|вказувати на;beruhen auf|—|ґрунтуватися на;sich auswirken auf|—|впливати на;in Betracht ziehen|—|брати до уваги;zur Verfügung stellen|—|надавати;eine Rolle spielen|—|відігравати роль;in Frage stellen|—|ставити під сумнів;zum Ausdruck bringen|—|виражати;Rücksicht nehmen auf|—|зважати на;Wert legen auf|—|надавати значення;eine Entscheidung treffen|—|ухвалювати рішення;Kritik üben|—|критикувати;Maßnahmen ergreifen|—|вживати заходів;zur Folge haben|—|мати наслідком;im Vordergrund stehen|—|бути на першому плані;sich erweisen als|—|виявитися чимось;erfordern|—|вимагати`,
+"Оцінка й ступінь":`erheblich|—|значний;gering|—|незначний;umfangreich|—|обширний;zutreffend|—|слушний;fragwürdig|—|сумнівний;maßgeblich|—|визначальний;ausschlaggebend|—|вирішальний;nachweislich|—|доведено;vermeintlich|—|нібито;offensichtlich|—|очевидний;grundsätzlich|—|принципово;weitgehend|—|значною мірою;vorläufig|—|попередній;endgültig|—|остаточний;zunehmend|—|дедалі більший;rückläufig|—|спадний;ausgeprägt|—|виразний;unerlässlich|—|конче потрібний;bedenklich|—|тривожний;vielfältig|—|різноманітний`,
+"Формальні звороти":`hinsichtlich|—|щодо;bezüglich|—|стосовно;aufgrund|—|на підставі;infolge|—|внаслідок;angesichts|—|з огляду на;im Hinblick auf|—|з огляду на;im Rahmen|—|у рамках;im Zuge|—|у ході;mit Ausnahme von|—|за винятком;im Wesentlichen|—|по суті;in erster Linie|—|насамперед;unter Umständen|—|за певних обставин;in der Regel|—|як правило;im Durchschnitt|—|у середньому;darüber hinaus|—|понад те;somit|—|отже;folglich|—|відтак;demnach|—|згідно з цим;letztlich|—|зрештою;zum einen … zum anderen|—|з одного … з іншого`,
+"Konnektoren":`zumal|—|тим паче що;sofern|—|за умови що;indem|—|тим, що (спосіб);während|—|тоді як;wohingegen|—|натомість;sobald|—|щойно;solange|—|поки;bevor|—|перш ніж;nachdem|—|після того як;seitdem|—|відтоді як;es sei denn|—|хіба що;statt zu|—|замість того щоб;ohne zu|—|не роблячи чогось;um zu|—|щоб;anstatt dass|—|замість того щоб;insofern|—|остільки;dementsprechend|—|відповідно;gleichermaßen|—|однаковою мірою;vorausgesetzt, dass|—|за умови, що;abgesehen von|—|окрім`
+};
+V.C1 = {
+"Академічна лексика":`die Erörterung|-en|розгляд, обговорення;der Ansatz|¨-e|підхід;die Perspektive|-n|перспектива;das Phänomen|-e|явище;die Wechselwirkung|-en|взаємодія;die Tragweite|—|масштаб наслідків;die Ambivalenz|-en|амбівалентність;der Diskurs|-e|дискурс;die Prämisse|-n|засновок;die Schlussfolgerung|-en|висновок;der Widerspruch|¨-e|суперечність;die Differenzierung|-en|розрізнення;die Relevanz|—|значущість;die Plausibilität|—|правдоподібність;die Einschränkung|-en|застереження;die Verallgemeinerung|-en|узагальнення;zugrunde liegen|—|лежати в основі;sich abzeichnen|—|вимальовуватися;hervorheben|—|наголошувати;abwägen|—|зважувати`,
+"Функціональні звороти":`in Anspruch nehmen|—|скористатися, забирати час;zur Sprache bringen|—|порушити тему;Abstand nehmen von|—|відмовитися від;in Kauf nehmen|—|змиритися з;zur Debatte stehen|—|бути предметом обговорення;außer Acht lassen|—|лишити поза увагою;in Erwägung ziehen|—|розглядати як варіант;Rechnung tragen|—|враховувати;unter Beweis stellen|—|довести на ділі;zum Tragen kommen|—|проявитися;Anklang finden|—|знайти відгук;ins Gewicht fallen|—|мати вагу;in Aussicht stellen|—|обіцяти;sich in Grenzen halten|—|бути помірним;auf dem Spiel stehen|—|бути під загрозою;den Ausschlag geben|—|стати вирішальним;ins Auge fassen|—|намітити;zur Verantwortung ziehen|—|притягнути до відповідальності;Stellung nehmen zu|—|висловити позицію щодо;in Verruf geraten|—|здобути погану славу`,
+"Modalpartikeln":`doch|—|же (наполягання);ja|—|ж (спільне знання);mal|—|-но (пом'якшення);eben|—|саме так, нічого не вдієш;halt|—|ну просто;wohl|—|мабуть;denn|—|же (у питанні);etwa|—|невже, приблизно;schon|—|таки;ruhig|—|спокійно можеш;bloß|—|тільки (застереження);nur|—|лише;eigentlich|—|власне кажучи;überhaupt|—|взагалі;immerhin|—|принаймні;sowieso|—|все одно;ohnehin|—|і без того;gewissermaßen|—|певною мірою;freilich|—|звісно, щоправда;durchaus|—|цілком`,
+"Ідіоми":`die Daumen drücken|—|тримати кулаки;ins kalte Wasser springen|—|кинутися у вир;den Nagel auf den Kopf treffen|—|влучити в яблучко;die Katze im Sack kaufen|—|купити кота в мішку;mit dem Feuer spielen|—|гратися з вогнем;die Zähne zusammenbeißen|—|зціпити зуби;über den Tellerrand schauen|—|дивитися ширше;das Rad neu erfinden|—|винаходити велосипед;auf großem Fuß leben|—|жити на широку ногу;den Faden verlieren|—|згубити думку;ins Fettnäpfchen treten|—|сісти в калюжу;Öl ins Feuer gießen|—|підливати оливи у вогонь;aus dem Ärmel schütteln|—|зробити без зусиль;jemandem die Stange halten|—|заступатися;die Flinte ins Korn werfen|—|опустити руки;Schwein haben|—|мати везіння;auf dem Holzweg sein|—|помилятися;das Handtuch werfen|—|здатися;Hals über Kopf|—|стрімголов;unter vier Augen|—|віч-на-віч`,
+"Книжна лексика":`gleichwohl|—|попри це;mithin|—|отже;zumindest|—|принаймні;keineswegs|—|аж ніяк;mitnichten|—|аж ніяк (висок.);schlechthin|—|як такий;vollends|—|остаточно;zusehends|—|дедалі помітніше;unlängst|—|нещодавно;seinerzeit|—|свого часу;hierzulande|—|у нас у країні;dergestalt|—|таким чином;nichtsdestotrotz|—|попри все;beiläufig|—|мимохідь;vorbehaltlich|—|за умови;namentlich|—|зокрема;vornehmlich|—|переважно;weitestgehend|—|максимально;schlichtweg|—|просто-таки;fortan|—|відтепер`,
+"Нюанси синонімів":`erwidern|—|заперечити у відповідь;entgegnen|—|заперечити;behaupten|—|стверджувати;einräumen|—|визнати (поступка);bestreiten|—|заперечувати;beteuern|—|запевняти;andeuten|—|натякати;unterstellen|—|приписувати (негатив);verharmlosen|—|применшувати;zuspitzen|—|загострювати;relativieren|—|релятивізувати;untermauern|—|підкріпити;hinterfragen|—|ставити під питання;nahelegen|—|наштовхувати на думку;schildern|—|змальовувати;erläutern|—|роз'яснювати;darlegen|—|викладати;ausführen|—|розгортати думку;zusammenfassen|—|підсумовувати;einwenden|—|заперечити (аргумент)`,
+"Психологія й філософія":`das Bewusstsein|—|свідомість;die Wahrnehmung|-en|сприйняття;das Unterbewusstsein|—|підсвідомість;die Vernunft|—|розум;die Willensfreiheit|—|свобода волі;die Sinnfrage|-n|питання сенсу;das Dasein|—|буття;die Sehnsucht|¨-e|туга, прагнення;die Verzweiflung|—|відчай;die Gelassenheit|—|незворушність;die Zuversicht|—|упевненість у майбутньому;das Vorurteil|-e|упередження;die Selbstverwirklichung|—|самореалізація;die Entfremdung|—|відчуження;das Gewissen|-|сумління;die Reue|—|каяття;die Demut|—|смиренність;der Zweifel|-|сумнів;die Absurdität|-en|абсурдність;das Streben|—|прагнення`,
+"Адміністративна мова":`der Sachverhalt|-e|обставини справи;die Zuständigkeit|-en|компетенція;der Ermessensspielraum|¨-e|простір розсуду;der Bescheid|-e|адміністративне рішення;die Rechtsgrundlage|-n|правова підстава;die Beweislast|—|тягар доказування;der Verzug|—|прострочення;die Kündigungsfrist|-en|строк розірвання;die Bevollmächtigung|-en|уповноваження;das Einvernehmen|—|порозуміння;die Zustimmung|-en|згода;Widerspruch einlegen|—|подати заперечення;eine Frist versäumen|—|пропустити строк;unverzüglich|—|невідкладно;vorbehalten|—|застережений;rechtskräftig|—|такий, що набув чинності;einvernehmlich|—|за взаємною згодою;zuwiderhandeln|—|діяти всупереч;beglaubigen|—|засвідчувати;erlassen|—|видавати (акт)`,
+"Розмовна німецька":`Quatsch|—|дурня;krass|—|жесть, крутезно;echt jetzt?|—|серйозно?;na klar|—|звісно;keine Ahnung|—|поняття не маю;das nervt|—|це дратує;es hat geklappt|—|вийшло;ich bin fix und fertig|—|я вимотана;das geht mir auf die Nerven|—|це діє мені на нерви;mir reicht's|—|з мене досить;lass mal|—|облиш;kein Ding|—|не проблема;das kommt drauf an|—|залежить;auf jeden Fall|—|у будь-якому разі;im Ernst|—|серйозно;mach's gut|—|бувай;alles klar|—|все ясно;das war knapp|—|ледь встигли;ganz schön|—|доволі;so gesehen|—|якщо так подивитись`,
+"Літературна лексика":`die Wehmut|—|меланхолія;das Fernweh|—|туга за далекими краями;die Geborgenheit|—|захищеність, затишок;der Zeitgeist|—|дух часу;die Zerrissenheit|—|внутрішня роздертість;die Vergänglichkeit|—|минущість;die Anmut|—|грація;der Abgrund|¨-e|прірва;die Stille|—|тиша;das Schicksal|-e|доля;die Ahnung|-en|передчуття;der Trost|—|розрада;die Ernüchterung|—|витвереження;das Unbehagen|—|незатишок;die Zuflucht|¨-e|прихисток;der Widerhall|—|відлуння;die Wucht|—|потуга;schwelgen|—|поринати, розкошувати;verweilen|—|затримуватися;erahnen|—|здогадуватися`
+};
+Object.assign(V.A1,{
+"Кольори й форми":`rot|—|червоний;blau|—|синій;grün|—|зелений;gelb|—|жовтий;schwarz|—|чорний;weiß|—|білий;grau|—|сірий;braun|—|коричневий;orange|—|помаранчевий;rosa|—|рожевий;bunt|—|барвистий;dunkel|—|темний;hell|—|світлий;rund|—|круглий;eckig|—|кутастий;die Farbe|-n|колір;die Form|-en|форма;breit|—|широкий;schmal|—|вузький;dick|—|товстий`,
+"Числівники":`eins|—|один;zwei|—|два;drei|—|три;vier|—|чотири;fünf|—|п'ять;sechs|—|шість;sieben|—|сім;acht|—|вісім;neun|—|дев'ять;zehn|—|десять;elf|—|одинадцять;zwölf|—|дванадцять;zwanzig|—|двадцять;hundert|—|сто;tausend|—|тисяча;die Hälfte|-n|половина;das Stück|-e|штука;das Paar|-e|пара;ungefähr|—|приблизно;genau|—|точно`,
+"Школа":`die Klasse|-n|клас;der Lehrer|-|вчитель;die Lehrerin|-nen|вчителька;der Schüler|-|учень;das Heft|-e|зошит;der Stift|-e|ручка;das Papier|-e|папір;die Tafel|-n|дошка;die Hausaufgabe|-n|домашнє завдання;das Fach|¨-er|навчальний предмет;die Sprache|-n|мова;das Wort|¨-er|слово;der Satz|¨-e|речення;die Frage|-n|питання;die Antwort|-en|відповідь;der Fehler|-|помилка;die Übung|-en|вправа;üben|—|вправлятися;fragen|—|питати;antworten|—|відповідати`,
+"Тварини":`der Hund|-e|собака;die Katze|-n|кішка;das Pferd|-e|кінь;die Kuh|¨-e|корова;das Schwein|-e|свиня;der Vogel|¨|птах;die Maus|¨-e|миша;der Bär|-en|ведмідь;der Wolf|¨-e|вовк;der Fuchs|¨-e|лис;das Schaf|-e|вівця;die Ziege|-n|коза;das Huhn|¨-er|курка;die Ente|-n|качка;der Hase|-n|заєць;die Biene|-n|бджола;die Fliege|-n|муха;der Käfer|-|жук;das Insekt|-en|комаха;der Zoo|-s|зоопарк`,
+"Дії щодня":`aufstehen|—|вставати;sich waschen|—|митися;sich anziehen|—|вдягатися;frühstücken|—|снідати;putzen|—|чистити;kochen|—|готувати їжу;waschen|—|прати;aufräumen|—|прибирати;einkaufen|—|робити покупки;spazieren gehen|—|гуляти;fernsehen|—|дивитися телевізор;telefonieren|—|телефонувати;spielen|—|грати;singen|—|співати;tanzen|—|танцювати;laufen|—|бігти;schwimmen|—|плавати;sitzen|—|сидіти;stehen|—|стояти;liegen|—|лежати`,
+"Місце й напрямок":`links|—|ліворуч;rechts|—|праворуч;geradeaus|—|прямо;oben|—|вгорі;unten|—|внизу;vorne|—|спереду;hinten|—|ззаду;drinnen|—|всередині;draußen|—|надворі;überall|—|скрізь;nirgends|—|ніде;weit|—|далеко;nah|—|близько;die Ecke|-n|ріг;die Mitte|-n|середина;der Weg|-e|шлях;die Seite|-n|бік, сторінка;das Ende|-n|кінець;der Anfang|¨-e|початок;zurück|—|назад`,
+"Ввічливість":`danke|—|дякую;bitte|—|будь ласка;Entschuldigung|-en|перепрошую;hallo|—|привіт;tschüss|—|бувай;guten Morgen|—|доброго ранку;guten Tag|—|добрий день;gute Nacht|—|надобраніч;auf Wiedersehen|—|до побачення;wie geht's?|—|як справи?;gern geschehen|—|прошу (у відповідь);herzlich willkommen|—|ласкаво просимо;viel Glück|—|щасти;alles Gute|—|усього доброго;kein Problem|—|немає проблем;natürlich|—|звісно;vielleicht|—|можливо;leider|—|на жаль;hoffentlich|—|сподіваюся;stimmt|—|так, правильно`,
+"Професії":`die Ärztin|-nen|лікарка;der Ingenieur|-e|інженер;der Koch|¨-e|кухар;der Kellner|-|офіціант;der Fahrer|-|водій;der Bäcker|-|пекар;der Friseur|-e|перукар;der Student|-en|студент;die Studentin|-nen|студентка;der Künstler|-|митець;der Musiker|-|музикант;der Sportler|-|спортсмен;der Journalist|-en|журналіст;der Programmierer|-|програміст;die Krankenschwester|-n|медсестра;der Landwirt|-e|фермер;der Handwerker|-|ремісник;die Sekretärin|-nen|секретарка;der Rentner|-|пенсіонер;der Polizist|-en|поліціянт`,
+"Кухня й посуд":`der Teller|-|тарілка;die Tasse|-n|чашка;das Glas|¨-er|склянка;die Gabel|-n|виделка;das Messer|-|ніж;der Topf|¨-e|каструля;die Pfanne|-n|сковорода;der Herd|-e|плита;der Kühlschrank|¨-e|холодильник;der Ofen|¨|духовка;die Flasche|-n|пляшка;die Dose|-n|бляшанка;die Serviette|-n|серветка;das Handtuch|¨-er|рушник;die Seife|-n|мило;der Schwamm|¨-e|губка;das Öl|-e|олія;der Essig|-e|оцет;das Mehl|-e|борошно;die Nudeln|—|локшина`,
+"Дні й місяці":`Montag|—|понеділок;Dienstag|—|вівторок;Mittwoch|—|середа;Donnerstag|—|четвер;Freitag|—|п'ятниця;Samstag|—|субота;Sonntag|—|неділя;Januar|—|січень;Februar|—|лютий;März|—|березень;April|—|квітень;Mai|—|травень;Juni|—|червень;Juli|—|липень;August|—|серпень;September|—|вересень;Oktober|—|жовтень;November|—|листопад;Dezember|—|грудень;das Wochenende|-n|вихідні`});
+
+Object.assign(V.A2,{
+"Спорт і дозвілля":`der Sport|—|спорт;das Spiel|-e|гра;die Mannschaft|-en|команда;der Verein|-e|клуб, товариство;das Training|-s|тренування;der Wettkampf|¨-e|змагання;der Sieg|-e|перемога;die Niederlage|-n|поразка;das Hobby|-s|хобі;die Freizeit|—|дозвілля;wandern|—|мандрувати пішки;Rad fahren|—|їздити на велосипеді;trainieren|—|тренуватися;gewinnen|—|вигравати;sich anstrengen|—|напружуватися;das Fitnessstudio|-s|спортзал;der Schiedsrichter|-|суддя;die Mitgliedschaft|-en|членство;fit|—|у формі;sportlich|—|спортивний`,
+"Транспорт":`die Straßenbahn|-en|трамвай;die U-Bahn|-en|метро;das Flugzeug|-e|літак;das Schiff|-e|корабель;das Taxi|-s|таксі;der Führerschein|-e|водійські права;die Tankstelle|-n|заправка;das Benzin|—|бензин;der Stau|-s|затор;die Ampel|-n|світлофор;die Kreuzung|-en|перехрестя;der Unfall|¨-e|аварія;die Geschwindigkeit|-en|швидкість;parken|—|паркуватися;bremsen|—|гальмувати;überholen|—|обганяти;abbiegen|—|повертати;die Fahrkarte|-n|проїзний квиток;der Fahrgast|¨-e|пасажир;der Bahnsteig|-e|перон`,
+"Техніка вдома":`der Fernseher|-|телевізор;der Computer|-|комп'ютер;das Handy|-s|мобільний;der Drucker|-|принтер;die Waschmaschine|-n|пральна машина;die Spülmaschine|-n|посудомийка;der Staubsauger|-|пилосос;die Mikrowelle|-n|мікрохвильовка;der Wecker|-|будильник;die Steckdose|-n|розетка;das Kabel|-|кабель;der Akku|-s|акумулятор;das Ladegerät|-e|зарядний пристрій;anschalten|—|вмикати;ausschalten|—|вимикати;funktionieren|—|працювати (про техніку);kaputt|—|зламаний;reparieren|—|ремонтувати;die Fernbedienung|-en|пульт;die Batterie|-n|батарейка`,
+"Послуги в місті":`die Reinigung|-en|хімчистка;der Friseursalon|-s|перукарня;die Bibliothek|-en|бібліотека;das Rathaus|¨-er|ратуша;das Museum|Museen|музей;das Theater|-|театр;das Kino|-s|кінотеатр;das Schwimmbad|¨-er|басейн;der Supermarkt|¨-e|супермаркет;die Bäckerei|-en|пекарня;die Metzgerei|-en|м'ясна крамниця;das Restaurant|-s|ресторан;das Café|-s|кав'ярня;die Kneipe|-n|пивна;der Kiosk|-e|кіоск;die Polizei|—|поліція;die Feuerwehr|-en|пожежна служба;der Notruf|-e|виклик екстрених служб;die Öffnungszeiten|—|години роботи;geschlossen|—|зачинено`,
+"Дім: дії й частини":`mieten|—|орендувати;vermieten|—|здавати в оренду;umziehen|—|переїжджати;klingeln|—|дзвонити у двері;öffnen|—|відчиняти;schließen|—|зачиняти;heizen|—|опалювати;lüften|—|провітрювати;bauen|—|будувати;streichen|—|фарбувати;hängen|—|вішати;stellen|—|ставити;legen|—|класти;der Aufzug|¨-e|ліфт;der Keller|-|підвал;der Balkon|-e|балкон;das Dach|¨-er|дах;die Decke|-n|стеля;der Flur|-e|коридор;das Erdgeschoss|-e|перший поверх`,
+"Характер":`nett|—|милий;lustig|—|веселий;traurig|—|сумний;streng|—|суворий;klug|—|розумний;dumm|—|дурний;mutig|—|сміливий;schüchtern|—|сором'язливий;sympathisch|—|симпатичний;langweilig|—|нудний;interessant|—|цікавий;aufgeregt|—|схвильований;glücklich|—|щасливий;unglücklich|—|нещасливий;ernst|—|серйозний;offen|—|відкритий;egoistisch|—|егоїстичний;sparsam|—|ощадливий;großzügig|—|щедрий;empfindlich|—|вразливий`,
+"Дієслова A2 ч.2":`ändern|—|змінювати;benutzen|—|користуватися;besuchen|—|відвідувати;bedeuten|—|означати;gehören|—|належати;passieren|—|траплятися;passen|—|пасувати;schenken|—|дарувати;sich setzen|—|сідати;zeigen|—|показувати;bestellen|—|замовляти;buchstabieren|—|вимовляти по літерах;wiegen|—|важити;mitbringen|—|приносити з собою;vorstellen|—|представляти;sich vorstellen|—|уявляти;sich verabreden|—|домовлятися про зустріч;absagen|—|скасовувати;verschieben|—|переносити;stattfinden|—|відбуватися`,
+"Ступінь і оцінка":`ziemlich|—|доволі;besonders|—|особливо;wirklich|—|справді;fast|—|майже;kaum|—|заледве;völlig|—|цілком;total|—|повністю;etwas|—|трохи;genug|—|достатньо;zu viel|—|занадто багато;mindestens|—|щонайменше;höchstens|—|щонайбільше;überhaupt nicht|—|зовсім ні;auf keinen Fall|—|у жодному разі;unbedingt|—|обов'язково;wahrscheinlich|—|імовірно;sicherlich|—|напевно;eventuell|—|можливо;ausgezeichnet|—|відмінно;furchtbar|—|жахливо`,
+"Свята й традиції":`das Fest|-e|свято;der Geburtstag|-e|день народження;Weihnachten|—|Різдво;Ostern|—|Великдень;Silvester|—|новорічна ніч;das Geschenk|-e|подарунок;die Einladung|-en|запрошення;der Gast|¨-e|гість;gratulieren|—|вітати;feiern|—|святкувати;einladen|—|запрошувати;der Brauch|¨-e|звичай;die Kerze|-n|свічка;der Kuchen|-|пиріг;die Torte|-n|торт;das Lied|-er|пісня;der Tanz|¨-e|танець;das Feuerwerk|-e|феєрверк;die Tradition|-en|традиція;der Feiertag|-e|святковий день`,
+"Кількість і порівняння":`mehr|—|більше;weniger|—|менше;gleich|—|однаково, зараз;dasselbe|—|те саме;anders|—|інакше;jeder|—|кожен;alle|—|усі;einige|—|деякі;mehrere|—|кілька;niemand|—|ніхто;jemand|—|хтось;nichts|—|нічого;alles|—|усе;beide|—|обидва;die Menge|-n|кількість;die Anzahl|-en|число, кількість;der Rest|-e|решта;der Teil|-e|частина;insgesamt|—|загалом;durchschnittlich|—|у середньому`});
+
+Object.assign(V.B1,{
+"Робота: процеси":`der Ablauf|¨-e|перебіг;der Prozess|-e|процес;die Planung|-en|планування;die Umsetzung|-en|впровадження;der Vorschlag|¨-e|пропозиція;die Rückmeldung|-en|зворотний зв'язок;die Verbesserung|-en|покращення;die Verzögerung|-en|затримка;der Aufwand|—|витрати зусиль;der Ertrag|¨-e|дохід, віддача;die Effizienz|—|ефективність;organisieren|—|організовувати;koordinieren|—|координувати;delegieren|—|делегувати;umsetzen|—|втілювати;überprüfen|—|перевіряти;abstimmen|—|узгоджувати;vereinbaren|—|домовлятися;beauftragen|—|доручати;die Zwischenbilanz|-en|проміжний підсумок`,
+"Фінанси":`das Einkommen|-|дохід;die Ausgabe|-n|видаток;die Einnahme|-n|надходження;das Vermögen|-|статок;die Rente|-n|пенсія;der Kredit|-e|кредит;die Zinsen|—|відсотки;die Rate|-n|платіж частинами;das Budget|-s|бюджет;die Gebühr|-en|збір, комісія;die Rücklage|-n|резерв;die Steuererklärung|-en|податкова декларація;sich leisten|—|дозволити собі;anlegen|—|вкладати кошти;abheben|—|знімати гроші;einzahlen|—|вносити гроші;kalkulieren|—|розраховувати;schulden|—|бути винним;finanziell|—|фінансовий;die Rechnung begleichen|—|погасити рахунок`,
+"Культура й мистецтво":`die Kunst|¨-e|мистецтво;das Gemälde|-|картина;die Ausstellung|-en|виставка;das Kunstwerk|-e|витвір мистецтва;die Aufführung|-en|вистава;die Bühne|-n|сцена;der Roman|-e|роман;das Gedicht|-e|вірш;der Autor|-en|автор;der Regisseur|-e|режисер;die Handlung|-en|сюжет;die Figur|-en|персонаж;das Werk|-e|твір;die Kritik|-en|критика;die Vorstellung|-en|вистава, уявлення;inszenieren|—|ставити виставу;darstellen|—|зображати;veranstalten|—|влаштовувати;kulturell|—|культурний;künstlerisch|—|мистецький`,
+"Дієслова B1 ч.2":`erwarten|—|очікувати;vermuten|—|припускати;behalten|—|залишати собі;erlauben|—|дозволяти;verbieten|—|забороняти;verlangen|—|вимагати;fordern|—|вимагати наполегливо;fördern|—|сприяти;verhindern|—|запобігати;ermöglichen|—|уможливлювати;erledigen|—|залагоджувати;bewältigen|—|долати;erreichen|—|досягати;verpassen|—|проґавити;betreffen|—|стосуватися;auffallen|—|впадати в око;gelingen|—|вдаватися;misslingen|—|не вдаватися;ausreichen|—|бути достатнім;entsprechen|—|відповідати`,
+"Іменники дії":`die Veränderung|-en|зміна;die Entstehung|-en|виникнення;die Erhöhung|-en|підвищення;die Senkung|-en|зниження;die Verteilung|-en|розподіл;die Einführung|-en|запровадження;die Abschaffung|-en|скасування;die Erweiterung|-en|розширення;die Beschränkung|-en|обмеження;die Durchführung|-en|проведення;die Bewertung|-en|оцінювання;die Beobachtung|-en|спостереження;die Erklärung|-en|пояснення;die Feststellung|-en|констатація;die Wiederholung|-en|повторення;die Zunahme|-n|приріст;die Abnahme|-n|спад;die Ausbreitung|-en|поширення;die Umstellung|-en|перехід;die Gestaltung|-en|оформлення`,
+"Стан і властивість":`zuständig|—|відповідальний за;bereit|—|готовий;fähig|—|здатний;abhängig|—|залежний;unabhängig|—|незалежний;verfügbar|—|доступний;nützlich|—|корисний;notwendig|—|необхідний;üblich|—|звичний;selbstverständlich|—|само собою зрозуміло;auffällig|—|помітний;deutlich|—|виразний;unklar|—|нечіткий;eindeutig|—|однозначний;vorsichtig|—|обережний;gründlich|—|ґрунтовний;flexibel|—|гнучкий;stabil|—|стабільний;knapp|—|обмежений;wesentlich|—|суттєвий`,
+"Спілкування":`das Gespräch|-e|розмова;die Auskunft|¨-e|довідка;die Mitteilung|-en|повідомлення;die Ankündigung|-en|оголошення;der Hinweis|-e|вказівка;die Bemerkung|-en|зауваження;der Ratschlag|¨-e|порада;die Zusage|-n|згода, обіцянка;die Absage|-n|відмова;das Versprechen|-|обіцянка;mitteilen|—|повідомляти;erwähnen|—|згадувати;betonen|—|наголошувати;wiedergeben|—|переказувати;sich äußern|—|висловлюватися;schweigen|—|мовчати;unterbrechen|—|перебивати;zuhören|—|слухати;nachfragen|—|перепитувати;klarstellen|—|прояснити`,
+"Час і зміни":`die Vergangenheit|—|минуле;die Gegenwart|—|теперішнє;die Zukunft|—|майбутнє;die Epoche|-n|епоха;der Zeitraum|¨-e|проміжок часу;der Zeitpunkt|-e|момент;die Dauer|—|тривалість;der Verlauf|¨-e|перебіг;der Rhythmus|Rhythmen|ритм;die Phase|-n|фаза;dauern|—|тривати;verlaufen|—|проходити;sich verändern|—|змінюватися;sich entwickeln|—|розвиватися;zunehmen|—|зростати;abnehmen|—|спадати;bleiben|—|лишатися;verschwinden|—|зникати;entstehen|—|виникати;wiederkehren|—|повертатися`,
+"Бюрократія":`das Amt|¨-er|відомство;die Sachbearbeiterin|-nen|референтка;der Schalter|-|віконце обслуговування;die Warteschlange|-n|черга;der Stempel|-|печатка;die Kopie|-n|копія;die Vollmacht|-en|довіреність;die Aufenthaltserlaubnis|-se|дозвіл на перебування;die Arbeitserlaubnis|-se|дозвіл на роботу;die Krankenkasse|-n|лікарняна каса;die Sozialversicherung|-en|соцстрахування;die Steuernummer|-n|податковий номер;einen Termin vereinbaren|—|призначити зустріч;einreichen|—|подавати документи;bearbeiten|—|опрацьовувати;genehmigen|—|схвалювати;verweigern|—|відмовляти;nachweisen|—|доводити;vorlegen|—|подати на розгляд;zuständig sein|—|бути компетентним`,
+"Споживання":`die Verpackung|-en|упаковка;das Etikett|-en|етикетка;die Haltbarkeit|—|термін придатності;die Zutat|-en|інгредієнт;die Portion|-en|порція;die Mahlzeit|-en|прийом їжі;die Ernährungsweise|-n|спосіб харчування;der Geschmack|¨-e|смак;die Qualität|-en|якість;die Auswahl|-en|вибір, асортимент;die Garantie|-n|гарантія;der Umtausch|—|обмін товару;die Beschwerde|-n|скарга;die Empfehlung|-en|рекомендація;probieren|—|куштувати;verbrauchen|—|споживати;wegwerfen|—|викидати;aufbewahren|—|зберігати;haltbar|—|тривкий;liefern|—|постачати`});
+
+Object.assign(V.B2,{
+"Політика ч.2":`die Koalition|-en|коаліція;die Opposition|-en|опозиція;der Kanzler|-|канцлер;das Parlament|-e|парламент;die Wahlbeteiligung|-en|явка на виборах;der Wahlkampf|¨-e|виборча кампанія;die Amtszeit|-en|термін повноважень;die Souveränität|—|суверенітет;das Bündnis|-se|союз;die Sanktion|-en|санкція;die Diplomatie|—|дипломатія;die Verhandlung|-en|переговори;der Konsens|-e|консенсус;die Spaltung|-en|розкол;die Propaganda|—|пропаганда;der Populismus|—|популізм;die Zivilgesellschaft|-en|громадянське суспільство;regieren|—|правити;verhandeln|—|вести переговори;der Staatshaushalt|-e|державний бюджет`,
+"Освіта й наука ч.2":`die Fakultät|-en|факультет;der Dozent|-en|викладач;die Dissertation|-en|дисертація;das Stipendium|Stipendien|стипендія;die Fachrichtung|-en|напрям;die Lehre|-n|вчення;der Lehrplan|¨-e|навчальний план;die Kompetenz|-en|компетенція;die Qualifikation|-en|кваліфікація;das Fachwissen|—|фахові знання;die Fortbildung|-en|післядипломне навчання;der Nachwuchs|—|молода зміна;die Begabung|-en|обдарування;die Förderung|-en|сприяння;akademisch|—|академічний;interdisziplinär|—|міждисциплінарний;theoretisch|—|теоретичний;praktisch|—|практичний;vermitteln|—|передавати знання;sich aneignen|—|засвоювати`,
+"Соціальні теми":`die Armut|—|бідність;der Wohlstand|—|добробут;die Ungleichheit|-en|нерівність;die Chancengleichheit|—|рівність можливостей;die Diskriminierung|-en|дискримінація;die Ausgrenzung|-en|маргіналізація;die Solidarität|—|солідарність;der Zusammenhalt|—|згуртованість;die Generation|-en|покоління;die Alterung|—|старіння населення;die Bevölkerung|-en|населення;die Geburtenrate|-n|народжуваність;der Wohnraum|¨-e|житловий фонд;die Obdachlosigkeit|—|бездомність;die Kriminalität|—|злочинність;die Prävention|-en|запобігання;die Fürsorge|—|опіка;benachteiligt|—|знедолений;gesellschaftlich|—|суспільний;der Missstand|¨-e|негаразд`,
+"Бізнес":`die Strategie|-n|стратегія;das Konzept|-e|концепція;die Zielgruppe|-n|цільова аудиторія;der Marktanteil|-e|частка ринку;die Marke|-n|бренд;der Vertrieb|-e|збут;die Beschaffung|-en|закупівля;die Logistik|—|логістика;die Rentabilität|—|рентабельність;die Fusion|-en|злиття;die Übernahme|-n|поглинання;der Aktionär|-e|акціонер;die Aktie|-n|акція;der Vorstand|¨-e|правління;die Bilanz|-en|баланс;der Jahresabschluss|¨-e|річний звіт;expandieren|—|розширюватися;optimieren|—|оптимізувати;skalieren|—|масштабувати;wirtschaftlich|—|економічний`,
+"Аргументація":`das Argument|-e|аргумент;die Begründung|-en|обґрунтування;der Einwand|¨-e|заперечення;die Gegenposition|-en|протилежна позиція;die Abwägung|-en|зважування;der Standpunkt|-e|погляд;die Stellungnahme|-n|заява, позиція;die Behauptung|-en|твердження;der Beleg|-e|підтвердження;das Beispiel|-e|приклад;die Einschätzung|-en|оцінка ситуації;das Fazit|-s|підсумок;begründen|—|обґрунтовувати;widersprechen|—|суперечити;entkräften|—|спростувати;veranschaulichen|—|унаочнити;gegenüberstellen|—|зіставляти;hervorbringen|—|породжувати;plausibel|—|правдоподібний;stichhaltig|—|переконливий`,
+"Дієслова B2 ч.2":`bewirken|—|спричиняти;verursachen|—|викликати;beitragen zu|—|сприяти чомусь;beeinträchtigen|—|погіршувати;begünstigen|—|сприяти;eindämmen|—|стримувати;bekämpfen|—|боротися з;gewährleisten|—|забезпечувати;sicherstellen|—|гарантувати;überwiegen|—|переважати;abweichen|—|відхилятися;übertreffen|—|перевершувати;nachlassen|—|слабшати;anhalten|—|тривати;aufweisen|—|мати ознаку;umfassen|—|охоплювати;betragen|—|становити кількість;sich belaufen auf|—|сягати суми;ausmachen|—|складати;zurückführen auf|—|зводити до причини`,
+"Прикметники B2 ч.2":`langfristig|—|довгостроковий;kurzfristig|—|короткостроковий;nachvollziehbar|—|обґрунтований;unzureichend|—|недостатній;übermäßig|—|надмірний;beträchtlich|—|значний;vernachlässigbar|—|незначний;entscheidend|—|вирішальний;wechselseitig|—|взаємний;einheitlich|—|однорідний;gezielt|—|цілеспрямований;systematisch|—|систематичний;drastisch|—|різкий;moderat|—|поміркований;anfällig|—|вразливий;robust|—|стійкий;transparent|—|прозорий;verlässlich|—|надійний;strittig|—|спірний;wegweisend|—|знаковий`,
+"Процеси й структури":`der Mechanismus|Mechanismen|механізм;die Struktur|-en|структура;das System|-e|система;der Rahmen|-|рамки;das Verhältnis|-se|співвідношення;die Dimension|-en|вимір;die Ebene|-n|рівень;der Bereich|-e|сфера;das Ausmaß|-e|масштаб;die Tendenz|-en|тенденція;die Dynamik|-en|динаміка;die Konstellation|-en|розстановка;der Faktor|-en|фактор;der Indikator|-en|показник;die Variable|-n|змінна;die Korrelation|-en|кореляція;die Ursache|-n|причина;die Auswirkung|-en|наслідок;die Wechselbeziehung|-en|взаємозв'язок;die Rückkopplung|-en|зворотний зв'язок`,
+"Медицина й технології":`die Impfung|-en|щеплення;die Epidemie|-n|епідемія;die Therapie|-n|терапія;der Eingriff|-e|втручання;die Genetik|—|генетика;die Zelle|-n|клітина;das Immunsystem|-e|імунна система;die Diagnostik|—|діагностика;die Digitalisierung|—|цифровізація;der Algorithmus|Algorithmen|алгоритм;die Automatisierung|—|автоматизація;die Datenbank|-en|база даних;die Verschlüsselung|-en|шифрування;der Datenschutz|—|захист даних;die Schnittstelle|-n|інтерфейс;die Innovation|-en|інновація;das Patent|-e|патент;die Anwendungsmöglichkeit|-en|можливість застосування;implementieren|—|впроваджувати;revolutionieren|—|революціонізувати`,
+"Прислівники B2":`vermutlich|—|імовірно;anscheinend|—|схоже, що;scheinbar|—|позірно;bekanntlich|—|як відомо;erfahrungsgemäß|—|за досвідом;erwartungsgemäß|—|як і очікувалося;überraschenderweise|—|на диво;bedauerlicherweise|—|на жаль;glücklicherweise|—|на щастя;interessanterweise|—|цікаво, що;üblicherweise|—|зазвичай;keinesfalls|—|у жодному разі;jedenfalls|—|у всякому разі;weitaus|—|набагато;nämlich|—|а саме;gegebenenfalls|—|за потреби;daraufhin|—|після чого;infolgedessen|—|унаслідок цього;stattdessen|—|натомість;hierbei|—|при цьому`});
+
+Object.assign(V.C1,{
+"Філософія й теорія":`die Erkenntnistheorie|-n|теорія пізнання;die Ontologie|-n|онтологія;die Ethik|—|етика;die Ästhetik|—|естетика;der Determinismus|—|детермінізм;die Kausalität|—|каузальність;die Subjektivität|—|суб'єктивність;die Objektivität|—|об'єктивність;die Dialektik|—|діалектика;das Paradigma|Paradigmen|парадигма;die Kontingenz|—|випадковість буття;die Transzendenz|—|трансцендентність;die Immanenz|—|іманентність;die Legitimation|-en|легітимація;die Rechtfertigung|-en|виправдання;der Sinnzusammenhang|¨-e|смисловий зв'язок;begrifflich|—|понятійний;normativ|—|нормативний;deskriptiv|—|описовий;metaphysisch|—|метафізичний`,
+"Дієслова високого стилю":`erörtern|—|розглядати докладно;bekunden|—|засвідчувати;anmuten|—|справляти враження;verweisen auf|—|відсилати до;obliegen|—|належати до обов'язків;bedürfen|—|потребувати (Gen.);gebieten|—|веліти;entbehren|—|бути позбавленим;verharren|—|застигати;anhaften|—|бути притаманним;innewohnen|—|бути властивим;widerfahren|—|спіткати;ereilen|—|настигнути;durchdringen|—|пронизувати;entfalten|—|розгортати;bewahren|—|зберігати;vermögen|—|бути спроможним;zeitigen|—|давати результат;hegen|—|плекати;walten|—|панувати`,
+"Ділова риторика":`die Tagesordnung|-en|порядок денний;das Protokoll|-e|протокол;die Beschlussfassung|-en|ухвалення рішення;die Zielsetzung|-en|постановка цілей;die Priorisierung|-en|розставлення пріоритетів;der Handlungsbedarf|—|потреба діяти;die Rahmenbedingungen|—|рамкові умови;der Sachzwang|¨-e|об'єктивний примус;die Federführung|—|провідна роль;die Abstimmungsrunde|-n|раунд узгодження;der Meilenstein|-e|віха;das Zwischenergebnis|-se|проміжний результат;die Eskalation|-en|ескалація;die Deeskalation|-en|деескалація;der Kompromissvorschlag|¨-e|компромісна пропозиція;unterbreiten|—|подавати пропозицію;erwirken|—|домогтися;durchsetzen|—|впроваджувати;abwickeln|—|проводити, згортати;beschließen|—|ухвалювати`,
+"Сполучники C1":`insoweit|—|остільки;wenngleich|—|хоча й;obgleich|—|хоча;wobei|—|причому;wodurch|—|завдяки чому;wonach|—|згідно з чим;woraufhin|—|після чого;sodann|—|потім;dahingehend|—|у тому сенсі;insofern als|—|остільки, оскільки;umso mehr als|—|тим паче що;geschweige denn|—|не кажучи вже про;ungeachtet|—|незважаючи на;kraft|—|силою чого;zwecks|—|з метою;mangels|—|через відсутність;anhand|—|на основі;mittels|—|за допомогою;seitens|—|з боку;binnen|—|протягом`,
+"Емоційні відтінки":`die Bestürzung|—|приголомшення;die Empörung|—|обурення;die Entrüstung|—|моральне обурення;die Zerknirschung|—|розкаяння;die Beklommenheit|—|тривожна скутість;die Euphorie|—|ейфорія;die Melancholie|—|меланхолія;die Verbitterung|—|озлобленість;die Ergriffenheit|—|зворушення;die Fassungslosigkeit|—|розгубленість;die Erleichterung|-en|полегшення;die Genugtuung|—|задоволення від справедливості;die Wehrlosigkeit|—|беззахисність;die Zärtlichkeit|-en|ніжність;die Verwunderung|—|подив;überwältigt|—|приголомшений;fassungslos|—|ошелешений;zerknirscht|—|сповнений каяття;ergriffen|—|зворушений;beschwingt|—|піднесений`,
+"Стійкі порівняння":`wie aus dem Ei gepellt|—|з голочки;wie ein Buch reden|—|говорити без упину;wie die Faust aufs Auge|—|як п'яте колесо;wie am Schnürchen|—|як по маслу;wie ein Fisch im Wasser|—|як риба у воді;wie auf Nadeln sitzen|—|сидіти як на голках;wie vom Erdboden verschluckt|—|як крізь землю провалився;wie ein Elefant im Porzellanladen|—|як слон у посудній крамниці;wie Pech und Schwefel|—|нерозлийвода;wie ein rotes Tuch|—|як червона ганчірка;ein Dorn im Auge sein|—|бути більмом на оці;auf die lange Bank schieben|—|відкладати в довгий ящик;das Kind mit dem Bade ausschütten|—|перегнути палицю;Perlen vor die Säue werfen|—|метати бісер;reinen Wein einschenken|—|сказати правду;die Kirche im Dorf lassen|—|не перебільшувати;alle Hebel in Bewegung setzen|—|задіяти всі важелі;auf Nummer sicher gehen|—|діяти напевно;den Bock zum Gärtner machen|—|пустити цапа в город;ins Blaue hinein|—|навмання`,
+"Наукова мова":`die Fragestellung|-en|постановка питання;der Untersuchungsgegenstand|¨-e|об'єкт дослідження;die Stichprobe|-n|вибірка;die Signifikanz|—|статистична значущість;die Validität|—|валідність;die Reliabilität|—|надійність;die Kausalannahme|-n|припущення про причинність;der Befund|-e|результат обстеження;die Datenerhebung|-en|збір даних;die Auswertung|-en|опрацювання даних;die Replikation|-en|відтворення дослідження;der Forschungsstand|—|стан дослідження;die Operationalisierung|-en|операціоналізація;die Verzerrung|-en|викривлення;methodisch|—|методичний;quantitativ|—|кількісний;qualitativ|—|якісний;evident|—|очевидний;hypothetisch|—|гіпотетичний;fundiert|—|обґрунтований`,
+"Іронія й критика":`die Anspielung|-en|натяк;der Seitenhieb|-e|шпилька;der Zynismus|—|цинізм;die Ironie|-n|іронія;der Sarkasmus|—|сарказм;die Polemik|-en|полеміка;die Schmähung|-en|паплюження;die Herabsetzung|-en|приниження;die Blamage|-n|ганьба;der Vorwurf|¨-e|докір;die Rüge|-n|догана;beschönigen|—|прикрашати;bloßstellen|—|виставляти на посміх;anprangern|—|таврувати;geißeln|—|бичувати;spotten|—|глузувати;sticheln|—|шпигати словами;süffisant|—|самовдоволено-іронічний;abschätzig|—|зневажливий;hämisch|—|зловтішний`,
+"Історія й пам'ять":`die Zäsur|-en|злам, цезура;der Umbruch|¨-e|перелом;die Wende|-n|поворот;der Aufstand|¨-e|повстання;die Besatzung|-en|окупація;der Widerstand|¨-e|опір;die Befreiung|-en|визволення;die Vertreibung|-en|вигнання;die Aufarbeitung|-en|переосмислення минулого;die Erinnerungskultur|-en|культура пам'яті;das Vermächtnis|-se|спадок;die Kontinuität|-en|тяглість;der Bruch|¨-e|розрив;die Verfolgung|-en|переслідування;der Völkermord|-e|геноцид;die Wiedergutmachung|-en|відшкодування;das Zeitzeugnis|-se|свідчення очевидця;kollektiv|—|колективний;historisch|—|історичний;geprägt von|—|позначений чимось`,
+"Розмовні звороти ч.2":`das ist mir schnuppe|—|мені байдуже;jetzt geht's los|—|ну почалося;da ist der Wurm drin|—|тут щось не так;das kannst du knicken|—|можеш забути;mir platzt der Kragen|—|у мене урвався терпець;ich bin platt|—|я в шоці;das ist ja der Hammer|—|оце так;na und?|—|і що з того?;von wegen!|—|та де там!;das war's|—|на цьому все;ich halt's nicht aus|—|я цього не витримую;lass gut sein|—|та годі вже;mach mal halblang|—|не перебільшуй;das hat gesessen|—|це влучило;Butter bei die Fische|—|переходь до суті;das kommt nicht in die Tüte|—|про це й мови нема;der Groschen ist gefallen|—|нарешті дійшло;auf gut Glück|—|навмання;klipp und klar|—|чітко і ясно;in null Komma nichts|—|миттю`});
+
+/* ================= GRAMMAR ================= */
+const G = {A1:[],A2:[],B1:[],B2:[],C1:[]};
+const r=(lv,t,tag,txt,ex,warn)=>G[lv].push({t,tag,txt,ex,warn});
+
+r("A1","Читання й вимова","Фонетика","Німецька читається за правилами — вивчивши їх раз, ти прочитаєш будь-яке слово. Ключове: <b>ei</b> = «ай», <b>ie</b> = «і», <b>eu/äu</b> = «ой», <b>sch</b> = «ш», <b>st-/sp-</b> на початку = «шт-/шп-», <b>v</b> = «ф», <b>w</b> = «в», <b>z</b> = «ц», <b>ch</b> після a,o,u = «х», після e,i = м'яке «хь».",[["Ich heiße Eva und spiele Klavier.","Іх ХАЙсе Ева унт ШПІле Клавір."],["Straße, Schule, sieben, teuer","штрасе, шуле, зібен, тойер"]],"Наголос майже завжди на першому складі кореня. У префіксах be-, ge-, ver-, ent- наголос на них НЕ падає: verSTEhen.");
+r("A1","Три роди й артикль","Іменник","Кожен іменник має рід: <span class='k-der'>der</span> (чол.), <span class='k-die'>die</span> (жін.), <span class='k-das'>das</span> (сер.). Рід не збігається з українським і його не можна вгадати з логіки — тому слово вчиться ЛИШЕ разом з артиклем. Усі іменники пишуться з великої літери.",[["das Mädchen","дівчинка — середнього роду, попри стать"],["die Sonne / der Mond","сонце жіноче, місяць чоловічий — навпаки до української"]],"Множина завжди die: die Tische, die Frauen, die Kinder.");
+r("A1","Präsens: дієвідміна","Дієслово","Основа + закінчення: ich -e, du -st, er/sie/es -t, wir -en, ihr -t, sie/Sie -en. У дієслів на -a-, -e- в корені 2 і 3 особа однини змінюють голосну: fahren → du fährst, sprechen → du sprichst, lesen → du liest.",[["ich lerne, du lernst, er lernt, wir lernen","я вчу, ти вчиш, він вчить, ми вчимо"],["ich fahre, du fährst, er fährt","я їду, ти їдеш, він їде"]],"sein і haben неправильні: ich bin/du bist/er ist; ich habe/du hast/er hat. Вивчити напам'ять першими.");
+r("A1","Дієслово на другому місці","Порядок слів","У розповідному реченні дієслово стоїть СУВОРО на другому місці — незалежно від того, що на першому. Якщо речення починається з обставини, підмет переходить після дієслова.",[["Ich gehe heute ins Kino.","Я йду сьогодні в кіно."],["Heute gehe ich ins Kino.","Сьогодні йду я в кіно."]],"Це найчастіша помилка слов'ян: «Heute ich gehe» — неправильно. Дієслово не зрушується ніколи.");
+r("A1","Питання","Порядок слів","W-питання: питальне слово + дієслово + підмет. Так-ні питання: дієслово на першому місці. Питальні слова: wer (хто), was (що), wo (де), wohin (куди), wann (коли), warum (чому), wie (як), wie viel (скільки), welcher (який).",[["Wo wohnst du?","Де ти живеш?"],["Kommst du mit?","Ти йдеш зі мною?"]]);
+r("A1","Akkusativ","Відмінок","Знахідний — прямий додаток (кого? що?). Змінюється ТІЛЬКИ чоловічий рід: der → den, ein → einen. Жіночий, середній і множина лишаються як у називному.",[["Ich sehe den Mann.","Я бачу чоловіка."],["Ich kaufe einen Tisch, eine Lampe, ein Buch.","Купую стіл, лампу, книжку."]],"Прийменники завжди з Akkusativ: durch, für, gegen, ohne, um, bis.");
+r("A1","Модальні дієслова","Дієслово","können (могти), müssen (мусити), wollen (хотіти), sollen (мати за обов'язком), dürfen (мати дозвіл), möchten (хотіла б). Модальне стоїть на другому місці, а смислове дієслово — в інфінітиві в самому кінці речення.",[["Ich kann heute nicht kommen.","Я сьогодні не можу прийти."],["Du musst mehr Deutsch sprechen.","Ти мусиш більше говорити німецькою."]],"В однині модальні змінюють голосну і НЕ мають -e/-t: ich kann, du kannst, er kann.");
+r("A1","nicht чи kein","Заперечення","<b>kein</b> заперечує іменник з неозначеним артиклем або без артикля. <b>nicht</b> заперечує все інше — дієслово, прикметник, обставину, а також іменник з означеним артиклем чи присвійним.",[["Ich habe kein Auto.","У мене немає машини."],["Das ist nicht mein Auto.","Це не моя машина."]],"nicht стоїть у кінці речення, але ПЕРЕД: інфінітивом, прикметником, місцем: Ich gehe nicht ins Kino.");
+r("A1","Присвійні займенники","Займенник","mein, dein, sein (його), ihr (її), unser, euer, ihr (їхній), Ihr (Ваш). Відмінюються як ein/kein: mein Vater, meine Mutter, mein Kind, meine Eltern.",[["Das ist meine Schwester.","Це моя сестра."],["Ich sehe meinen Bruder.","Я бачу свого брата."]],"Німецька не має слова «свій» — завжди повторюється потрібний займенник.");
+r("A1","Відокремлювані префікси","Дієслово","Префікси an-, auf-, aus-, ein-, mit-, zu-, vor-, ab-, weg- відокремлюються і йдуть у кінець речення. Наголос падає на префікс — це і є ознака відокремлюваності.",[["Der Zug fährt um acht ab.","Потяг відходить о восьмій."],["Ich stehe jeden Tag um sechs auf.","Я встаю щодня о шостій."]],"Невідокремлювані: be-, ge-, er-, ver-, zer-, ent-, emp-, miss-. Вони ненаголошені: verstehen → ich verstehe.");
+
+r("A2","Dativ","Відмінок","Давальний — непрямий додаток (кому?). der→dem, die→der, das→dem, множина→den + -n до іменника. Дієслова, що вимагають Dativ: helfen, danken, gefallen, gehören, antworten, passen, schmecken.",[["Ich helfe dem Kind.","Я допомагаю дитині."],["Das Buch gehört meiner Schwester.","Книга належить моїй сестрі."]],"Прийменники завжди з Dativ: aus, bei, mit, nach, seit, von, zu, gegenüber. Вивчити як пісеньку.");
+r("A2","Wechselpräpositionen","Прийменник","Дев'ять прийменників беруть два відмінки: in, an, auf, über, unter, vor, hinter, neben, zwischen. <b>Wohin?</b> (рух, куди) → Akkusativ. <b>Wo?</b> (місце, де) → Dativ.",[["Ich gehe in die Küche.","Іду на кухню. (куди → Akk.)"],["Ich bin in der Küche.","Я на кухні. (де → Dat.)"]],"Питання «куди» ставиться до дії, а не до дієслова руху: Ich hänge das Bild an die Wand.");
+r("A2","Perfekt","Час","Головне минуле в розмові: haben/sein + Partizip II у кінці. Слабкі: ge- + основа + -t (machen → gemacht). Сильні: ge- + основа + -en, часто зі зміною голосної (sprechen → gesprochen).",[["Ich habe das Buch gelesen.","Я прочитала книгу."],["Wir sind nach Berlin gefahren.","Ми поїхали до Берліна."]],"sein беруть дієслова руху й зміни стану: gehen, fahren, kommen, laufen, aufstehen, einschlafen, sterben, sein, bleiben, werden.");
+r("A2","Präteritum","Час","Письмове минуле. У розмові вживається лише для sein, haben і модальних — решту витісняє Perfekt. war, hatte, konnte, musste, wollte, sollte, durfte.",[["Ich war gestern müde.","Я вчора була втомлена."],["Wir hatten keine Zeit.","У нас не було часу."]],"«Ich war» — правильно; «ich bin gewesen» теж можливо, але звучить важче.");
+r("A2","Підрядні речення","Синтаксис","Після weil, dass, wenn, ob, obwohl, damit дієслово йде в САМИЙ КІНЕЦЬ. Це другий великий поріг після «дієслово на другому місці».",[["Ich lerne Deutsch, weil ich in Wien arbeiten will.","Вчу німецьку, бо хочу працювати у Відні."],["Ich weiß nicht, ob er kommt.","Не знаю, чи він прийде."]],"Якщо підрядне стоїть першим, головне починається з дієслова: Weil es regnet, bleibe ich zu Hause.");
+r("A2","Ступені порівняння","Прикметник","-er і -sten: klein → kleiner → am kleinsten. Односкладові часто з умлаутом: alt → älter → am ältesten. Неправильні: gut/besser/am besten, viel/mehr/am meisten, gern/lieber/am liebsten, hoch/höher, nah/näher.",[["Berlin ist größer als Wien.","Берлін більший за Відень."],["Sie spricht am besten.","Вона говорить найкраще."]],"Порівняння: «як» = wie (so groß wie), «ніж» = als (größer als).");
+r("A2","Зворотні дієслова","Дієслово","sich freuen, sich waschen, sich interessieren. Зворотний займенник в Akkusativ: mich, dich, sich, uns, euch, sich. Якщо є прямий додаток — зворотний стає Dativ: ich wasche mir die Hände.",[["Ich freue mich auf den Sommer.","Чекаю з нетерпінням на літо."],["Setz dich, bitte.","Сідай, будь ласка."]],"Список зворотних у німецькій і українській не збігається: sich erholen, але «відпочивати» без -ся.");
+r("A2","Наказовий спосіб","Дієслово","du: основа без закінчення (Komm!, Geh!, Sprich!). ihr: форма як у теперішньому (Kommt!). Sie: інфінітив + Sie (Kommen Sie!).",[["Mach die Tür zu!","Зачини двері!"],["Warten Sie bitte einen Moment.","Зачекайте, будь ласка, хвилинку."]],"Ввічливість додається словом bitte й часом mal: Komm mal her.");
+r("A2","Відмінювання прикметника: початок","Прикметник","Прикметник перед іменником завжди має закінчення. Після означеного артикля в Nominativ: -e для всіх родів, -en у множині; в Akkusativ чол. роду: -en.",[["der große Tisch, die kleine Lampe, das neue Buch","великий стіл, маленька лампа, нова книга"],["Ich sehe den großen Tisch.","Я бачу великий стіл."]],"Прикметник ПІСЛЯ іменника не змінюється ніколи: Der Tisch ist groß.");
+r("A2","Порядок додатків","Синтаксис","Правило: Dativ перед Akkusativ, АЛЕ якщо додаток — займенник, він іде першим. Обставини йдуть у порядку: час → причина → спосіб → місце (TeKaMoLo).",[["Ich gebe dem Kind das Buch.","Я даю дитині книгу."],["Ich gebe es dem Kind.","Я даю її дитині."]],"Займенник завжди тисне вліво — це проста механіка, її досить запам'ятати раз.");
+
+r("B1","Відмінювання прикметника: система","Прикметник","Три схеми. <b>Після означеного артикля</b> (der/die/das) — слабка: -e / -en. <b>Після ein/kein/mein</b> — мішана: прикметник бере закінчення артикля там, де сам артикль його не показує (ein guter Mann, ein gutes Kind). <b>Без артикля</b> — сильна: прикметник бере закінчення означеного артикля (guter Wein, kaltes Wasser).",[["ein guter Freund / der gute Freund / guter Freund","добрий друг у трьох схемах"],["mit kaltem Wasser","холодною водою"]],"Логіка одна: рід і відмінок мають бути показані хоч раз. Якщо їх показав артикль — прикметник розслабляється (-e/-en).");
+r("B1","Genitiv","Відмінок","Родовий — належність. der/das → des + -s (des Mannes, des Kindes), die → der. Прийменники: während, wegen, trotz, statt, innerhalb, außerhalb.",[["das Auto meines Bruders","автомобіль мого брата"],["während des Krieges","під час війни"]],"У розмові Genitiv часто замінюють на von + Dativ: das Auto von meinem Bruder. Це нормально усно, але не в письмі.");
+r("B1","Konjunktiv II","Спосіб","Ввічливість, побажання, нереальне. Найчастіші: wäre, hätte, könnte, würde, sollte, müsste. Для більшості дієслів — würde + інфінітив.",[["Könnten Sie mir bitte helfen?","Чи могли б Ви мені допомогти?"],["Wenn ich Zeit hätte, würde ich reisen.","Якби я мала час, я б подорожувала."]],"Без Konjunktiv II німецька звучить різко. Це не «додаткова тема», а базова ввічливість.");
+r("B1","Relativsätze","Синтаксис","Підрядні означальні. Займенник = артикль іменника, але Dativ множини = denen, Genitiv = dessen/deren. Відмінок визначається роллю в ПІДРЯДНОМУ реченні, а рід — словом у головному.",[["Der Mann, der dort steht, ist mein Chef.","Чоловік, який там стоїть, — мій начальник."],["Die Frau, mit der ich sprach, ist Ärztin.","Жінка, з якою я говорила, — лікарка."]],"Дієслово в кінці підрядного, кома обов'язкова.");
+r("B1","Passiv Präsens","Стан","werden + Partizip II. Виконавець вводиться через von (особа) або durch (засіб). Пасив вживається там, де дія важливіша за виконавця — у німецькій набагато частіше, ніж в українській.",[["Das Haus wird renoviert.","Будинок ремонтують."],["Der Brief wurde von ihr geschrieben.","Лист був написаний нею."]],"Не плутай: «ist renoviert» — стан (уже відремонтований), «wird renoviert» — процес.");
+r("B1","Інфінітив із zu","Синтаксис","Після більшості дієслів, прикметників і іменників інфінітив іде з zu в кінці: Ich habe vor, nach Wien zu ziehen. У відокремлюваних дієсловах zu вставляється всередину: aufzustehen.",[["Es ist wichtig, jeden Tag zu üben.","Важливо вправлятися щодня."],["Ich versuche, früher aufzustehen.","Намагаюся вставати раніше."]],"Без zu — після модальних, sehen, hören, lassen, gehen: Ich gehe schwimmen.");
+r("B1","Дієслова з фіксованими прийменниками","Лексика","Прийменник при дієслові не перекладається логічно — його треба вчити разом із дієсловом: warten AUF, denken AN, sich freuen ÜBER. Питання утворюється через wo(r)- : Worauf wartest du?",[["Ich denke oft an dich.","Я часто думаю про тебе."],["Worüber sprecht ihr?","Про що ви говорите?"]],"Замість «про це» кажуть darüber, «на це» — darauf. Ця конструкція обов'язкова, а не стилістична.");
+r("B1","Часові підрядні","Синтаксис","<b>als</b> — одна подія в минулому. <b>wenn</b> — повторювана дія або майбутнє. <b>nachdem</b> — після того як (з зсувом часу). <b>bevor</b>, <b>während</b>, <b>seitdem</b>, <b>bis</b>.",[["Als ich ein Kind war, wohnte ich in Lwiw.","Коли я була дитиною, жила у Львові."],["Immer wenn es regnet, bleibe ich zu Hause.","Щоразу коли йде дощ, я лишаюся вдома."]],"Плутанина als/wenn — класична помилка. Одноразове минуле = завжди als.");
+r("B1","Plusquamperfekt","Час","Передминулий: hatte/war + Partizip II. Вживається майже виключно з nachdem, щоб показати, що одна подія була раніше за іншу.",[["Nachdem ich gegessen hatte, ging ich spazieren.","Поївши, я пішла гуляти."],["Sie war schon gegangen, als ich ankam.","Вона вже пішла, коли я прибула."]]);
+r("B1","Futur I","Час","werden + інфінітив. Але майбутнє в німецькій частіше виражають теперішнім часом з обставиною. Futur I радше означає припущення або тверде рішення.",[["Morgen fahre ich nach Wien.","Завтра я їду до Відня. (звичайне майбутнє)"],["Er wird wohl krank sein.","Він, мабуть, хворий. (припущення)"]]);
+
+r("B2","Passiv у всіх часах","Стан","Präteritum: wurde + P.II. Perfekt: ist + P.II + worden. Plusquamperfekt: war + P.II + worden. З модальним: muss … werden.",[["Das Problem ist gelöst worden.","Проблему було розв'язано."],["Der Antrag muss bis Freitag eingereicht werden.","Заяву треба подати до п'ятниці."]],"У Perfekt-пасиві саме worden, а не geworden. Це маркер рівня.");
+r("B2","Passiversatzformen","Стан","Замінники пасиву в діловій мові: <b>sein + zu + Inf.</b> (необхідність), <b>sich lassen + Inf.</b> (можливість), <b>-bar</b> (властивість), <b>man</b>.",[["Das Problem lässt sich lösen.","Проблему можна розв'язати."],["Die Regeln sind einzuhalten.","Правил слід дотримуватися."]]);
+r("B2","Konjunktiv I","Спосіб","Непряма мова в пресі та звітах: er sei, er habe, er komme. Показує, що це чужі слова і мовець за них не ручається.",[["Er sagte, er sei krank.","Він сказав, що хворий."],["Sie behauptet, sie habe nichts gewusst.","Вона стверджує, що нічого не знала."]],"Якщо форма Konjunktiv I збігається з індикативом, беруть Konjunktiv II: sie hätten замість sie haben.");
+r("B2","Partizip як означення","Синтаксис","Partizip I (-end) = активна одночасна дія; Partizip II = пасивна завершена. Стоять перед іменником і відмінюються як прикметники — основа німецького письмового стилю.",[["das lachende Kind","дитина, яка сміється"],["die gestern getroffene Entscheidung","рішення, ухвалене вчора"]],"Це стискає ціле підрядне в одне означення — тому преса ним рясніє.");
+r("B2","Nominalstil","Стиль","У формальній німецькій дієслова перетворюють на іменники: prüfen → die Prüfung, entscheiden → die Entscheidung. Речення стає щільнішим і сухішим.",[["nach der Prüfung der Unterlagen","після перевірки документів"],["aufgrund der gestiegenen Kosten","через зрослі витрати"]],"Для іспиту треба вміти в обидва боки: розгортати номінальне в дієслівне і навпаки.");
+r("B2","n-Deklination","Іменник","Група іменників чол. роду бере -n/-en в усіх відмінках крім Nominativ: der Junge/den Jungen, der Kunde, der Kollege, der Mensch, der Nachbar, der Student, der Praktikant, der Herr.",[["Ich kenne den Studenten.","Я знаю цього студента."],["Ich helfe dem Kollegen.","Я допомагаю колезі."]],"Помилка «Ich kenne den Student» одразу видає рівень нижче B2.");
+r("B2","Konnektoren двоскладові","Синтаксис","zwar … aber, entweder … oder, weder … noch, nicht nur … sondern auch, je … desto. Кожен впливає на порядок слів по-своєму: після je йде дієслово в кінець, після desto — на друге місце.",[["Je mehr ich lerne, desto besser verstehe ich.","Чим більше вчу, тим краще розумію."],["Er ist zwar müde, aber er arbeitet weiter.","Він хоч і втомлений, але працює далі."]]);
+r("B2","Керування дієслів і прикметників","Лексика","На B2 керування треба знати системно, включно з прикметниками: stolz auf, abhängig von, interessiert an, verantwortlich für, zufrieden mit, bereit zu.",[["Ich bin stolz auf dich.","Я тобою пишаюся."],["Das hängt von vielen Faktoren ab.","Це залежить від багатьох факторів."]]);
+r("B2","Заперечні й обмежувальні звороти","Синтаксис","kaum (заледве), keineswegs, nicht einmal, außer, es sei denn, geschweige denn. Використовуються для точних нюансів у аргументації.",[["Er hat kaum etwas gesagt.","Він майже нічого не сказав."],["Ich komme, es sei denn, es regnet.","Я прийду, хіба що піде дощ."]]);
+r("B2","Порядок слів у складному реченні","Синтаксис","У підрядному з модальним чи перфектом допоміжне дієслово йде в самий кінець. При подвійному інфінітиві — навпаки, воно виходить наперед.",[["…, weil ich es nicht machen konnte.","…бо я не могла цього зробити."],["…, weil ich es nicht habe machen können.","…бо я не змогла цього зробити."]],"Друга конструкція (Ersatzinfinitiv) — маркер C1.");
+
+r("C1","Konjunktiv II минулого","Спосіб","Нереальне в минулому: hätte/wäre + Partizip II. З модальним — подвійний інфінітив: hätte machen können. Це основа висловлення жалю й докору.",[["Wenn ich das gewusst hätte, wäre ich nicht gekommen.","Якби я це знала, я б не прийшла."],["Du hättest mich anrufen können.","Ти міг би мені зателефонувати."]],"Без цієї форми неможливо говорити про альтернативне минуле — а це половина дорослих розмов.");
+r("C1","Funktionsverbgefüge","Стиль","Стійкі зв'язки «дієслово + іменник», де значення несе іменник: in Betracht ziehen, zur Verfügung stellen, Kritik üben, eine Entscheidung treffen. Ознака зрілого письмового стилю.",[["Wir müssen diese Option in Betracht ziehen.","Ми маємо розглянути цей варіант."],["Der Bericht steht zur Verfügung.","Звіт доступний."]],"Замінити їх простим дієсловом можна — але текст одразу впаде до B1.");
+r("C1","Modalpartikeln","Розмова","doch, ja, mal, eben, halt, wohl, denn, schon, ruhig. Не перекладаються словниково — передають ставлення мовця. Саме вони роблять мову живою, а їх відсутність — «правильною, але роботизованою».",[["Komm doch mal vorbei!","Та заскоч якось!"],["Das ist eben so.","Ну так уже воно є."]],"Вчити тільки з контексту й інтонацією. Ніколи не перекладай їх окремо.");
+r("C1","Складні атрибути","Синтаксис","Розгорнуте означення перед іменником: der von der Regierung im letzten Jahr beschlossene Plan. Читати треба з кінця: спершу іменник, потім означення.",[["die in den letzten Jahren stark gestiegenen Preise","ціни, які сильно зросли за останні роки"],["ein kaum zu lösendes Problem","проблема, яку заледве можна розв'язати"]],"Конструкція zu + Partizip I означає пасивну можливість або необхідність.");
+r("C1","Стилістичні регістри","Стиль","Одна думка звучить по-різному: розмовно (Das nervt), нейтрально (Das stört mich), формально (Dies stellt eine erhebliche Beeinträchtigung dar). На C1 оцінюють саме вміння перемикатися.",[["Ich hab keinen Bock.","Мені не хочеться. (розм.)"],["Ich sehe davon ab.","Я від цього утримаюся. (форм.)"]]);
+r("C1","Синонімія й нюанси","Лексика","Ряди на кшталт sagen — behaupten — einräumen — beteuern — andeuten розрізняються не значенням, а позицією мовця. На C1 помилка вибору синоніма важча за граматичну.",[["Er räumte ein, dass er Fehler gemacht hatte.","Він визнав, що припустився помилок."],["Er unterstellte ihr böse Absicht.","Він приписав їй злий намір."]]);
+r("C1","Емфатичний порядок слів","Синтаксис","Винесення елемента на перше місце змінює акцент. Також Inversion після ausgerechnet, kaum, nur, erst, nicht nur — після них іде дієслово.",[["Kaum war ich zu Hause, klingelte das Telefon.","Щойно я була вдома, задзвонив телефон."],["Nur so lässt sich das erklären.","Тільки так це можна пояснити."]]);
+r("C1","Номіналізація і денаміналізація","Стиль","Уміння згорнути підрядне в іменникову групу і навпаки — головна вправа C1-письма: «weil die Kosten gestiegen sind» → «wegen der gestiegenen Kosten».",[["nach Abschluss der Verhandlungen","після завершення переговорів"],["trotz wiederholter Aufforderung","попри неодноразову вимогу"]]);
+r("C1","Ідіоматика","Лексика","Стійкі вирази не розкладаються на слова: den Nagel auf den Kopf treffen, ins Fettnäpfchen treten. На C1 очікується їх розуміння в мовленні і помірне вживання у власному.",[["Damit hast du den Nagel auf den Kopf getroffen.","Ти влучила в саму суть."],["Er wirft die Flinte ins Korn.","Він опускає руки."]],"Помірність важлива: надлишок ідіом звучить неприродно, як у підручнику.");
+r("C1","Текстова зв'язність","Стиль","На C1 оцінюють не речення, а текст: логічні переходи (dementsprechend, gleichwohl, insofern), тематична прогресія, уникнення повторів через синоніми й займенники.",[["Insofern lässt sich festhalten, dass …","Остільки можна констатувати, що …"],["Gleichwohl bleibt fraglich, ob …","Попри це лишається сумнівним, чи …"]]);
+
+r("A1","Особові займенники","Займенник","ich, du, er/sie/es, wir, ihr, sie/Sie. В Akkusativ: mich, dich, ihn, sie, es, uns, euch, sie. В Dativ: mir, dir, ihm, ihr, ihm, uns, euch, ihnen. <b>Sie</b> з великої літери — ввічлива форма до незнайомих і в установах.",[["Kannst du mir helfen?","Можеш мені допомогти?"],["Ich sehe ihn nicht.","Я його не бачу."]],"До людей старших чи незнайомих — завжди Sie, поки вам не запропонують перейти на du.");
+r("A1","es gibt","Конструкція","«Є, існує» передається через es gibt + Akkusativ — незалежно від числа. Це одна з найчастіших конструкцій у мові.",[["Es gibt hier ein gutes Restaurant.","Тут є хороший ресторан."],["Es gibt keine Probleme.","Проблем немає."]],"Не «hier ist ein Restaurant» у значенні «тут є» — це буде «ось ресторан».");
+r("A1","Множина іменників","Іменник","П'ять типів: -e (der Tisch/Tische), -er (das Kind/Kinder), -n/-en (die Frau/Frauen), -s (das Auto/Autos), без змін (das Fenster/Fenster). Часто додається умлаут. Множину треба вчити разом зі словом.",[["ein Buch → zwei Bücher","одна книга → дві книги"],["die Frau → die Frauen","жінка → жінки"]],"Артикль множини завжди die, а в Dativ множини іменник ще й отримує -n: mit den Kindern.");
+r("A1","Прийменники місця й часу","Прийменник","<b>in</b> — у місті/країні: in Berlin. <b>nach</b> — до міста чи країни без артикля: nach Wien. <b>zu</b> — до особи чи закладу: zum Arzt. <b>an</b> — дні й частини доби: am Montag, am Abend. <b>um</b> — година: um acht. <b>im</b> — місяці й пори року: im Mai.",[["Ich fahre nach Deutschland.","Я їду до Німеччини."],["Ich gehe zum Arzt.","Я йду до лікаря."]],"Виняток: in die Schweiz, in die Türkei — країни з артиклем беруть in.");
+r("A1","Числа й час","Лексика","Числа читаються «навиворіт»: 21 = einundzwanzig (один-і-двадцять). Час: Viertel nach drei (чверть по третій), halb vier (пів на четверту — увага, це 3:30!), Viertel vor vier.",[["Es ist halb sieben.","Пів на сьому, тобто 6:30."],["siebenundvierzig","сорок сім"]],"«halb sieben» — найтиповіша помилка: німці рахують до наступної години, як і українці, але легко переплутати.");
+
+r("A2","Прийменники з Genitiv","Прийменник","während (під час), wegen (через), trotz (попри), statt (замість), innerhalb (у межах), außerhalb (поза). У розмові часто вживають з Dativ, але в письмі — Genitiv.",[["wegen des schlechten Wetters","через погану погоду"],["trotz der Kosten","попри витрати"]]);
+r("A2","werden","Дієслово","Три ролі: самостійне дієслово «ставати» (Ich werde Ärztin), допоміжне для майбутнього (Ich werde kommen), допоміжне для пасиву (Das wird gemacht). Форми: ich werde, du wirst, er wird.",[["Es wird kalt.","Холоднішає."],["Sie wird Lehrerin.","Вона стає вчителькою."]],"Не плутай werden (ставати) з bekommen (отримувати) — false friend для англомовних.");
+r("A2","Порядок TeKaMoLo","Синтаксис","Обставини йдуть у порядку: <b>Te</b>mporal (коли) → <b>Ka</b>usal (чому) → <b>Mo</b>dal (як) → <b>Lo</b>kal (де). Це не жорсткий закон, але порушення звучить дивно.",[["Ich fahre morgen wegen der Arbeit mit dem Zug nach Berlin.","Я їду завтра через роботу потягом до Берліна."]],"Українська ставить місце раніше — тому мозок опирається. Вправлятися свідомо.");
+r("A2","Неозначені займенники","Займенник","man (загальне «люди/ти»), jemand/niemand, etwas/nichts, alle/alles, jeder, einige, mehrere. <b>man</b> — надзвичайно частий: замінює безособові речення.",[["Hier darf man nicht rauchen.","Тут не можна курити."],["Man sagt, dass …","Кажуть, що …"]],"man вимагає дієслова в 3 особі однини: man geht, man macht.");
+r("A2","Прикметник як іменник","Іменник","Прикметники й дієприкметники стають іменниками: der Deutsche, der Angestellte, der Bekannte, das Beste. Вони й далі відмінюються як прикметники.",[["ein Bekannter von mir","один мій знайомий"],["Das ist das Beste.","Це найкраще."]],"Тому «ein Deutscher», але «der Deutsche» — закінчення міняється разом з артиклем.");
+
+r("B1","Konjunktiv II: реальні vs нереальні умови","Спосіб","Реальна умова — індикатив із wenn. Нереальна — Konjunktiv II. Це різниця між «якщо матиму час» і «якби я мала час».",[["Wenn ich Zeit habe, komme ich.","Якщо матиму час — прийду."],["Wenn ich Zeit hätte, käme ich.","Якби я мала час, я б прийшла."]],"У розмові замість käme частіше würde kommen — обидва правильні.");
+r("B1","Займенникові прислівники","Синтаксис","Замість «прийменник + це/те» вживається da(r)- : darauf, damit, dafür, davon, darüber. Питання — wo(r)- : worauf, womit, wofür.",[["Ich freue mich darauf.","Я цьому радію (наперед)."],["Womit kann ich helfen?","Чим я можу допомогти?"]],"Ця форма застосовується ТІЛЬКИ до речей. Для людей — звичайний прийменник: auf ihn, mit ihr.");
+r("B1","Подвійні сполучники","Синтаксис","je … desto (з дієсловом у кінці після je), entweder … oder, weder … noch, sowohl … als auch, nicht nur … sondern auch, zwar … aber.",[["Sowohl er als auch sie kommen.","І він, і вона прийдуть."],["Weder er noch sie hat angerufen.","Ні він, ні вона не подзвонили."]]);
+r("B1","Непряме питання","Синтаксис","Питання всередині речення стає підрядним: дієслово в кінець. Якщо немає питального слова — вживається <b>ob</b>.",[["Ich weiß nicht, wo er wohnt.","Не знаю, де він живе."],["Sie fragt, ob wir kommen.","Вона питає, чи ми прийдемо."]],"«Ich weiß nicht, wo wohnt er» — типова помилка. Дієслово завжди в кінці.");
+r("B1","lassen","Дієслово","Чотири значення: залишати, дозволяти, доручати (щоб хтось зробив), а також sich lassen = «можна». У перфекті — подвійний інфінітив: Ich habe es machen lassen.",[["Ich lasse mir die Haare schneiden.","Я стрижуся (даю підстригти)."],["Das lässt sich machen.","Це можна зробити."]],"Друга конструкція — основа ділової німецької, вивчити обов'язково.");
+
+r("B2","Modalverben суб'єктивні","Спосіб","Модальні виражають не дію, а ступінь упевненості мовця: müssen (напевно), dürfte (ймовірно), können (можливо), sollen (кажуть, що), wollen (стверджує, що).",[["Er muss krank sein.","Він, напевно, хворий."],["Sie soll sehr reich sein.","Кажуть, вона дуже багата."]],"«Er will Arzt sein» = він стверджує, що лікар (а мовець сумнівається). Це не «хоче бути».");
+r("B2","Konjunktiv I у деталях","Спосіб","Утворюється від інфінітива: er sage, er habe, er sei, er komme. Для мовлення про минуле: er habe gemacht, er sei gekommen. Обов'язкова форма журналістики й наукових оглядів.",[["Der Minister erklärte, die Lage sei stabil.","Міністр заявив, що ситуація стабільна."],["Sie sagte, sie habe nichts gesehen.","Вона сказала, що нічого не бачила."]]);
+r("B2","Genitivattribute й ланцюжки","Стиль","Німецька преса нанизує генітиви: die Auswirkungen der Entscheidung der Regierung. Читається справа наліво. Уміння розплутувати такі ланцюжки — базова навичка B2.",[["die Folgen der Erhöhung der Preise","наслідки підвищення цін"]],"У власному письмі більше двох генітивів поспіль краще не робити — стає нечитабельно.");
+r("B2","Konzessive конструкції","Синтаксис","Поступка: obwohl, obgleich, wenngleich (підрядне), trotzdem, dennoch, gleichwohl (головне), trotz + Gen. (прийменник), auch wenn (навіть якщо).",[["Auch wenn es regnet, gehen wir.","Навіть якщо піде дощ, ми йдемо."],["Er kam dennoch zu spät.","Він усе одно спізнився."]],"Помилка: після trotzdem дієслово на другому місці, після obwohl — у кінці.");
+r("B2","Сталі прийменникові звороти","Стиль","in Bezug auf, im Vergleich zu, im Gegensatz zu, im Zusammenhang mit, im Hinblick auf, aufgrund von, mit Blick auf. Основа зв'язного письмового тексту.",[["Im Vergleich zum Vorjahr sind die Zahlen gestiegen.","Порівняно з минулим роком цифри зросли."],["In Bezug auf die Kosten …","Щодо витрат …"]]);
+
+r("C1","Ersatzinfinitiv","Синтаксис","Подвійний інфінітив: у перфекті модальних і lassen, sehen, hören замість Partizip II стоїть інфінітив. У підрядному допоміжне дієслово виходить наперед.",[["Ich habe nicht kommen können.","Я не змогла прийти."],["…, weil ich nicht habe kommen können.","…бо я не змогла прийти."]],"Винесення habe вперед у підрядному — чіткий маркер C1. Помилка тут одразу знижує рівень.");
+r("C1","Пасив із модальними в усіх часах","Стан","muss gemacht werden → musste gemacht werden → hat gemacht werden müssen. Конструкція перевантажена, але в офіційних текстах трапляється постійно.",[["Der Antrag hätte früher gestellt werden müssen.","Заяву треба було подати раніше."]],"Розбирати такі речення варто з кінця: müssen → werden → gestellt.");
+r("C1","Nominalstil ↔ Verbalstil","Стиль","Головна вправа C1-письма: перетворювати підрядні на іменникові групи й навпаки. Іспит перевіряє саме це вміння в обидва боки.",[["weil die Preise gestiegen sind → wegen gestiegener Preise","бо ціни зросли → через зрослі ціни"],["nach Beendigung der Arbeit → nachdem die Arbeit beendet worden war","після завершення роботи"]]);
+r("C1","Порядок слів для акценту","Синтаксис","Рема (нове) тяжіє до кінця речення, тема (відоме) — до початку. Винесення додатка на перше місце створює наголос. Після nur, erst, kaum, nicht nur йде інверсія.",[["Diesen Fehler habe ich nicht gemacht.","Цієї помилки я не робила."],["Erst dann wurde klar, worum es ging.","Лише тоді стало ясно, про що йшлося."]]);
+r("C1","Регістри й дистанція","Стиль","Німецька дуже чітко розділяє: Umgangssprache (розмовна), Standardsprache (нейтральна), Amtssprache (канцелярська), gehobene Sprache (висока). Плутання регістрів на C1 — важча помилка, ніж граматична.",[["Ich hab kein Bock. / Ich möchte nicht. / Ich sehe davon ab.","три регістри однієї думки"]],"На іспиті і в житті: канцелярит у розмові звучить смішно, розмовне в листі — грубо.");
+
+/* ================= LEVELS ================= */
+const LEVELS=[
+{code:"A1",name:"Fundament",weeks:"Тижні 1–12",months:"≈3 місяці",vocab:"400 слів модуля",
+goal:"Розумієш прості фрази, представляєшся, замовляєш каву, читаєш вивіски, заповнюєш анкету.",
+skills:["Читання вголос 10 хв щодня з першого дня","Nicos Weg A1 повністю","Прості діалоги: кав'ярня, вокзал, знайомство","3–5 речень про свій день письмово"],
+milestone:"Розповісти про себе дві хвилини без підготовки й без перекладу в голові.",
+tasks:["Правила читання — прочитати незнайомий текст уголос","400 слів модуля A1 з артиклями","Präsens усіх типів дієслів автоматично","Akkusativ без паузи","Пройти Nicos Weg A1","Перший діалог зі мною повністю німецькою"]},
+{code:"A2",name:"Alltag",weeks:"Тижні 13–30",months:"≈4 місяці",vocab:"400 слів модуля",
+goal:"Справляєшся з побутом: лікар, оренда, магазин, розповідь про минуле й плани.",
+skills:["Розповідь про вихідні у Perfekt","Слухання без субтитрів на простих темах","Листи 80–120 слів","Перша адаптована книжка"],
+milestone:"Переказати сюжет фільму в минулому часі — 10 речень без помилок у Perfekt.",
+tasks:["Таблиця відмінків напам'ять — усі чотири","100 найчастіших Partizip II","Порядок слів у підрядному автоматичний","400 слів модуля A2","10 текстів по 100 слів із розбором","Пройти Nicos Weg A2"]},
+{code:"B1",name:"Selbstständig",weeks:"Тижні 31–54",months:"≈6 місяців",vocab:"400 слів модуля",
+goal:"Мова стає інструментом, а не предметом. Говориш про досвід, плани, думки — з помилками, але вільно.",
+skills:["Живий співрозмовник щотижня","Подкасти: Slow German, Easy German","Щоденник німецькою","Дискусія на побутову тему 10 хвилин"],
+milestone:"30-хвилинна розмова з носієм без переходу на іншу мову.",
+tasks:["Прикметники в усіх трьох схемах","Konjunktiv II у проханнях автоматично","400 слів модуля B1","20 сесій із партнером для розмов","Перейти на одномовний словник DWDS","Перша неадаптована книжка"]},
+{code:"B2",name:"Argument",weeks:"Тижні 55–86",months:"≈8 місяців",vocab:"400 слів модуля",
+goal:"Аргументуєш, заперечуєш, пишеш офіційні листи. Розумієш новини й фільми без субтитрів.",
+skills:["tagesschau і DW щодня","Есе 250–350 слів з аргументацією","Фільми без субтитрів","Абстрактні теми: освіта, робота, суспільство"],
+milestone:"Есе на 300 слів «за і проти» — менше п'яти помилок.",
+tasks:["Passiv у всіх часах активно","Непряма мова в Konjunktiv I","400 слів модуля B2","20 есе з розбором помилок","Новини щодня три місяці поспіль","Список 200 своїх повторюваних помилок"]},
+{code:"C1",name:"Nuance",weeks:"Тижні 87–130",months:"≈10 місяців",vocab:"400 слів модуля",
+goal:"Мова звучить природно. Вловлюєш іронію, розрізняєш регістри, читаєш літературу без словника.",
+skills:["Художня література в оригіналі","Спонтанна дискусія на будь-яку тему","Професійна лексика твоєї сфери","Розуміння діалектного забарвлення"],
+milestone:"Прочитати роман німецькою без словника — і сперечатися про нього німецькою.",
+tasks:["Modalpartikeln вживаються самі","400 слів модуля C1","5 книжок в оригіналі","60-хвилинна дискусія на абстрактну тему","Тексти у трьох різних регістрах","(За потреби) Goethe-Zertifikat C1"]}];
+
+const DECL={
+best:{label:"означений",note:"Ці 16 форм — основа основ. Усе інше в німецькій відмінюється за цим зразком.",
+rows:[["Nominativ","der","die","das","die"],["Akkusativ","den","die","das","die"],["Dativ","dem","der","dem","den +n"],["Genitiv","des +s","der","des +s","der"]]},
+unbest:{label:"неозначений",note:"У множині неозначеного артикля немає — там просто нічого не стоїть: Ich sehe Kinder.",
+rows:[["Nominativ","ein","eine","ein","—"],["Akkusativ","einen","eine","ein","—"],["Dativ","einem","einer","einem","—"],["Genitiv","eines +s","einer","eines +s","—"]]},
+kein:{label:"kein",note:"kein відмінюється точно як ein, але має ще й множину.",
+rows:[["Nominativ","kein","keine","kein","keine"],["Akkusativ","keinen","keine","kein","keine"],["Dativ","keinem","keiner","keinem","keinen +n"],["Genitiv","keines +s","keiner","keines +s","keiner"]]},
+poss:{label:"mein",note:"Так само: dein, sein, ihr, unser, euer, Ihr. Вивчиш один — знаєш усі.",
+rows:[["Nominativ","mein","meine","mein","meine"],["Akkusativ","meinen","meine","mein","meine"],["Dativ","meinem","meiner","meinem","meinen +n"],["Genitiv","meines +s","meiner","meines +s","meiner"]]}};
+
+const ARTRULES={der:"Чоловічий: дні, місяці, пори року, погода; -er, -ling, -ismus, -or; особи чол. статі.",die:"Жіночий: -ung, -heit, -keit, -schaft, -ion, -ei, -ie, -tät; більшість слів на -e; усі множини.",das:"Середній: -chen, -lein, -um, -ment; дієслова-іменники (das Essen); більшість слів на Ge-."};
+/* ================= APP ================= */
+const LV=["A1","A2","B1","B2","C1"];
+const parse=s=>s.split(";").map(x=>x.split("|"));
+const ALL={}; let TOTALW=0;
+LV.forEach(l=>{ALL[l]=[];Object.entries(V[l]).forEach(([th,s])=>parse(s).forEach(w=>{ALL[l].push({de:w[0],pl:w[1],uk:w[2],th,lv:l});TOTALW++;}));});
+const FLAT=LV.flatMap(l=>ALL[l]);
+const NOUNS=FLAT.filter(w=>/^(der|die|das) /.test(w.de)).map(w=>({art:w.de.split(" ")[0],n:w.de.split(" ").slice(1).join(" "),uk:w.uk}));
+
+let state={done:{},known:{}};
+const KEY="de-c1-v2";
+const ST={async get(k){if(window.storage&&window.storage.get){try{return await window.storage.get(k);}catch(e){}}try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch(e){return null;}},
+async set(k,v){if(window.storage&&window.storage.set){try{return await window.storage.set(k,v);}catch(e){}}try{localStorage.setItem(k,v);return 1;}catch(e){return null;}}};
+async function load(){try{const r=await ST.get(KEY);if(r&&r.value)state=JSON.parse(r.value);}catch(e){}
+  renderLevels();renderRoute();renderVocab();stat();
+  document.getElementById("savedNote").textContent="Прогрес зберігається автоматично.";}
+async function save(){try{const ok=await ST.set(KEY,JSON.stringify(state));if(!ok)throw 0;}catch(e){document.getElementById("savedNote").textContent="Увага: прогрес не зберігається, працює лише в цій сесії.";}}
+const knownCount=()=>Object.values(state.known).filter(Boolean).length;
+function stat(){document.getElementById("topstat").textContent=knownCount()+" / "+TOTALW+" слів";}
+
+/* tabs */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("is-on"));
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("is-on"));
+  t.classList.add("is-on");document.getElementById("v-"+t.dataset.v).classList.add("is-on");
+  window.scrollTo(0,0);}));
+
+/* levels */
+const isDone=(lv,i)=>!!(state.done[lv]&&state.done[lv][i]);
+const lvlPct=L=>Math.round(L.tasks.filter((_,i)=>isDone(L.code,i)).length/L.tasks.length*100);
+function renderLevels(){
+  const h=document.getElementById("levels");
+  const open=new Set([...h.querySelectorAll(".lvl.is-open")].map(e=>e.dataset.code));
+  h.innerHTML=LEVELS.map(L=>{const p=lvlPct(L),c=2*Math.PI*15;return `
+  <article class="lvl${open.has(L.code)?" is-open":""}" data-code="${L.code}">
+   <button class="lvl__btn" aria-expanded="${open.has(L.code)}">
+    <span class="lvl__code">${L.code}</span>
+    <span><span class="lvl__title">${L.name}</span><span class="lvl__sub">${L.weeks} · ${L.months} · ${L.vocab}</span></span>
+    <svg class="ring" viewBox="0 0 36 36"><circle class="bg" cx="18" cy="18" r="15"></circle><circle class="fg" cx="18" cy="18" r="15" transform="rotate(-90 18 18)" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-p/100)}"></circle></svg>
+   </button>
+   <div class="lvl__body">
+    <p class="goal">${L.goal}</p>
+    <div class="block"><h4>Граматика рівня</h4><ul>${G[L.code].map(g=>`<li>${g.t}</li>`).join("")}</ul></div>
+    <div class="block"><h4>Навички й практика</h4><ul>${L.skills.map(s=>`<li>${s}</li>`).join("")}</ul></div>
+    <div class="milestone"><span class="eyebrow">Контрольна точка</span><p>${L.milestone}</p></div>
+    <div style="margin-top:16px"><h4 class="eyebrow">Чек-лист — ${p}%</h4>
+    ${L.tasks.map((t,i)=>`<div class="task${isDone(L.code,i)?" is-done":""}"><input type="checkbox" id="t${L.code}${i}" data-lv="${L.code}" data-i="${i}" ${isDone(L.code,i)?"checked":""}><label for="t${L.code}${i}">${t}</label></div>`).join("")}</div>
+   </div></article>`}).join("");
+  h.querySelectorAll(".lvl__btn").forEach(b=>b.addEventListener("click",()=>{const c=b.closest(".lvl");c.classList.toggle("is-open");b.setAttribute("aria-expanded",c.classList.contains("is-open"));}));
+  h.querySelectorAll(".task input").forEach(ch=>ch.addEventListener("change",()=>{const lv=ch.dataset.lv;state.done[lv]=state.done[lv]||{};state.done[lv][ch.dataset.i]=ch.checked;save();renderLevels();renderRoute();}));
+}
+function renderRoute(){
+  let tot=0;
+  document.getElementById("routeLine").innerHTML=LEVELS.map(L=>{const p=lvlPct(L);tot+=p;
+    return `<div class="st ${p===100?"is-done":p>0?"is-active":""}"><div class="st__dot"></div><div><div class="st__code">${L.code}</div><div class="st__name">${L.name}</div></div><div class="st__pct">${p}%</div></div>`}).join("");
+  document.getElementById("totalPct").textContent=Math.round(tot/5)+"%";
+}
+
+/* vocab */
+let vLv="A1",vQ="",vHide=false;
+document.getElementById("vLevels").innerHTML=LV.map(l=>`<button class="pill${l==="A1"?" is-on":""}" data-l="${l}">${l}</button>`).join("");
+document.querySelectorAll("#vLevels .pill").forEach(p=>p.addEventListener("click",()=>{vLv=p.dataset.l;document.querySelectorAll("#vLevels .pill").forEach(x=>x.classList.toggle("is-on",x===p));renderVocab();}));
+document.getElementById("vSearch").addEventListener("input",e=>{vQ=e.target.value.toLowerCase().trim();renderVocab();});
+document.getElementById("vHideKnown").addEventListener("click",e=>{vHide=!vHide;e.target.classList.toggle("is-on",vHide);e.target.textContent=vHide?"Показати всі":"Сховати вивчені";renderVocab();});
+function wid(w){return w.lv+"|"+w.de;}
+function renderVocab(){
+  const src=vQ?FLAT:ALL[vLv];
+  const list=src.filter(w=>(!vQ||w.de.toLowerCase().includes(vQ)||w.uk.toLowerCase().includes(vQ))&&(!vHide||!state.known[wid(w)]));
+  const themes={};list.forEach(w=>{(themes[w.th]=themes[w.th]||[]).push(w)});
+  document.getElementById("vList").innerHTML=Object.entries(themes).map(([th,ws])=>`
+   <div class="theme"><h3>${th}<em>${ws.filter(w=>state.known[wid(w)]).length}/${ws.length}</em></h3>
+   ${ws.map(w=>`<div class="w${state.known[wid(w)]?" is-known":""}" data-id="${wid(w)}">
+     <div><span class="w__de">${w.de}</span>${w.pl!=="—"?`<span class="w__pl">${w.pl}</span>`:""}</div>
+     <div class="w__uk">${w.uk}</div><button class="w__b" aria-label="Вивчено">✓</button></div>`).join("")}</div>`).join("")||`<p class="note">Нічого не знайдено.</p>`;
+  document.querySelectorAll("#vList .w__b").forEach(b=>b.addEventListener("click",()=>{
+    const el=b.closest(".w"),id=el.dataset.id;state.known[id]=!state.known[id];el.classList.toggle("is-known");save();stat();
+    const kc=Object.values(state.known).filter(Boolean).length;document.getElementById("vProg").style.width=(kc/TOTALW*100)+"%";}));
+  const kc=knownCount();
+  document.getElementById("vProg").style.width=(kc/TOTALW*100)+"%";
+  document.getElementById("vCount").textContent=vQ?`Знайдено: ${list.length}`:`${vLv}: ${ALL[vLv].filter(w=>state.known[wid(w)]).length} з ${ALL[vLv].length} вивчено · загалом ${kc}/${TOTALW}`;
+}
+
+/* grammar */
+let gLv="A1";
+document.getElementById("gLevels").innerHTML=LV.map(l=>`<button class="pill${l==="A1"?" is-on":""}" data-l="${l}">${l}</button>`).join("");
+document.querySelectorAll("#gLevels .pill").forEach(p=>p.addEventListener("click",()=>{gLv=p.dataset.l;document.querySelectorAll("#gLevels .pill").forEach(x=>x.classList.toggle("is-on",x===p));renderG();}));
+function renderG(){
+  document.getElementById("gList").innerHTML=G[gLv].map((g,i)=>`
+  <article class="rule" data-i="${i}"><button class="rule__b"><span><span class="rule__t">${g.t}</span><span class="rule__tag">${g.tag}</span></span><span style="font-family:var(--mono)">+</span></button>
+  <div class="rule__body"><p>${g.txt}</p>
+  ${g.ex.map(e=>`<div class="ex"><b>${e[0]}</b><span>${e[1]}</span></div>`).join("")}
+  ${g.warn?`<div class="warn"><b>Увага:</b> ${g.warn}</div>`:""}</div></article>`).join("");
+  document.querySelectorAll("#gList .rule__b").forEach(b=>b.addEventListener("click",()=>b.closest(".rule").classList.toggle("is-open")));
+}
+let dk="best";
+function renderDecl(){
+  document.getElementById("declBar").innerHTML=Object.entries(DECL).map(([k,v])=>`<button class="pill${k===dk?" is-on":""}" data-k="${k}">${v.label}</button>`).join("");
+  document.querySelectorAll("#declBar .pill").forEach(p=>p.addEventListener("click",()=>{dk=p.dataset.k;renderDecl();}));
+  const d=DECL[dk];
+  document.getElementById("declTbl").innerHTML=`<thead><tr><th></th><th>чол.</th><th>жін.</th><th>сер.</th><th>множ.</th></tr></thead><tbody>${d.rows.map(r=>`<tr><th>${r[0]}</th><td class="k-der">${r[1]}</td><td class="k-die">${r[2]}</td><td class="k-das">${r[3]}</td><td>${r[4]}</td></tr>`).join("")}</tbody>`;
+  document.getElementById("declNote").textContent=d.note;
+}
+
+/* article trainer */
+let cur,right=0,streak=0,lock=false;
+function nextN(){lock=false;cur=NOUNS[Math.floor(Math.random()*NOUNS.length)];
+  document.getElementById("artWord").textContent=cur.n;document.getElementById("artTr").textContent=cur.uk;
+  document.querySelectorAll(".artbtn").forEach(b=>b.classList.remove("correct","wrong"));
+  document.getElementById("artFb").innerHTML="<b>Обери артикль</b><p>Після відповіді покажу правило.</p>";}
+document.querySelectorAll(".artbtn").forEach(b=>b.addEventListener("click",()=>{
+  if(lock)return;lock=true;const ok=b.dataset.a===cur.art;
+  b.classList.add(ok?"correct":"wrong");
+  if(!ok)document.querySelector(`.artbtn[data-a="${cur.art}"]`).classList.add("correct");
+  ok?(right++,streak++):streak=0;
+  document.getElementById("scRight").textContent=right;document.getElementById("scStreak").textContent=streak;
+  document.getElementById("artFb").innerHTML=`<b>${ok?"Правильно":cur.art+" "+cur.n}</b><p>${ARTRULES[cur.art]}</p>`;}));
+document.getElementById("artNext").addEventListener("click",nextN);
+
+/* flashcards */
+let fLv="A1",fi=0,flip=false;
+document.getElementById("fcBar").innerHTML=LV.map(l=>`<button class="pill${l==="A1"?" is-on":""}" data-l="${l}">${l}</button>`).join("");
+document.querySelectorAll("#fcBar .pill").forEach(p=>p.addEventListener("click",()=>{fLv=p.dataset.l;fi=0;flip=false;document.querySelectorAll("#fcBar .pill").forEach(x=>x.classList.toggle("is-on",x===p));card();}));
+function card(){const w=ALL[fLv][fi];
+  document.getElementById("fcFront").textContent=w.de+(w.pl!=="—"?"  "+w.pl:"");
+  document.getElementById("fcBack").textContent=w.uk;
+  document.getElementById("fcBack").style.display=flip?"block":"none";
+  document.getElementById("fcCount").textContent=`${fi+1} / ${ALL[fLv].length}`;}
+const doFlip=()=>{flip=!flip;card();};
+document.getElementById("fcCard").addEventListener("click",doFlip);
+document.getElementById("fcCard").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();doFlip();}});
+document.getElementById("fcNext").addEventListener("click",()=>{fi=(fi+1)%ALL[fLv].length;flip=false;card();});
+document.getElementById("fcPrev").addEventListener("click",()=>{fi=(fi-1+ALL[fLv].length)%ALL[fLv].length;flip=false;card();});
+
+/* quiz */
+let qLv="A1",qR=0,qT=0,qLock=false;
+document.getElementById("qzBar").innerHTML=LV.map(l=>`<button class="pill${l==="A1"?" is-on":""}" data-l="${l}">${l}</button>`).join("");
+document.querySelectorAll("#qzBar .pill").forEach(p=>p.addEventListener("click",()=>{qLv=p.dataset.l;document.querySelectorAll("#qzBar .pill").forEach(x=>x.classList.toggle("is-on",x===p));quiz();}));
+function quiz(){qLock=false;const pool=ALL[qLv];const w=pool[Math.floor(Math.random()*pool.length)];
+  const opts=[w];while(opts.length<4){const o=pool[Math.floor(Math.random()*pool.length)];if(!opts.includes(o))opts.push(o);}
+  opts.sort(()=>Math.random()-.5);
+  document.getElementById("qzQ").textContent=w.uk;
+  document.getElementById("qzOpts").innerHTML=opts.map(o=>`<button class="qopt" data-de="${o.de}">${o.de}</button>`).join("");
+  document.querySelectorAll(".qopt").forEach(b=>b.addEventListener("click",()=>{
+    if(qLock)return;qLock=true;qT++;const ok=b.dataset.de===w.de;
+    b.classList.add(ok?"correct":"wrong");
+    if(!ok)document.querySelector(`.qopt[data-de="${w.de}"]`).classList.add("correct");
+    if(ok)qR++;
+    document.getElementById("qzRight").textContent=qR;document.getElementById("qzTotal").textContent=qT;
+    setTimeout(quiz,ok?700:1600);}));}
+
+/* planner */
+const MS=[["A1",90],["A2",210],["B1",420],["B2",680],["C1",1000]];
+function plan(){const m=+document.getElementById("mins").value;
+  document.getElementById("minsOut").textContent=m;
+  const parts=[["Слова",.2],["Граматика",.25],["Слухання",.25],["Мовлення",.3]];
+  document.getElementById("split").innerHTML=parts.map(([n,f])=>`<div class="split__row"><span>${n}</span><span class="bar"><i style="width:${f*100}%"></i></span><b>${Math.round(m*f)}хв</b></div>`).join("");
+  document.getElementById("forecast").innerHTML=`<thead><tr><th>Рівень</th><th>Годин</th><th>Коли</th></tr></thead><tbody>${MS.map(([l,h])=>{const d=Math.round(h*60/m);const t=d<60?d+" днів":d<400?(d/30.4).toFixed(1)+" міс":(d/365).toFixed(1)+" років";
+  return `<tr><th>${l}</th><td style="font-family:var(--mono);font-size:13px;font-weight:400">${h}</td><td>${t}</td></tr>`}).join("")}</tbody>`;}
+document.getElementById("mins").addEventListener("input",plan);
+
+nextN();card();quiz();renderG();renderDecl();plan();load();
+</script>
+</body>
+</html>
