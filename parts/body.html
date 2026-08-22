@@ -1,0 +1,140 @@
+<div class="top"><div class="wrap top__in">
+  <span class="brand">Von Null bis <i>C1</i></span>
+  <span class="hud hud--fire" id="hudFire" title="Серія днів"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-1-.4-2-1-3 2 1 4 3.5 4 6.5A6 6 0 0 1 6 15c0-5 6-6 6-13z"/></svg><b id="stFire">0</b></span>
+  <span class="hud hud--xp" title="Досвід"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg><b id="stXp">0</b></span>
+  <span class="hud hud--word" title="Слів вивчено"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5h16v14H4zM4 9h16M9 9v10"/></svg><b id="stWord">0</b></span>
+</div></div>
+
+<nav class="tabs" id="tabs">
+  <button class="tab is-on" data-v="weg"><svg viewBox="0 0 24 24"><path d="M6 21V9m0 0a3 3 0 1 1 6 0v6a3 3 0 1 0 6 0V3"/><circle cx="6" cy="21" r="1.4"/><circle cx="18" cy="3" r="1.4"/></svg><span>Шлях</span></button>
+  <button class="tab" data-v="woerter"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 9h16M9 9v10"/></svg><span>Слова</span></button>
+  <button class="tab" data-v="regeln"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg><span>Правила</span></button>
+  <button class="tab" data-v="training"><svg viewBox="0 0 24 24"><path d="M6.5 6.5 4 9l2.5 2.5M17.5 6.5 20 9l-2.5 2.5M14 4l-4 16"/></svg><span>Тренажер</span></button>
+  <button class="tab" data-v="profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg><span>Профіль</span></button>
+</nav>
+
+<main>
+
+<!-- ============ ШЛЯХ ============ -->
+<section class="view is-on" id="v-weg"><div class="wrap">
+  <div class="hero">
+    <span class="eyebrow">Повна програма · українською · 2000 слів · 75 правил</span>
+    <h1><span>Von Null</span><span>bis <em class="gold" style="font-style:normal">C1</em></span></h1>
+    <div class="waldi-box" style="margin-top:16px">
+      <div id="waldiHero"></div>
+      <div class="bubble"><b>Вальді</b><span id="waldiSay">Привіт! Я Вальді. Разом дійдемо до C1 — по одному дню за раз.</span></div>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>2000</b><span>слів у 100 днях</span></div>
+      <div class="fact"><b>100</b><span>днів-уроків</span></div>
+      <div class="fact"><b>75</b><span>правил граматики</span></div>
+      <div class="fact"><b>12</b><span>типів вправ</span></div>
+    </div>
+    <div class="goalbar">
+      <div class="goalbar__top"><span class="eyebrow">Ціль на сьогодні</span><span class="eyebrow" id="goalTxt">0 / 40 XP</span></div>
+      <div class="bar"><i id="goalBar" style="width:0%"></i></div>
+      <p class="note" id="goalNote" style="margin-top:9px">Один урок ≈ 20 XP. Два уроки на день — і за 100 днів ти пройдеш усю програму.</p>
+    </div>
+  </div>
+  <div id="pathWrap"></div>
+  <footer>
+    <p>Прогрес зберігається у твоєму браузері. Найважливіше правило: щоденні 30 хвилин сильніші за чотири години раз на тиждень.</p>
+    <p class="note" id="savedNote"></p>
+  </footer>
+</div></section>
+
+<!-- ============ СЛОВА ============ -->
+<section class="view" id="v-woerter"><div class="wrap">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Модуль слів</span><h2>2000 слів</h2>
+      <p>400 слів на рівень у 20 темах. Іменники — з артиклем і закінченням множини, під кожним словом — вимова українськими літерами. Тисни на кружечок, коли слово вже точно твоє.</p></div>
+    <div class="pillrow" id="vLevels"></div>
+    <input class="vsearch" id="vSearch" type="search" placeholder="Пошук: німецькою або українською…" aria-label="Пошук слова">
+    <div class="bar bar--green"><i id="vProg" style="width:0%"></i></div>
+    <div class="vmeta"><span class="vcount" id="vCount"></span>
+      <button class="pill" id="vHideKnown">Сховати вивчені</button></div>
+    <div id="vList"></div>
+    <p class="note"><b>Про транскрипцію.</b> Українські літери передають німецьку приблизно — точних відповідників немає. <b>ґ</b> — це g (ґут = gut). <b>ю</b> після приголосної — це ü, губи трубочкою. <b>ьо</b> — це ö. <b>х</b> після a, o, u — тверде, після e, i — м'яке. Довгі голосні тут не позначені: у Vater перша <b>а</b> довга. Наголос у німецьких словах майже завжди на першому складі, крім префіксів be-, ge-, ver-, ent-, er-, zer- та слів на -ieren.</p>
+  </div>
+</div></section>
+
+<!-- ============ ПРАВИЛА ============ -->
+<section class="view" id="v-regeln"><div class="wrap">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Довідник</span><h2>Уся граматика</h2>
+      <p>75 правил від вимови до Ersatzinfinitiv. Кожне — з поясненням українською, прикладами й транскрипцією. Тисни на динамік, щоб почути приклад.</p></div>
+    <div class="pillrow" id="gLevels"></div>
+    <div id="gList" style="margin-top:10px"></div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Таблиця</span><h2>Чотири відмінки</h2></div>
+    <div class="tool">
+      <div class="pillrow" id="declBar"></div>
+      <div class="tblwrap"><table class="tbl" id="declTbl"></table></div>
+      <p class="note" id="declNote"></p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ ТРЕНАЖЕР ============ -->
+<section class="view" id="v-training"><div class="wrap">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Вільне тренування</span><h2>Тренажер</h2>
+      <p>Дванадцять типів вправ на всьому словнику. Без сердець і без обмежень — тренуйся скільки хочеш. XP тут теж рахується.</p></div>
+    <span class="eyebrow">Рівень</span>
+    <div class="pillrow" id="trLevels" style="margin-top:6px"></div>
+    <div class="tgrid" id="trGrid"></div>
+  </div>
+</div></section>
+
+<!-- ============ ПРОФІЛЬ ============ -->
+<section class="view" id="v-profil"><div class="wrap">
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Профіль</span><h2>Твій прогрес</h2></div>
+    <div class="tool">
+      <div class="waldi-box"><div id="waldiProf"></div>
+        <div class="bubble"><b>Вальді</b><span id="waldiProfSay">—</span></div></div>
+    </div>
+    <div class="statgrid" id="statGrid"></div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Досягнення</span><h2>Нагороди</h2></div>
+    <div class="ach" id="achList"></div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Маршрут</span><h2>П'ять рівнів</h2></div>
+    <div id="lvlRows"></div>
+    <div id="lvlDetail" style="margin-top:14px"></div>
+  </div>
+  <div class="sec">
+    <div class="sec__head"><span class="eyebrow">Розрахунок</span><h2>Скільки це займе</h2>
+      <p>Постав, скільки часу маєш реально на день.</p></div>
+    <div class="tool">
+      <span class="eyebrow">Хвилин на день</span>
+      <div style="font-family:var(--disp);font-weight:800;font-size:48px;line-height:1" id="minsOut">60</div>
+      <input type="range" id="mins" min="20" max="240" step="10" value="60" style="width:100%" aria-label="Хвилин на день">
+      <div class="tblwrap" style="margin-top:12px"><table class="tbl" id="forecast"></table></div>
+      <p class="note">Пропуски не «доганяються» подвійним заняттям. 30 хвилин щодня сильніші за 4 години в неділю.</p>
+    </div>
+    <div class="tool" style="margin-top:12px">
+      <span class="eyebrow">Дані</span>
+      <p style="font-size:14.5px;margin:8px 0 12px">Скидання видалить увесь прогрес: вивчені слова, пройдені дні, XP і серію.</p>
+      <button class="btn" id="resetBtn">Скинути прогрес</button>
+    </div>
+  </div>
+</div></section>
+
+</main>
+
+<!-- day sheet -->
+<div class="sheet" id="sheet"><div class="sheet__in" id="sheetIn"></div></div>
+<!-- lesson -->
+<div class="lesson" id="lesson">
+  <div class="lesson__top">
+    <button class="xbtn" id="lQuit" aria-label="Вийти">&times;</button>
+    <div class="bar" style="flex:1"><i id="lBar" style="width:0%"></i></div>
+    <span class="hearts" id="lHearts"></span>
+  </div>
+  <div class="lesson__body"><div class="lesson__in" id="lBody"></div></div>
+  <div class="lfoot" id="lFoot"><div class="lfoot__in" id="lFootIn"></div></div>
+</div>
