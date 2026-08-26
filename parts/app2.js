@@ -311,7 +311,7 @@ function endLesson(){
   lessonEl.classList.remove("is-on");
   document.body.style.overflow="";
   try{speechSynthesis.cancel();}catch(e){}
-  L=null; renderStreet(); renderProfile(); renderSide(); hud();
+  L=null; renderStreet(); renderProfile(); hud();
 }
 document.getElementById("lQuit").addEventListener("click",()=>{
   if(!L)return;

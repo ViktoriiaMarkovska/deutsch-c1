@@ -11,8 +11,8 @@ document.querySelectorAll("#tabs .tab").forEach(t=>t.addEventListener("click",()
    світло у вікні = пройдено. Кожен п'ятий будинок — крамниця персонажа. */
 
 const LVLC={A1:"bA1",A2:"bA2",B1:"bB1",B2:"bB2",C1:"bC1"};
-const SHOPAT=[4,9,14,19];                    /* на яких днях стоять крамниці */
-const shopFor=i=>CASTKEYS[SHOPAT.indexOf(i)];
+/* крамниця на кожному п'ятому будинку, персонажі чергуються по колу */
+const shopFor=i=> (i%5===4) ? CASTKEYS[Math.floor(i/5)%CASTKEYS.length] : null;
 
 function renderStreet(){
   const cur=currentDay();
@@ -27,9 +27,10 @@ function renderStreet(){
         const dn=dayDone(l,i), op=dayOpen(l,i), now=cur&&cur.lv===l&&cur.i===i;
         const st=dn?"done":op?(now?"now":"open"):"lock";
         const sh=shopFor(i);
+        const sty=' style="--sx:'+houseShift(i)+'px;--sc:'+houseScale(i)+'"';
         if(sh){
           const c=CAST[sh];
-          return '<div class="hs hs--shop'+(op?"":" hs--lock")+'">'
+          return '<div class="hs hs--shop'+(op?"":" hs--lock")+'"'+sty+'>'
             +'<button class="shop" data-task="'+sh+'"'+(op?"":" disabled")+' style="--c:'+c.color+'" aria-label="'+esc(c.name)+' · '+esc(c.shop)+'">'
               +'<span class="shop__awning"></span>'
               +'<span class="shop__face">'+c.draw(64)+'</span>'
@@ -37,7 +38,7 @@ function renderStreet(){
             +'</button>'
             +'<span class="hs__lbl">'+esc(c.name)+'</span></div>';
         }
-        return '<div class="hs hs--'+st+'">'
+        return '<div class="hs hs--'+st+'"'+sty+'>'
           +(now?'<span class="now-here">ти тут</span>':'')
           +'<button class="house" data-lv="'+l+'" data-i="'+i+'"'+(op?"":" disabled")+' aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
             +'<span class="house__num">'+(i+1)+'</span>'
@@ -62,29 +63,6 @@ function currentDay(){
   return null;
 }
 
-/* ---- бічна панель: завдання персонажів ---- */
-function renderSide(){
-  const el=document.getElementById("sideRail"); if(!el)return;
-  const due=dueMistakes().length, tot=allMistakes().length;
-  const w=wotdToday();
-  const info={
-    elsa: due? due+" "+plural(due,"слово","слова","слів")+" чекають" : (tot?"усе повторено":"поки що чисто"),
-    bruno:"60 складених слів",
-    kurt: state.sprintBest?"рекорд: "+state.sprintBest:"ще без рекорду",
-    greta:w?w.de:"слово дня"
-  };
-  el.innerHTML='<div class="side__t"><span class="eyebrow">Сьогодні на вулиці</span></div>'
-   +CASTKEYS.map(k=>{
-     const c=CAST[k], hot=(k==="elsa"&&due>0);
-     return '<button class="tcard tcard--ch'+(hot?" is-hot":"")+'" data-task="'+k+'" style="--c:'+c.color+'">'
-      +'<span class="tcard__ch">'+c.draw(58)+'</span>'
-      +'<span class="tcard__txt"><b>'+esc(c.name)+'</b><span>'+esc(TASKNAME[k])+'</span>'
-      +'<span class="tcard__meta">'+esc(info[k])+'</span></span>'
-      +(hot?'<span class="tcard__dot">'+due+'</span>':'')
-      +'</button>';
-   }).join("");
-  el.querySelectorAll(".tcard").forEach(b=>b.addEventListener("click",()=>openTask(b.dataset.task)));
-}
 const TASKNAME={elsa:"Робота над помилками",bruno:"Словобуд",kurt:"Спринт на час",greta:"Слово дня"};
 
 /* ---- день: одразу в урок, без стіни тексту ---- */
@@ -270,7 +248,7 @@ function endSprint(score){
   lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="spDone">Далі</button>';
   document.getElementById("spDone").addEventListener("click",()=>{
     lessonEl.classList.remove("is-on"); document.body.style.overflow="";
-    renderStreet(); renderSide(); renderProfile(); hud();
+    renderStreet(); renderProfile(); hud();
   });
 }
 
@@ -395,18 +373,18 @@ const ACH=[
   {ic:"🐣",t:"Перший день",d:"пройти будь-який урок",ok:s=>s.lessons>=1},
   {ic:"🔥",t:"Тиждень",d:"серія 7 днів поспіль",ok:s=>s.best>=7},
   {ic:"💯",t:"Сто слів",d:"позначити 100 слів вивченими",ok:()=>knownCount()>=100},
-  {ic:"📚",t:"Півтисячі",d:"позначити 500 слів вивченими",ok:()=>knownCount()>=500},
-  {ic:"🏁",t:"A1 закрито",d:"пройти всі 20 днів A1",ok:()=>lvlDone("A1")===20},
+  {ic:"📚",t:"Тисяча слів",d:"позначити 1000 слів вивченими",ok:()=>knownCount()>=1000},
+  {ic:"🏁",t:"A1 закрито",d:"пройти всі 40 днів A1",ok:()=>lvlDone("A1")>=DAYS.A1.length},
   {ic:"🎧",t:"Вухо",d:"1000 XP",ok:s=>s.xp>=1000},
   {ic:"🥨",t:"Знавець артиклів",d:"200 правильних відповідей",ok:s=>s.correct>=200},
   {ic:"🌙",t:"Марафон",d:"серія 30 днів",ok:s=>s.best>=30},
-  {ic:"👑",t:"Von Null bis C1",d:"пройти всі 100 днів",ok:()=>LV.every(l=>lvlDone(l)===20)}
+  {ic:"👑",t:"Von Null bis C1",d:"пройти всі 161 день",ok:()=>LV.every(l=>lvlDone(l)>=DAYS[l].length)}
 ];
 function renderProfile(){
   const total=ALLDAYS.filter(d=>dayDone(d.lv,d.i)).length;
   const acc=state.answered?Math.round(state.correct/state.answered*100):0;
   document.getElementById("statGrid").innerHTML=
-    [["Днів пройдено",total+" / 100"],["Слів вивчено",knownCount()+" / "+TOTALW],
+    [["Днів пройдено",total+" / "+ALLDAYS.length],["Слів вивчено",knownCount()+" / "+TOTALW],
      ["Усього XP",state.xp],["Найдовша серія",state.best+" "+plural(state.best,"день","дні","днів")],
      ["Уроків",state.lessons],["Влучність",acc+"%"],["Відповідей",state.answered],["Правильних",state.correct]]
     .map(([s,b])=>'<div class="sg"><b>'+b+'</b><span>'+s+'</span></div>').join("");
@@ -423,10 +401,10 @@ function renderProfile(){
       : "Ти на фінішній прямій: "+total+" зі 100. Тримайся.";
   }
   document.getElementById("lvlRows").innerHTML=LEVELS.map(L2=>{
-    const done=lvlDone(L2.code), pct=Math.round(done/20*100);
+    const done=lvlDone(L2.code), pct=Math.round(done/DAYS[L2.code].length*100);
     return '<button class="lvlrow" data-c="'+L2.code+'" style="width:100%;text-align:left;cursor:pointer">'
       +'<span class="lvlrow__c '+LVLC[L2.code]+'">'+L2.code+'</span>'
-      +'<span><span class="lvlrow__t">'+esc(L2.name)+'</span><span class="lvlrow__s">'+esc(L2.months)+' · '+done+' з 20 днів</span></span>'
+      +'<span><span class="lvlrow__t">'+esc(L2.name)+'</span><span class="lvlrow__s">'+esc(L2.months)+' · '+done+' з '+DAYS[L2.code].length+' днів</span></span>'
       +'<span class="lvlrow__p">'+pct+'%</span></button>';
   }).join("");
   document.querySelectorAll("#lvlRows .lvlrow").forEach(b=>b.addEventListener("click",()=>showLvl(b.dataset.c)));
@@ -489,7 +467,7 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
   if(!confirm("Точно скинути весь прогрес? Це не можна відмінити."))return;
   state={known:{},days:{},xp:0,xpToday:0,xpDate:today(),streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
     mistakes:{},voice:state.voice,rate:state.rate,sprintBest:0,wotdSeen:""};
-  save(); renderStreet(); renderSide(); renderVocab(); renderProfile(); hud();
+  save(); renderStreet(); renderVocab(); renderProfile(); hud();
 });
 
 /* ================= СТАРТ ================= */
@@ -497,6 +475,6 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
   await load();
   pickVoice();                       /* стан уже є — підхопить збережений голос */
   renderVoicePicker();
-  hud(); renderStreet(); renderSide(); renderVocab(); renderG(); renderDecl();
+  hud(); renderStreet(); renderVocab(); renderG(); renderDecl();
   renderTrainer(); renderProfile(); planner();
 })();

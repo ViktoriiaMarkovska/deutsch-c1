@@ -51,43 +51,22 @@ function houseTile(lv,flip){
   return "url(data:image/svg+xml,"+encodeURIComponent(s).replace(/'/g,"%27")+")";
 }
 
-/* будиночок-день: дах, стіна, двері. Стан читається з першого погляду:
-   зачинені віконниці — зарано, зелені двері — тобі сюди, світло — пройдено */
+/* будиночок-день: сорок архетипів по колу, палітра — від кварталу.
+   Кожен рівень має свій колір, тож 40 архетипів × 5 палітр = 200 різних
+   будинків, і в межах одного рівня жоден не повторюється.              */
 function houseArt(stateName,n,lv){
   const V=VIERTEL[lv]||VIERTEL.A1;
-  const wall=V.wall[n%V.wall.length];
-  const lit=stateName==="done", now=stateName==="now", lock=stateName==="lock";
-  const gray="#D8CFBB", grayRoof="#B9AF98";
-  const W=lock?gray:wall, R=lock?grayRoof:V.roof;
-  let s='<svg viewBox="0 0 110 118" width="100%" height="100%" aria-hidden="true">';
-  /* дах */
-  s+='<path d="M6 44L55 8l49 36z" fill="'+R+'"/>';
-  s+='<rect x="14" y="42" width="82" height="4" rx="2" fill="'+R+'"/>';
-  /* стіна */
-  s+='<rect x="16" y="46" width="78" height="66" rx="3" fill="'+W+'"/>';
-  /* вікна обабіч дверей */
-  const winF = lit?"#FFF3C4":(lock?"#C6BCA6":"#FFF8E0");
-  s+='<rect x="24" y="54" width="17" height="17" rx="2" fill="'+winF+'"/>';
-  s+='<rect x="69" y="54" width="17" height="17" rx="2" fill="'+winF+'"/>';
-  s+='<path d="M32.5 54v17M24 62.5h17M77.5 54v17M69 62.5h17" stroke="'+R+'" stroke-width="1.5" opacity=".6"/>';
-  /* двері */
-  if(lock){
-    s+='<rect x="42" y="76" width="26" height="36" rx="3" fill="#B9AF98"/>';
-    s+='<path d="M55 76v36M44 88h22M44 100h22" stroke="#A2977E" stroke-width="2.4"/>';
-  } else if(lit){
-    s+='<rect x="42" y="76" width="26" height="36" rx="3" fill="#E0A800"/>';
-    s+='<rect x="46" y="81" width="18" height="26" rx="2" fill="#FFF3C4"/>';
-    s+='<path d="M55 81v26M46 94h18" stroke="#E0A800" stroke-width="2"/>';
-  } else {
-    s+='<rect x="42" y="76" width="26" height="36" rx="3" fill="'+(now?"#1FB86B":"#159154")+'"/>';
-    if(now){ s+='<path d="M48 80h16v32H48z" fill="#D8F7E8"/>'; }
-    s+='<circle cx="'+(now?"62":"63")+'" cy="96" r="2.6" fill="'+(now?"#159154":"#D8F7E8")+'"/>';
-  }
-  /* сходинка */
-  s+='<rect x="38" y="110" width="34" height="5" rx="2" fill="'+R+'" opacity=".55"/>';
-  s+='</svg>';
-  return s;
+  return HOUSES[n % HOUSES.length](V,stateName);
 }
+
+/* зсув і розмір будинку — детерміновані від номера, щоб вулиця
+   не вишиковувалась під лінійку, але й не стрибала при перемальовуванні */
+const OFFS=[0,54,88,38,-28,-74,-46,16,70,28,-58,-88,-22,46,76,-12,-68,-38,24,62,
+            -50,34,80,-18,58,-80,12,-34,66,-62,20,-44,84,-26,48,-70,36,-16,72,-54];
+const SCAL=[1,.95,1.06,.98,1.03,.93,1.07,.97,1.02,.94,1.05,.99,1.04,.96,1.01,
+            .92,1.08,.98,1.03,.95];
+function houseShift(i){ return OFFS[i % OFFS.length]; }
+function houseScale(i){ return SCAL[i % SCAL.length]; }
 
 /* ліхтар — ставиться між будинками для ритму */
 const LAMP='<svg class="lamp" viewBox="0 0 24 80" aria-hidden="true">'
