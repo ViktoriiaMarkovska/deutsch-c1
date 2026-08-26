@@ -20,23 +20,22 @@
   <div class="hero">
     <span class="eyebrow">Повна програма · українською · 2000 слів · 75 правил</span>
     <h1><span>Von Null</span><span>bis <em class="gold" style="font-style:normal">C1</em></span></h1>
-    <div class="waldi-box" style="margin-top:16px">
+    <div class="waldi-box" style="margin-top:14px">
       <div id="waldiHero"></div>
       <div class="bubble"><b>Вальді</b><span id="waldiSay">Привіт! Я Вальді. Разом дійдемо до C1 — по одному дню за раз.</span></div>
     </div>
-    <div class="facts">
-      <div class="fact"><b>2000</b><span>слів у 100 днях</span></div>
-      <div class="fact"><b>100</b><span>днів-уроків</span></div>
-      <div class="fact"><b>75</b><span>правил граматики</span></div>
-      <div class="fact"><b>12</b><span>типів вправ</span></div>
-    </div>
     <div class="goalbar">
-      <div class="goalbar__top"><span class="eyebrow">Ціль на сьогодні</span><span class="eyebrow" id="goalTxt">0 / 40 XP</span></div>
+      <div class="goalbar__top"><span class="eyebrow">Ціль на сьогодні</span><span class="eyebrow" id="goalTxt">0 / 30 XP</span></div>
       <div class="bar"><i id="goalBar" style="width:0%"></i></div>
-      <p class="note" id="goalNote" style="margin-top:9px">Один урок ≈ 20 XP. Два уроки на день — і за 100 днів ти пройдеш усю програму.</p>
+      <p class="note" id="goalNote" style="margin-top:9px"></p>
     </div>
   </div>
-  <div id="pathWrap"></div>
+
+  <div class="weg">
+    <aside class="side" id="sideRail"></aside>
+    <div class="streetcol" id="pathWrap"></div>
+  </div>
+
   <footer>
     <p>Прогрес зберігається у твоєму браузері. Найважливіше правило: щоденні 30 хвилин сильніші за чотири години раз на тиждень.</p>
     <p class="note" id="savedNote"></p>
@@ -117,6 +116,14 @@
       <p class="note">Пропуски не «доганяються» подвійним заняттям. 30 хвилин щодня сильніші за 4 години в неділю.</p>
     </div>
     <div class="tool" style="margin-top:12px">
+      <span class="eyebrow">Озвучка</span>
+      <p style="font-size:14.5px;margin:8px 0 10px">Голоси відрізняються на кожному пристрої. Обери той, що звучить найживіше — вибір запам'ятається.</p>
+      <div id="voicePick"></div>
+      <div style="margin-top:12px"><span class="eyebrow">Швидкість · <b id="rateOut">0.95</b></span>
+        <input type="range" id="rateRange" min="0.6" max="1.2" step="0.05" value="0.95" style="width:100%" aria-label="Швидкість озвучки"></div>
+      <button class="btn" id="voiceTest" style="margin-top:10px">Прослухати зразок</button>
+    </div>
+    <div class="tool" style="margin-top:12px">
       <span class="eyebrow">Дані</span>
       <p style="font-size:14.5px;margin:8px 0 12px">Скидання видалить увесь прогрес: вивчені слова, пройдені дні, XP і серію.</p>
       <button class="btn" id="resetBtn">Скинути прогрес</button>
@@ -133,7 +140,7 @@
   <div class="lesson__top">
     <button class="xbtn" id="lQuit" aria-label="Вийти">&times;</button>
     <div class="bar" style="flex:1"><i id="lBar" style="width:0%"></i></div>
-    <span class="hearts" id="lHearts"></span>
+    <span class="lcount" id="lCount">0 / 0</span>
   </div>
   <div class="lesson__body"><div class="lesson__in" id="lBody"></div></div>
   <div class="lfoot" id="lFoot"><div class="lfoot__in" id="lFootIn"></div></div>

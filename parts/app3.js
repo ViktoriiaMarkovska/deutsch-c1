@@ -5,31 +5,51 @@ document.querySelectorAll("#tabs .tab").forEach(t=>t.addEventListener("click",()
   window.scrollTo(0,0);
 }));
 
-/* ================= ШЛЯХ ================= */
-const LVLC={A1:"bA1",A2:"bA2",B1:"bB1",B2:"bB2",C1:"bC1"};
-const LOCK='<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
-const STAR='<svg viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="m12 3 2.6 5.6 6 .8-4.4 4.2 1.1 6-5.3-3-5.3 3 1.1-6L3.4 9.4l6-.8z"/></svg>';
-const BOOK='<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 8h6"/></svg>';
+/* ================= ВУЛИЦЯ =================
+   Кожен рівень — квартал зі своїм кольором. Кожен день — будинок:
+   зачинені віконниці = ще зарано, відчинені двері = тобі сюди,
+   світло у вікні = пройдено. Кожен п'ятий будинок — крамниця персонажа. */
 
-function renderPath(){
+const LVLC={A1:"bA1",A2:"bA2",B1:"bB1",B2:"bB2",C1:"bC1"};
+const SHOPAT=[4,9,14,19];                    /* на яких днях стоять крамниці */
+const shopFor=i=>CASTKEYS[SHOPAT.indexOf(i)];
+
+function renderStreet(){
   const cur=currentDay();
   document.getElementById("pathWrap").innerHTML=LV.map(l=>{
-    const done=lvlDone(l), pct=Math.round(done/DAYS[l].length*100);
-    return '<div class="lvlband"><div class="lvlband__head"><div class="lvlband__card '+LVLC[l]+'">'
-      +'<b>'+l+'</b><span>'+esc(LEVELS.find(x=>x.code===l).name)+' · '+DAYS[l].length+' днів</span>'
-      +'<span class="lp">'+pct+'%</span></div></div>'
-      +'<div class="path">'+DAYS[l].map((d,i)=>{
+    const V=VIERTEL[l], done=lvlDone(l), pct=Math.round(done/DAYS[l].length*100);
+    return '<section class="viertel" style="--road:'+V.road+';--sky:'+V.sky+';--roof:'+V.roof+'">'
+      +'<div class="viertel__head"><div class="viertel__card '+LVLC[l]+'">'
+        +'<b>'+l+'</b><span>'+esc(V.name)+' · '+DAYS[l].length+' будинків</span>'
+        +'<span class="lp">'+pct+'%</span></div></div>'
+      +'<div class="street" style="--tileL:'+houseTile(l)+';--tileR:'+houseTile(l)+'">'
+      +DAYS[l].map((d,i)=>{
         const dn=dayDone(l,i), op=dayOpen(l,i), now=cur&&cur.lv===l&&cur.i===i;
-        const cls="node"+(dn?" node--done":op?(now?" node--now":""):" node--lock");
-        return '<div class="'+cls+'">'
+        const st=dn?"done":op?(now?"now":"open"):"lock";
+        const sh=shopFor(i);
+        if(sh){
+          const c=CAST[sh];
+          return '<div class="hs hs--shop'+(op?"":" hs--lock")+'">'
+            +'<button class="shop" data-task="'+sh+'"'+(op?"":" disabled")+' style="--c:'+c.color+'" aria-label="'+esc(c.name)+' · '+esc(c.shop)+'">'
+              +'<span class="shop__awning"></span>'
+              +'<span class="shop__face">'+c.draw(64)+'</span>'
+              +'<span class="shop__sign">'+esc(c.shop)+'</span>'
+            +'</button>'
+            +'<span class="hs__lbl">'+esc(c.name)+'</span></div>';
+        }
+        return '<div class="hs hs--'+st+'">'
           +(now?'<span class="now-here">ти тут</span>':'')
-          +'<button class="node__btn" data-lv="'+l+'" data-i="'+i+'"'+(op?"":" disabled")+' aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
-          +(dn?STAR:op?(d.rule!=null?BOOK:'<b>'+(i+1)+'</b>'):LOCK)+'</button>'
-          +(dayCrowns(l,i)>1?'<span class="node__crowns">×'+dayCrowns(l,i)+'</span>':'')
-          +'<span class="node__lbl">'+(i+1)+' · '+esc(d.theme)+'</span></div>';
-      }).join("")+'</div></div>';
+          +'<button class="house" data-lv="'+l+'" data-i="'+i+'"'+(op?"":" disabled")+' aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
+            +'<span class="house__num">'+(i+1)+'</span>'
+            +'<span class="house__door">'+houseArt(st,i,l)+'</span>'
+          +'</button>'
+          +(dayCrowns(l,i)>1?'<span class="hs__crowns">×'+dayCrowns(l,i)+'</span>':'')
+          +'<span class="hs__lbl">'+esc(d.theme)+'</span></div>';
+      }).join("")
+      +'</div></section>';
   }).join("");
-  document.querySelectorAll(".node__btn").forEach(b=>b.addEventListener("click",()=>openDay(b.dataset.lv,+b.dataset.i)));
+  document.querySelectorAll(".house").forEach(b=>b.addEventListener("click",()=>openDay(b.dataset.lv,+b.dataset.i)));
+  document.querySelectorAll(".shop").forEach(b=>b.addEventListener("click",()=>openTask(b.dataset.task)));
   const w=document.getElementById("waldiHero"); if(w)w.innerHTML=waldi(state.xpToday>=GOAL?"happy":"idle",104);
   const ws=document.getElementById("waldiSay");
   if(ws)ws.textContent = state.streak>0
@@ -42,47 +62,242 @@ function currentDay(){
   return null;
 }
 
-/* ---- картка дня ---- */
+/* ---- бічна панель: завдання персонажів ---- */
+function renderSide(){
+  const el=document.getElementById("sideRail"); if(!el)return;
+  const due=dueMistakes().length, tot=allMistakes().length;
+  const w=wotdToday();
+  const info={
+    elsa: due? due+" "+plural(due,"слово","слова","слів")+" чекають" : (tot?"усе повторено":"поки що чисто"),
+    bruno:"60 складених слів",
+    kurt: state.sprintBest?"рекорд: "+state.sprintBest:"ще без рекорду",
+    greta:w?w.de:"слово дня"
+  };
+  el.innerHTML='<div class="side__t"><span class="eyebrow">Сьогодні на вулиці</span></div>'
+   +CASTKEYS.map(k=>{
+     const c=CAST[k], hot=(k==="elsa"&&due>0);
+     return '<button class="tcard tcard--ch'+(hot?" is-hot":"")+'" data-task="'+k+'" style="--c:'+c.color+'">'
+      +'<span class="tcard__ch">'+c.draw(58)+'</span>'
+      +'<span class="tcard__txt"><b>'+esc(c.name)+'</b><span>'+esc(TASKNAME[k])+'</span>'
+      +'<span class="tcard__meta">'+esc(info[k])+'</span></span>'
+      +(hot?'<span class="tcard__dot">'+due+'</span>':'')
+      +'</button>';
+   }).join("");
+  el.querySelectorAll(".tcard").forEach(b=>b.addEventListener("click",()=>openTask(b.dataset.task)));
+}
+const TASKNAME={elsa:"Робота над помилками",bruno:"Словобуд",kurt:"Спринт на час",greta:"Слово дня"};
+
+/* ---- день: одразу в урок, без стіни тексту ---- */
+function openDay(lv,i){
+  const d=DAYS[lv][i];
+  startLesson({lv,words:d.words,day:d});
+}
+
+/* ================= ЗАВДАННЯ ПЕРСОНАЖІВ ================= */
 const sheet=document.getElementById("sheet"), sheetIn=document.getElementById("sheetIn");
 sheet.addEventListener("click",e=>{if(e.target===sheet)closeSheet();});
 function closeSheet(){sheet.classList.remove("is-on");document.body.style.overflow="";}
-function openDay(lv,i){
-  const d=DAYS[lv][i], g=d.rule!=null?G[lv][d.rule]:null;
-  const knownN=d.words.filter(w=>state.known[wid(w)]).length;
-  sheetIn.innerHTML='<div class="sheet__grab"></div>'
-    +'<span class="eyebrow">'+lv+' · день '+(i+1)+' зі '+DAYS[lv].length+'</span>'
-    +'<h2 style="font-size:clamp(24px,7vw,36px);text-transform:uppercase;margin:5px 0 0">'+esc(d.theme)+'</h2>'
-    +'<div class="dayblock"><h4>20 слів дня · вивчено '+knownN+'</h4><div class="wordgrid">'
-      +d.words.map(w=>'<div><b>'+esc(w.de)+'</b><span>'+esc(w.uk)+'</span></div>').join("")
-    +'</div></div>'
-    +(g?'<div class="dayblock"><h4>Правило дня · '+esc(g.tag)+'</h4>'
-       +'<b style="font-family:var(--disp);font-size:17px;text-transform:uppercase">'+esc(g.t)+'</b>'
-       +'<p style="font-size:15px;margin:7px 0 0">'+g.txt+'</p>'
-       +(g.ex&&g.ex[0]?'<div class="ex" style="margin-top:10px"><b>'+esc(g.ex[0][0])+'</b><div class="tr">'+esc(tr(g.ex[0][0]))+'</div><span>'+esc(g.ex[0][1])+'</span></div>':'')
-       +'</div>'
-      :'<div class="dayblock"><h4>День закріплення</h4><p style="font-size:15px;margin:0">Нового правила сьогодні немає — сьогодні працює тільки повторення. Це не менш важливо: саме тут вчорашнє переходить у автоматизм.</p></div>')
-    +(d.vid?'<div class="dayblock"><h4>Відео за бажанням</h4>'
-       +'<a class="ytlink" href="https://www.youtube.com/results?search_query='+encodeURIComponent(d.vid.q)+'" target="_blank" rel="noopener">'
-       +'<svg viewBox="0 0 24 24"><rect x="1.5" y="5" width="21" height="14" rx="4" fill="#E4342F"/><path d="M10 9.2v5.6l5-2.8z" fill="#fff"/></svg>'
-       +'<span><b>'+esc(d.vid.q)+'</b><span>'+esc(d.vid.ch)+'</span></span></a>'
-       +'<p class="note" style="margin-top:9px">Посилання відкриє пошук YouTube за цією темою — так воно не зламається, коли автор перезаллє відео.</p></div>':'')
-    +'<div style="display:grid;gap:9px;margin-top:16px">'
-      +'<button class="btn btn--green btn--wide" id="dStart">'+(dayDone(lv,i)?"Пройти ще раз":"Почати урок")+' · 14 вправ</button>'
-      +'<button class="btn btn--wide" id="dWords">Спершу подивитись слова</button>'
-    +'</div>';
-  document.getElementById("dStart").addEventListener("click",()=>{
-    closeSheet(); startLesson({lv,words:d.words,day:d,n:14});
-  });
-  document.getElementById("dWords").addEventListener("click",()=>{
-    closeSheet(); vLv=lv; vQ=""; document.getElementById("vSearch").value="";
-    document.querySelectorAll("#vLevels .pill").forEach(x=>x.classList.toggle("is-on",x.dataset.l===lv));
-    renderVocab();
-    document.querySelectorAll("#tabs .tab").forEach(x=>x.classList.toggle("is-on",x.dataset.v==="woerter"));
-    document.querySelectorAll(".view").forEach(v=>v.classList.toggle("is-on",v.id==="v-woerter"));
-    window.scrollTo(0,0);
-    setTimeout(()=>{const el=[...document.querySelectorAll(".thblock>h3")].find(h=>h.textContent===d.theme); if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},120);
-  });
+function openSheet(html){
+  sheetIn.innerHTML='<div class="sheet__grab"></div>'+html;
   sheet.classList.add("is-on"); document.body.style.overflow="hidden";
+}
+function charHead(k,sub){
+  const c=CAST[k];
+  return '<div class="chhead" style="--c:'+c.color+'">'+c.draw(84)
+    +'<div><span class="eyebrow">'+esc(c.who)+'</span>'
+    +'<h2 class="chhead__n">'+esc(c.name)+'</h2>'
+    +'<p class="chhead__l">'+esc(sub||c.line)+'</p></div></div>';
+}
+function openTask(k){
+  if(k==="elsa") taskMistakes();
+  else if(k==="bruno") taskCompound();
+  else if(k==="kurt") taskSprint();
+  else if(k==="greta") taskWotd();
+}
+
+/* --- Ельза: робота над помилками --- */
+function taskMistakes(){
+  const due=dueMistakes(), all=allMistakes();
+  if(!all.length){
+    openSheet(charHead("elsa","Поки що порожньо. Помились кілька разів — і я почну збирати.")
+      +'<p class="note">Тут з\'являється все, на чому ти спіткнулася в уроках. Слово повертається через день, потім через три, потім через тиждень — і зникає, коли ти відповіси правильно чотири рази поспіль.</p>');
+    return;
+  }
+  const rows=all.slice().sort((a,b)=>(a.due||"").localeCompare(b.due||"")).slice(0,40);
+  openSheet(charHead("elsa")
+    +'<div class="dayblock"><h4>Зібрано '+all.length+' · дозріло '+due.length+'</h4>'
+    +'<div class="mlist">'+rows.map(m=>
+       '<div class="mrow'+((!m.due||m.due<=today())?" is-due":"")+'">'
+       +'<b>'+esc(m.t)+'</b>'
+       +'<span class="mrow__box">коробка '+(m.box||0)+'/4</span>'
+       +'<span class="mrow__due">'+((!m.due||m.due<=today())?"сьогодні":esc(m.due))+'</span></div>').join("")
+    +'</div></div>'
+    +(due.length?'<button class="btn btn--green btn--wide" id="mStart" style="margin-top:14px">Повторити '+due.length+' '+plural(due.length,"слово","слова","слів")+'</button>'
+                :'<p class="note">На сьогодні все повторено. Наступні слова дозріють завтра.</p>'));
+  const b=document.getElementById("mStart");
+  if(b)b.addEventListener("click",()=>{ closeSheet(); startMistakeLesson(dueMistakes()); });
+}
+function startMistakeLesson(due){
+  const q=[];
+  due.slice(0,15).forEach(m=>{
+    const lv=m.lv||"A1";
+    const w=FLAT.find(x=>x.de===m.t)||FLAT.find(x=>x.de.replace(ARTS,"")===String(m.t).replace(ARTS,""));
+    const d=ctx(lv, w?[w]:ALL[lv]);
+    if(w){
+      const kinds=EXKEYS.filter(k=>k!=="pairs"&&k!=="build"&&k!=="listen"&&k!=="gap"&&EX[k].need(d));
+      const k=kinds.length?rnd(kinds):"de_uk";
+      const it=makeOne(d,k); if(it) q.push(it);
+    } else {
+      const sd=ctx(lv);
+      const it=makeOne(sd,"build"); if(it) q.push(it);
+    }
+  });
+  if(!q.length){alert("Нема чого повторювати.");return;}
+  startLesson({lv:due[0].lv||"A1",queue:shuffle(q),mode:"review"});
+}
+
+/* --- Бруно: словобуд --- */
+const COMPS=COMP.trim().split(";").map(x=>{
+  const p=x.trim().split("|");
+  return {whole:p[0],parts:p[1].split("+"),uk:p[2],ukParts:p[3].split("+"),note:p[4]||""};
+}).filter(x=>x.whole);
+let cIdx=0,cScore=0;
+function taskCompound(){
+  cScore=0; nextCompound();
+}
+function nextCompound(){
+  const c=rnd(COMPS);
+  const bare=c.whole.replace(ARTS,"");
+  const decoys=distinct(COMPS.filter(x=>x!==c),3,c,x=>x.whole).map(x=>x.parts[rnd([0,1])]||x.parts[0]);
+  const tiles=shuffle(c.parts.concat(decoys.filter(d=>c.parts.indexOf(d)<0)).slice(0,c.parts.length+3));
+  openSheet(charHead("bruno")
+    +'<div class="dayblock"><h4>Збери слово · рахунок '+cScore+'</h4>'
+    +'<div class="cw__uk">'+esc(c.uk)+'</div>'
+    +'<div class="cw__hint">'+esc(c.ukParts.join(" + "))+'</div>'
+    +'<div class="cw__slot" id="cwSlot"></div>'
+    +'<div class="tiles" id="cwTiles">'+tiles.map((t,i)=>'<button class="tile" data-t="'+esc(t)+'">'+esc(t)+'</button>').join("")+'</div>'
+    +'<div class="cw__fb" id="cwFb"></div>'
+    +'</div>'
+    +'<div style="display:grid;gap:9px;margin-top:12px">'
+    +'<button class="btn btn--green btn--wide" id="cwCheck" disabled>Перевірити</button>'
+    +'<button class="btn btn--wide" id="cwSkip">Інше слово</button></div>');
+  const slot=document.getElementById("cwSlot"), fb=document.getElementById("cwFb");
+  const picked=[];
+  const sync=()=>{ slot.innerHTML=picked.map(t=>'<span class="tile tile--in">'+esc(t)+'</span>').join("");
+                   document.getElementById("cwCheck").disabled=!picked.length; };
+  document.querySelectorAll("#cwTiles .tile").forEach(t=>t.addEventListener("click",()=>{
+    if(t.classList.contains("used"))return;
+    t.classList.add("used"); picked.push(t.dataset.t); sync();
+  }));
+  slot.addEventListener("click",()=>{ if(!picked.length)return; const last=picked.pop();
+    const t=[...document.querySelectorAll("#cwTiles .tile")].find(x=>x.dataset.t===last&&x.classList.contains("used"));
+    if(t)t.classList.remove("used"); sync(); });
+  document.getElementById("cwCheck").addEventListener("click",()=>{
+    const ok=picked.join("").toLowerCase()===c.parts.join("").toLowerCase();
+    if(ok){
+      cScore++; beep("ok"); addXP(2); say(c.whole);
+      fb.className="cw__fb ok";
+      fb.innerHTML='<b>'+esc(c.whole)+'</b><div class="tr">'+esc(tr(c.whole))+'</div>'
+        +(c.note?'<p>'+esc(c.note)+'</p>':'');
+      setTimeout(nextCompound,c.note?2600:1500);
+    }else{
+      beep("bad"); fb.className="cw__fb no";
+      fb.innerHTML='<b>Правильно: '+esc(c.parts.join(" + "))+'</b>'
+        +(c.note?'<p>'+esc(c.note)+'</p>':'');
+      setTimeout(nextCompound,2400);
+    }
+  });
+  document.getElementById("cwSkip").addEventListener("click",nextCompound);
+}
+
+/* --- Курт: спринт на 60 секунд --- */
+let spT=null;
+function taskSprint(){
+  openSheet(charHead("kurt")
+    +'<div class="dayblock"><h4>Рекорд: '+(state.sprintBest||0)+'</h4>'
+    +'<p style="font-size:15px;margin:0 0 10px">Шістдесят секунд. Стільки слів, скільки встигнеш. Помилка не карає — просто йдемо далі.</p>'
+    +'<span class="eyebrow">Рівень</span><div class="pillrow" id="spLv" style="margin-top:6px"></div></div>'
+    +'<button class="btn btn--green btn--wide" id="spGo" style="margin-top:12px">Поїхали</button>');
+  let lv="A1";
+  document.getElementById("spLv").innerHTML=LV.map(l=>'<button class="pill'+(l==="A1"?" is-on":"")+'" data-l="'+l+'">'+l+'</button>').join("");
+  document.querySelectorAll("#spLv .pill").forEach(p=>p.addEventListener("click",()=>{
+    lv=p.dataset.l; document.querySelectorAll("#spLv .pill").forEach(x=>x.classList.toggle("is-on",x===p));}));
+  document.getElementById("spGo").addEventListener("click",()=>{ closeSheet(); runSprint(lv); });
+}
+function runSprint(lv){
+  const d=ctx(lv);
+  let score=0, left=60;
+  lessonEl.classList.add("is-on"); document.body.style.overflow="hidden";
+  document.getElementById("lCount").textContent="";
+  const tick=()=>{
+    left--;
+    document.getElementById("lBar").style.width=(left/60*100)+"%";
+    const t=document.getElementById("spClock"); if(t)t.textContent="0:"+String(Math.max(0,left)).padStart(2,"0");
+    if(left<=0){ clearInterval(spT); endSprint(score); }
+  };
+  clearInterval(spT); spT=setInterval(tick,1000);
+  const step=()=>{
+    const q=makeOne(d,rnd(["uk_de","de_uk","artikel"]));
+    if(!q){endSprint(score);return;}
+    lBody.innerHTML='<div class="sprintbar"><span class="sprintbar__c" id="spClock">1:00</span>'
+      +'<span class="sprintbar__s">✓ '+score+'</span></div>'
+      +'<div class="qtype">'+esc(q.head)+'</div>'+(q.body||"")
+      +'<div class="opts'+(q.cols===3?" opts--3":" opts--2")+'">'
+      +q.opts.map((o,i)=>'<button class="opt'+(q.art?" opt--art k-"+o:"")+'" data-i="'+i+'">'+esc(o)+'</button>').join("")+'</div>';
+    lFoot.className="lfoot"; lFootIn.innerHTML='<p class="note" style="margin:0">Тисни варіант — далі одразу наступне.</p>';
+    lBody.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+      const ok=+b.dataset.i===q.ans;
+      b.classList.add(ok?"ok":"no");
+      if(ok){score++;beep("ok");} else {beep("bad"); logMistake(lv,q.say);}
+      setTimeout(()=>{ if(left>0) step(); },ok?170:520);
+    }));
+  };
+  step();
+}
+function endSprint(score){
+  clearInterval(spT);
+  const rec=score>(state.sprintBest||0);
+  if(rec) state.sprintBest=score;
+  addXP(Math.round(score/2)); save();
+  if(rec) confetti(); beep("win");
+  document.getElementById("lBar").style.width="100%";
+  lBody.innerHTML='<div class="endcard">'+kurt(150,"happy")
+    +'<h2>'+(rec?"Новий рекорд":"Час вийшов")+'</h2>'
+    +'<div class="endstats"><div class="endstat es-xp"><b>'+score+'</b><span>правильних</span></div>'
+    +'<div class="endstat es-acc"><b>'+(state.sprintBest||0)+'</b><span>рекорд</span></div>'
+    +'<div class="endstat es-time"><b>+'+Math.round(score/2)+'</b><span>XP</span></div></div></div>';
+  lFoot.className="lfoot ok";
+  lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="spDone">Далі</button>';
+  document.getElementById("spDone").addEventListener("click",()=>{
+    lessonEl.classList.remove("is-on"); document.body.style.overflow="";
+    renderStreet(); renderSide(); renderProfile(); hud();
+  });
+}
+
+/* --- Ґрета: слово дня --- */
+const WOTDS=WOTD.trim().split(";").map(x=>{
+  const p=x.trim().split("|");
+  return {de:p[0],uk:p[1],story:p[2],ex:p[3],exUk:p[4]};
+}).filter(x=>x.de);
+function wotdToday(){
+  const d=new Date(), n=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);
+  return WOTDS[n%WOTDS.length];
+}
+function taskWotd(){
+  const w=wotdToday();
+  openSheet(charHead("greta")
+    +'<div class="wotd">'
+    +'<div class="wotd__de">'+esc(w.de)+'</div>'
+    +'<div class="wotd__tr">'+esc(tr(w.de))+'</div>'
+    +(canSpeak()?'<button class="speak speak--sm" id="wotdSay" aria-label="Прослухати">'+SPKF+'</button>':'')
+    +'<div class="wotd__uk">'+esc(w.uk)+'</div>'
+    +'<div class="wotd__story">'+esc(w.story)+'</div>'
+    +'<div class="ex"><b>'+esc(w.ex)+'</b><div class="tr">'+esc(tr(w.ex))+'</div><span>'+esc(w.exUk)+'</span></div>'
+    +'</div>'
+    +'<p class="note">Завтра тут буде інше слово. Усього в Ґрети їх '+WOTDS.length+'.</p>');
+  const b=document.getElementById("wotdSay");
+  if(b){ b.addEventListener("click",()=>say(w.de)); setTimeout(()=>say(w.de),300); }
+  if(state.wotdSeen!==today()){ state.wotdSeen=today(); addXP(2); save(); }
 }
 
 /* ================= СЛОВА ================= */
@@ -232,6 +447,32 @@ function showLvl(code){
   document.getElementById("lvlDetail").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
+/* ---- вибір голосу ---- */
+function renderVoicePicker(){
+  const el=document.getElementById("voicePick"); if(!el)return;
+  if(!deVoices.length){ el.innerHTML='<p class="note" style="margin:0">Браузер не дає списку голосів. Озвучка працюватиме системним голосом.</p>'; return; }
+  el.innerHTML='<div class="vlist">'+deVoices.map((v,i)=>{
+    const on=(state.voice? v.name===state.voice : i===0);
+    const tag=voiceTag(v);
+    return '<button class="vrow'+(on?" is-on":"")+'" data-n="'+esc(v.name)+'">'
+      +'<span class="vrow__r"></span><b>'+esc(v.name)+'</b><span class="vrow__t">'+tag+'</span></button>';
+  }).join("")+'</div>';
+  el.querySelectorAll(".vrow").forEach(b=>b.addEventListener("click",()=>{
+    state.voice=b.dataset.n; pickVoice(); save(); renderVoicePicker();
+    say("Guten Tag! Ich helfe dir beim Deutschlernen.");
+  }));
+}
+const rr=document.getElementById("rateRange");
+if(rr){
+  rr.addEventListener("input",e=>{
+    state.rate=+e.target.value;
+    document.getElementById("rateOut").textContent=state.rate.toFixed(2);
+    save();
+  });
+}
+const vt=document.getElementById("voiceTest");
+if(vt)vt.addEventListener("click",()=>say("Guten Tag! Ich helfe dir beim Deutschlernen."));
+
 /* планувальник */
 const MS=[["A1",90],["A2",210],["B1",420],["B2",680],["C1",1000]];
 function planner(){
@@ -246,12 +487,16 @@ function planner(){
 document.getElementById("mins").addEventListener("input",planner);
 document.getElementById("resetBtn").addEventListener("click",()=>{
   if(!confirm("Точно скинути весь прогрес? Це не можна відмінити."))return;
-  state={known:{},days:{},xp:0,xpToday:0,xpDate:today(),streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0};
-  save(); renderPath(); renderVocab(); renderProfile(); hud();
+  state={known:{},days:{},xp:0,xpToday:0,xpDate:today(),streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
+    mistakes:{},voice:state.voice,rate:state.rate,sprintBest:0,wotdSeen:""};
+  save(); renderStreet(); renderSide(); renderVocab(); renderProfile(); hud();
 });
 
 /* ================= СТАРТ ================= */
 (async function(){
   await load();
-  hud(); renderPath(); renderVocab(); renderG(); renderDecl(); renderTrainer(); renderProfile(); planner();
+  pickVoice();                       /* стан уже є — підхопить збережений голос */
+  renderVoicePicker();
+  hud(); renderStreet(); renderSide(); renderVocab(); renderG(); renderDecl();
+  renderTrainer(); renderProfile(); planner();
 })();

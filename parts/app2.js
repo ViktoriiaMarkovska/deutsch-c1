@@ -192,26 +192,117 @@ function ctx(lv,words){
   };
 }
 
-/* ================= ДВИГУН УРОКУ ================= */
+/* ================= ДВИГУН УРОКУ =================
+   Три відмінності від попередньої версії:
+   1. Життя безлімітні. Помилка не «віднімає серце», а повертає питання
+      в кінець черги — урок не закінчиться, поки слово не сяде.
+   2. Слова вводяться картками-знайомствами прямо в уроці: вивчив четвірку —
+      одразу її й перевірив. Ніякої стіни тексту перед стартом.
+   3. У кожної вправи є підказка на вимогу. Вона нічого не забирає,
+      лише знімає бонус за бездоганний урок.                              */
 let L=null;
 const lessonEl=document.getElementById("lesson");
 const lBody=document.getElementById("lBody"), lFoot=document.getElementById("lFoot"), lFootIn=document.getElementById("lFootIn");
+
+/* ---- підказка: будуємо риштування під конкретний тип вправи ---- */
+function answerOf(q){
+  return q.k==="choice" ? q.opts[q.ans] : (q.ans||"");
+}
+function hintFor(q){
+  const a=answerOf(q);
+  switch(q.ex){
+    case "artikel": case "artpl":
+      return q.hint||"Дивись на закінчення слова — воно майже завжди й вирішує рід.";
+    case "uk_de":
+      return "Починається на <b>"+esc(a.replace(ARTS,"").slice(0,2))+"…</b> · вимова: "+esc(tr(a));
+    case "de_uk": case "audio":
+      return "Вимова: <b>"+esc(tr(q.say||a))+"</b>";
+    case "type":
+      return "Вимова: <b>"+esc(tr(a))+"</b> · "+a.replace(ARTS,"").length+" літер у слові";
+    case "dictate":
+      return "Вимова: <b>"+esc(tr(a))+"</b>";
+    case "plural":
+      return q.hint||"Подивись на позначку множини у словнику.";
+    case "build": case "listen":
+      return "Перше слово: <b>"+esc(String(q.ans).split(" ")[0])+"</b>. Дієслово в простому реченні — на другому місці.";
+    case "gap":
+      return q.hint||"Подивись, якого відмінка вимагає прийменник.";
+    default:
+      return q.hint||"Спробуй пригадати корінь слова.";
+  }
+}
+
+/* ---- картки-знайомства: вчимо перед тим, як питати ----
+   П'ятірка слів на одній картці, а не двадцять карток поспіль:
+   так знайомство займає чотири кроки замість двадцяти.                 */
+function teachGroup(ws,n,total){
+  return {k:"teach",ex:"teach",head:"Нові слова · "+n+" з "+total,
+    say:ws[0].de, words:ws,
+    body:'<div class="teach teach--list">'
+      +ws.map((w,i)=>'<div class="tw" data-say="'+esc(w.de)+'">'
+        +'<div class="tw__l"><b>'+esc(w.de)+'</b>'
+        +(w.pl&&w.pl!=="—"?'<i>мн. '+esc(plForm(w.de.replace(ARTS,""),w.pl))+'</i>':'')
+        +'<span class="tw__tr">'+esc(tr(w.de))+'</span></div>'
+        +'<div class="tw__uk">'+esc(w.uk)+'</div>'
+        +(canSpeak()?'<button class="tw__say" aria-label="Прослухати">'+SPKF+'</button>':'')
+        +'</div>').join("")
+      +'</div>'
+      +'<p class="teach__tip">Тисни на слово, щоб почути. Далі — вправи саме на ці п\'ять.</p>'};
+}
+function teachRule(g){
+  return {k:"teach",ex:"teach",head:"Правило дня",
+    say:(g.ex&&g.ex[0])?g.ex[0][0]:"",
+    body:'<div class="teach teach--rule">'
+      +'<div class="teach__tag">'+esc(g.tag)+'</div>'
+      +'<div class="teach__title">'+esc(g.t)+'</div>'
+      +'<p class="teach__txt">'+g.txt+'</p>'
+      +((g.ex&&g.ex[0])?'<div class="ex"><b>'+esc(g.ex[0][0])+'</b><div class="tr">'+esc(tr(g.ex[0][0]))+'</div><span>'+esc(g.ex[0][1])+'</span></div>':'')
+      +(canSpeak()&&g.ex&&g.ex[0]?'<button class="speak speak--sm" id="bigSpeak" aria-label="Прослухати">'+SPKF+'</button>':'')
+      +'</div>'};
+}
+
+/* ---- складання черги ---- */
+function makeOne(d,k){ try{ return Object.assign({ex:k},EX[k].make(d)); }catch(e){ return null; } }
 
 function buildQueue(d,n){
   const avail=EXKEYS.filter(k=>EX[k].need(d));
   const q=[]; let guard=0;
   while(q.length<n && guard++<300){
     const k=avail[q.length%avail.length];
-    try{ q.push(Object.assign({ex:k},EX[k].make(d))); }catch(e){}
+    const item=makeOne(d,k); if(item) q.push(item);
   }
   return shuffle(q);
 }
+
+/* урок дня: 4 нових слова → вправи на них → наступна четвірка */
+function buildDayQueue(day){
+  const lv=day.lv, q=[];
+  const rule = day.rule!=null ? G[lv][day.rule] : null;
+  if(rule) q.push(teachRule(rule));
+  const groups=[];
+  for(let i=0;i<day.words.length;i+=5) groups.push(day.words.slice(i,i+5));
+  groups.forEach((grp,gi)=>{
+    q.push(teachGroup(grp,gi+1,groups.length));
+    const d=ctx(lv,grp);
+    const avail=EXKEYS.filter(k=>EX[k].need(d));
+    /* по три вправи на четвірку — різних типів */
+    shuffle(avail).slice(0,3).forEach(k=>{ const it=makeOne(d,k); if(it) q.push(it); });
+  });
+  /* фінальний блок: змішані вправи на всі 20 слів дня */
+  const dAll=ctx(lv,day.words);
+  buildQueue(dAll,5).forEach(x=>q.push(x));
+  return q;
+}
+
 function startLesson(opts){
   const d=ctx(opts.lv,opts.words);
-  const queue = opts.only ? Array.from({length:opts.n||14},()=>Object.assign({ex:opts.only},EX[opts.only].make(d)))
-                          : buildQueue(d,opts.n||14);
+  let queue;
+  if(opts.day)        queue=buildDayQueue(opts.day);
+  else if(opts.queue) queue=opts.queue;
+  else if(opts.only)  queue=Array.from({length:opts.n||14},()=>makeOne(d,opts.only)).filter(Boolean);
+  else                queue=buildQueue(d,opts.n||14);
   if(!queue.length){alert("Для цього рівня вправа недоступна.");return;}
-  L={...opts,d,queue,i:0,hearts:opts.hearts===false?Infinity:5,right:0,t0:Date.now(),xp:0};
+  L={...opts,d,queue,i:0,right:0,asked:0,solved:0,t0:Date.now(),xp:0,hintsUsed:0,total:queue.length};
   lessonEl.classList.add("is-on");
   document.body.style.overflow="hidden";
   renderQ();
@@ -219,26 +310,29 @@ function startLesson(opts){
 function endLesson(){
   lessonEl.classList.remove("is-on");
   document.body.style.overflow="";
-  L=null; renderPath(); renderProfile(); hud();
+  try{speechSynthesis.cancel();}catch(e){}
+  L=null; renderStreet(); renderProfile(); renderSide(); hud();
 }
 document.getElementById("lQuit").addEventListener("click",()=>{
   if(!L)return;
   if(L.i>0 && L.done!==true && !confirm("Вийти з уроку? Прогрес цього уроку не збережеться."))return;
   endLesson();
 });
-function hearts(){
-  const h=document.getElementById("lHearts");
-  if(L.hearts===Infinity){h.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" style="opacity:.35"><path d="M12 20s-7-4.6-7-9.5A4 4 0 0 1 12 7a4 4 0 0 1 7 3.5C19 15.4 12 20 12 20z"/></svg><b style="color:var(--ink-30)">∞</b>';return;}
-  h.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7-4.6-7-9.5A4 4 0 0 1 12 7a4 4 0 0 1 7 3.5C19 15.4 12 20 12 20z"/></svg><b>'+L.hearts+'</b>';
+
+function lessonProgress(){
+  const remain=L.queue.length-L.i;
+  const denom=Math.max(1,L.solved+remain);
+  return Math.round(L.solved/denom*100);
 }
 function renderQ(){
   const q=L.queue[L.i];
-  document.getElementById("lBar").style.width=Math.round(L.i/L.queue.length*100)+"%";
-  hearts(); lFoot.className="lfoot"; L.locked=false; L.sel=null;
+  document.getElementById("lBar").style.width=lessonProgress()+"%";
+  document.getElementById("lCount").textContent=L.solved+" / "+Math.max(L.total,L.solved+(L.queue.length-L.i));
+  lFoot.className="lfoot"; L.locked=false; L.sel=null; L.hintOpen=false;
   let h='<div class="qtype">'+esc(q.head)+'</div>'+(q.body||"");
   if(q.k==="choice"){
-    h+='<div class="opts'+(q.cols===3?"":" opts--2")+'" '+(q.cols===3?'style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px"':'')+' id="qOpts">'
-      + q.opts.map((o,i)=>'<button class="opt'+(q.art?" k-"+o:"")+'" data-i="'+i+'"'+(q.art?' style="text-align:center;font-family:var(--disp);font-weight:800;font-size:clamp(21px,6vw,30px);padding:18px 4px"':'')+'>'+esc(o)+'</button>').join("")
+    h+='<div class="opts'+(q.cols===3?" opts--3":" opts--2")+'" id="qOpts">'
+      + q.opts.map((o,i)=>'<button class="opt'+(q.art?" opt--art k-"+o:"")+'" data-i="'+i+'">'+esc(o)+'</button>').join("")
       +'</div>';
   } else if(q.k==="type"){
     h+='<input class="typein" id="qType" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="німецькою…">';
@@ -250,20 +344,43 @@ function renderQ(){
     const right=shuffle(q.pairs.map((p,i)=>({t:p[1],i,s:"uk"})));
     L.pairsLeft=q.pairs.length;
     h+='<div class="pairs" id="qPairs">'
-      +'<div style="display:grid;gap:9px">'+left.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="de">'+esc(x.t)+'</button>').join("")+'</div>'
-      +'<div style="display:grid;gap:9px">'+right.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="uk">'+esc(x.t)+'</button>').join("")+'</div>'
+      +'<div class="pairs__col">'+left.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="de">'+esc(x.t)+'</button>').join("")+'</div>'
+      +'<div class="pairs__col">'+right.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="uk">'+esc(x.t)+'</button>').join("")+'</div>'
       +'</div>';
+  }
+  /* підказка живе в тому місці, що раніше було порожнім */
+  if(q.k!=="teach" && q.k!=="pairs"){
+    h+='<div class="hintbox" id="hintBox">'
+      +'<button class="hintbtn" id="hintBtn"><span class="hintbtn__ic">?</span>Підказка</button>'
+      +'<div class="hintbody" id="hintBody"></div></div>';
   }
   lBody.innerHTML=h;
   lBody.parentElement.scrollTop=0;
   wire(q);
-  lFootIn.innerHTML = q.k==="pairs" ? '<p class="note" style="margin:0">Тисни німецьке слово, тоді його переклад.</p>'
-    : '<button class="btn btn--green btn--wide" id="lCheck" disabled>Перевірити</button>';
-  const chk=document.getElementById("lCheck"); if(chk)chk.addEventListener("click",check);
+  if(q.k==="teach"){
+    lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="lNext">Зрозуміло</button>';
+    document.getElementById("lNext").addEventListener("click",next);
+  } else if(q.k==="pairs"){
+    lFootIn.innerHTML='<p class="note" style="margin:0">Тисни німецьке слово, тоді його переклад.</p>';
+  } else {
+    lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="lCheck" disabled>Перевірити</button>';
+    document.getElementById("lCheck").addEventListener("click",check);
+  }
+  const hb=document.getElementById("hintBtn");
+  if(hb)hb.addEventListener("click",()=>{
+    if(L.hintOpen)return;
+    L.hintOpen=true; L.hintsUsed++;
+    document.getElementById("hintBox").classList.add("is-open");
+    document.getElementById("hintBody").innerHTML=hintFor(q);
+  });
 }
 function wire(q){
   const big=document.getElementById("bigSpeak");
-  if(big){big.addEventListener("click",()=>say(q.say)); if(q.autoSay)setTimeout(()=>say(q.say),260);}
+  if(big){big.addEventListener("click",()=>say(q.say)); if(q.autoSay||q.k==="teach")setTimeout(()=>say(q.say),260);}
+  lBody.querySelectorAll(".tw").forEach(row=>row.addEventListener("click",()=>{
+    say(row.dataset.say);
+    row.classList.add("is-said"); setTimeout(()=>row.classList.remove("is-said"),400);
+  }));
   if(q.k==="choice"){
     lBody.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
       if(L.locked)return;
@@ -297,14 +414,12 @@ function wire(q){
       if(sel.dataset.s===b.dataset.s){ sel.classList.remove("is-sel"); sel=b; b.classList.add("is-sel"); return; }
       if(sel.dataset.i===b.dataset.i){
         beep("ok"); [sel,b].forEach(x=>{x.classList.remove("is-sel");x.classList.add("gone");});
-        sel=null; L.pairsLeft--; L.right+=.2;
-        if(L.pairsLeft===0){ L.right=Math.round(L.right); addXP(2); L.xp+=2; setTimeout(next,340); }
+        sel=null; L.pairsLeft--;
+        if(L.pairsLeft===0){ L.right++; L.solved++; L.asked++; addXP(2); L.xp+=2; setTimeout(next,340); }
       }else{
         beep("bad"); const a=sel,c=b; a.classList.add("no"); c.classList.add("no");
-        if(L.hearts!==Infinity){L.hearts--;hearts();}
         setTimeout(()=>{a.classList.remove("no","is-sel");c.classList.remove("no");},550);
         sel=null;
-        if(L.hearts===0)setTimeout(fail,600);
       }
     }));
   }
@@ -326,59 +441,56 @@ function check(){
     const accept=[q.ans].concat(q.strictArt?[]:(q.alt||[]));
     ok=accept.some(a=>norm(a)===v); corr=q.ans;
     const inp=document.getElementById("qType");
-    inp.style.borderColor= ok?"var(--green)":"var(--red)";
-    inp.style.background = ok?"var(--green-l)":"var(--red-l)";
-    inp.blur();
+    inp.classList.add(ok?"ok":"no"); inp.blur();
   } else if(q.k==="build"){
     const got=[...document.getElementById("qSlot").children].map(x=>x.textContent).join(" ");
     ok=norm(got)===norm(q.ans); corr=q.ans;
   }
-  if(ok){ L.right++; beep("ok"); addXP(1); L.xp+=1; }
-  else { beep("bad"); if(L.hearts!==Infinity){L.hearts--;hearts();} }
+  L.asked++;
+  if(ok){
+    L.right++; L.solved++; beep("ok"); addXP(1); L.xp+=1;
+    if(!q.retried) logCorrect(L.lv,q.say);
+  } else {
+    beep("bad");
+    logMistake(L.lv,q.say);
+    /* безлімітні життя: питання не зникає, а повертається наприкінці */
+    if(!q.retried){
+      const again=Object.assign({},q,{retried:true});
+      L.queue.push(again);
+    } else { L.solved++; }
+  }
   if(q.say)setTimeout(()=>say(q.say), ok?120:420);
   lFoot.className="lfoot "+(ok?"ok":"no");
   lFootIn.innerHTML=
     '<div class="verdict">'
     + (ok?'<svg viewBox="0 0 24 24" fill="none" stroke="var(--green-d)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg>'
         :'<svg viewBox="0 0 24 24" fill="none" stroke="var(--red-d)" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="m9 9 6 6M15 9l-6 6"/></svg>')
-    +'<div><b>'+(ok?pick(WALDI_LINES.good):"Правильно: "+esc(corr))+'</b>'
-    + (ok?"":'<p>'+esc(pick(WALDI_LINES.bad))+'</p>')
+    +'<div><b>'+(ok?esc(pick(WALDI_LINES.good)):"Правильно: "+esc(corr))+'</b>'
+    + (ok?"":'<p>'+esc(q.retried?"Це слово повернеться ще раз наприкінці.":"Не страшно — покажу його ще раз у кінці уроку.")+'</p>')
     + (q.hint?'<span class="k">'+q.hint+'</span>':'')
     +'</div></div>'
     +'<button class="btn '+(ok?"btn--green":"btn--gold")+' btn--wide" id="lNext">Далі</button>';
   document.getElementById("lNext").addEventListener("click",next);
-  if(L.hearts===0){ setTimeout(fail,300); }
 }
 function next(){
-  if(L.hearts===0){fail();return;}
+  if(L.queue[L.i] && L.queue[L.i].k==="teach"){ L.solved++; L.total++; }
   L.i++;
   if(L.i>=L.queue.length) finish(); else renderQ();
-}
-function fail(){
-  L.done=true;
-  document.getElementById("lBar").style.width="100%";
-  lBody.innerHTML='<div class="endcard">'+waldi("sad",150)
-    +'<h2>Серця скінчилися</h2><p style="color:var(--ink-60);max-width:34ch;margin:0 auto">'
-    +'Це не поразка — це сигнал, що тему варто пройти ще раз. Слова з цього уроку нікуди не поділися.</p></div>';
-  lFoot.className="lfoot"; 
-  lFootIn.innerHTML='<button class="btn btn--gold btn--wide" id="lRetry" style="margin-bottom:9px">Спробувати ще раз</button>'
-    +'<button class="btn btn--wide" id="lBack">Вийти</button>';
-  document.getElementById("lRetry").addEventListener("click",()=>{const o=L; endLesson(); startLesson(o);});
-  document.getElementById("lBack").addEventListener("click",endLesson);
 }
 function finish(){
   L.done=true;
   const secs=Math.round((Date.now()-L.t0)/1000);
-  const acc=Math.round(L.right/L.queue.length*100);
-  state.answered+=L.queue.length; state.correct+=Math.round(L.right); state.lessons++;
-  let bonus=10; if(acc>=100)bonus+=10;
+  const acc=L.asked?Math.round(L.right/L.asked*100):100;
+  state.answered+=L.asked; state.correct+=L.right; state.lessons++;
+  let bonus=10;
+  if(acc>=100 && !L.hintsUsed) bonus+=10;
   addXP(bonus); L.xp+=bonus;
   let crowned=false;
   if(L.day){
     const k=DAYKEY(L.day.lv,L.day.i), cur=state.days[k]||0;
-    if(acc>=60 && cur<3){ state.days[k]=cur+1; crowned=true; }
-    else if(!cur && acc>=60) state.days[k]=1;
+    if(cur<3){ state.days[k]=cur+1; crowned=true; }
   }
+  if(L.mode==="sprint" && L.right>(state.sprintBest||0)) state.sprintBest=L.right;
   save(); beep("win"); confetti();
   document.getElementById("lBar").style.width="100%";
   lBody.innerHTML='<div class="endcard">'+waldi("happy",160)
@@ -389,7 +501,8 @@ function finish(){
     +'<div class="endstat es-acc"><b>'+acc+'%</b><span>влучність</span></div>'
     +'<div class="endstat es-time"><b>'+Math.floor(secs/60)+":"+String(secs%60).padStart(2,"0")+'</b><span>час</span></div>'
     +'</div>'
-    +(crowned?'<p style="font-family:var(--mono);font-size:12px;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase">+1 корона за цей день</p>':'')
+    +(crowned?'<p class="endcrown">+1 корона за цей день</p>':'')
+    +(L.hintsUsed?'<p class="note">Підказок узято: '+L.hintsUsed+'. Це нормально — вони для того й є.</p>':'')
     +'</div>';
   lFoot.className="lfoot ok";
   lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="lDone">Далі</button>';

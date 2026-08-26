@@ -130,51 +130,99 @@ h1 span{display:block}
 .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--orange));transition:width .5s}
 .bar--green i{background:linear-gradient(90deg,var(--green),#5BD99B)}
 
-/* ---------- PATH ---------- */
-.lvlband{margin-top:26px}
-.lvlband__head{position:sticky;top:52px;z-index:20;background:var(--paper);padding:12px 0 10px}
-@media(min-width:820px){.lvlband__head{top:112px}}
-.lvlband__card{border-radius:var(--r);padding:13px 16px;color:#fff;display:flex;align-items:center;gap:12px}
-.lvlband__card b{font-family:var(--disp);font-size:26px;line-height:1}
-.lvlband__card span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
-.lvlband__card .lp{margin-left:auto;font-family:var(--disp);font-size:20px}
+/* ---------- ВУЛИЦЯ ---------- */
+.weg{display:grid;gap:18px;margin-top:22px}
+@media(min-width:1000px){.weg{grid-template-columns:320px 1fr;align-items:start}}
+
+/* бічна панель персонажів */
+.side{display:grid;gap:9px}
+@media(max-width:999px){
+  .side{grid-auto-flow:column;grid-auto-columns:76%;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding-bottom:6px;scrollbar-width:none}
+  .side::-webkit-scrollbar{display:none}
+  .side .tcard{scroll-snap-align:start}
+  .side__t{display:none}
+}
+@media(min-width:1000px){.side{position:sticky;top:118px}}
+.side__t{margin-bottom:2px}
+.tcard--ch{display:flex;gap:11px;align-items:center;position:relative;border:2px solid var(--line);
+  border-radius:var(--r);background:var(--panel);padding:11px 13px;text-align:left;
+  box-shadow:0 4px 0 var(--line);transition:transform .07s,box-shadow .07s}
+.tcard--ch:active{transform:translateY(4px);box-shadow:0 0 0 var(--line)}
+.tcard--ch.is-hot{border-color:var(--c);box-shadow:0 4px 0 var(--c)}
+.tcard__ch{flex:none;width:58px;display:grid;place-items:center}
+.tcard__ch svg{width:58px;height:auto}
+.tcard__txt{display:block;min-width:0}
+.tcard__txt b{font-family:var(--disp);font-size:15px;text-transform:uppercase;display:block;line-height:1.1}
+.tcard__txt>span{font-size:12.5px;color:var(--ink-60);display:block;line-height:1.3}
+.tcard__meta{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--c);text-transform:uppercase;margin-top:3px}
+.tcard__dot{position:absolute;top:8px;right:9px;background:var(--c);color:#fff;border-radius:999px;
+  font-family:var(--disp);font-size:11px;padding:1px 7px}
+
+/* квартал */
+.viertel{margin-top:26px}
+.viertel__head{position:sticky;top:52px;z-index:20;background:var(--paper);padding:10px 0 9px}
+@media(min-width:820px){.viertel__head{top:112px}}
+.viertel__card{border-radius:var(--r);padding:12px 15px;color:#fff;display:flex;align-items:center;gap:11px}
+.viertel__card b{font-family:var(--disp);font-size:25px;line-height:1}
+.viertel__card span{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;opacity:.92}
+.viertel__card .lp{margin-left:auto;font-family:var(--disp);font-size:19px}
 .bA1{background:var(--green)}.bA2{background:var(--blue)}.bB1{background:var(--purple)}
 .bB2{background:var(--orange)}.bC1{background:var(--red)}
-.path{display:flex;flex-direction:column;align-items:center;gap:22px;padding:18px 0 14px}
-.node{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;width:170px}
-.node__btn{width:74px;height:66px;border:0;border-radius:50%/46%;background:var(--line);box-shadow:0 7px 0 #D6CBB0;
-  display:grid;place-items:center;transition:transform .07s,box-shadow .07s;position:relative}
-.node__btn:active{transform:translateY(6px);box-shadow:0 1px 0 #D6CBB0}
-.node__btn b{font-family:var(--disp);font-size:23px;color:#fff}
-.node__btn svg{width:29px;height:29px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.node--done .node__btn{background:var(--gold);box-shadow:0 7px 0 var(--gold-d)}
-.node--now .node__btn{background:var(--green);box-shadow:0 7px 0 var(--green-d)}
-.node--lock .node__btn{background:#E3DAC6;box-shadow:0 7px 0 #CFC4AB;cursor:not-allowed}
-.node--lock .node__btn svg{stroke:#B0A68F}
-.node__lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-60);
-  text-align:center;line-height:1.35}
-.node--lock .node__lbl{color:var(--ink-30)}
-.node--now .node__lbl{color:var(--green-d);font-weight:700}
-.node__crowns{position:absolute;top:-5px;right:38px;background:var(--panel);border:2px solid var(--gold);border-radius:999px;
-  font-family:var(--disp);font-size:10px;padding:0 5px;color:var(--gold-d)}
-.node:nth-child(8n+1){transform:translateX(0)}
-.node:nth-child(8n+2){transform:translateX(52px)}
-.node:nth-child(8n+3){transform:translateX(76px)}
-.node:nth-child(8n+4){transform:translateX(52px)}
-.node:nth-child(8n+5){transform:translateX(0)}
-.node:nth-child(8n+6){transform:translateX(-52px)}
-.node:nth-child(8n+7){transform:translateX(-76px)}
-.node:nth-child(8n+8){transform:translateX(-52px)}
-@media(max-width:400px){
-  .node{width:150px}
-  .node:nth-child(8n+2),.node:nth-child(8n+4){transform:translateX(40px)}
-  .node:nth-child(8n+3){transform:translateX(58px)}
-  .node:nth-child(8n+6),.node:nth-child(8n+8){transform:translateX(-40px)}
-  .node:nth-child(8n+7){transform:translateX(-58px)}
+
+/* сама вулиця: дорога посередині, фасади обабіч */
+.street{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:22px 0 26px;background:var(--road);border-radius:18px;overflow:hidden;
+  background-image:linear-gradient(var(--sky),var(--road) 30%)}
+.street::before,.street::after{content:"";position:absolute;top:0;bottom:0;width:170px;
+  background-image:var(--tileL);background-repeat:repeat-y;background-position:top center;
+  opacity:.95;pointer-events:none;z-index:0}
+.street::before{left:-14px}
+.street::after{right:-14px;transform:scaleX(-1)}
+@media(max-width:760px){
+  .street::before,.street::after{width:104px;background-size:104px auto}
+  .street::before{left:-26px}.street::after{right:-26px}
 }
-.now-here{position:absolute;top:-17px;left:50%;transform:translateX(-50%);background:var(--green);border:0;
+@media(max-width:430px){
+  .street::before,.street::after{width:74px;background-size:74px auto;opacity:.8}
+  .street::before{left:-22px}.street::after{right:-22px}
+}
+/* бруківка по центру */
+.street>*{position:relative;z-index:2}
+
+/* будинок-день */
+.hs{display:flex;flex-direction:column;align-items:center;gap:2px;width:min(210px,62%);position:relative;padding-bottom:12px}
+.house{border:0;background:none;padding:0;position:relative;width:118px;filter:drop-shadow(0 4px 2px rgba(34,31,26,.14));
+  transition:transform .07s}
+.house:active{transform:translateY(4px)}
+.house[disabled]{cursor:not-allowed;opacity:.72}
+.house__door{display:block;width:118px;height:126px}
+.house__num{position:absolute;top:2px;left:50%;transform:translateX(-50%);z-index:3;
+  background:var(--panel);border:2px solid var(--ink);border-radius:7px;
+  font-family:var(--disp);font-weight:800;font-size:12px;padding:0 7px;line-height:1.5}
+.hs--lock .house__num{border-color:#B4A98F;color:var(--ink-30)}
+.hs__lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-60);text-align:center;line-height:1.35;max-width:170px}
+.hs--lock .hs__lbl{color:var(--ink-30)}
+.hs--now .hs__lbl{color:var(--green-d);font-weight:700}
+.hs__crowns{position:absolute;top:-6px;right:16px;background:var(--panel);border:2px solid var(--gold);
+  border-radius:999px;font-family:var(--disp);font-size:10px;padding:0 5px;color:var(--gold-d);z-index:3}
+.now-here{position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:var(--green);
   color:#fff;border-radius:9px;font-family:var(--disp);font-weight:800;font-size:10px;letter-spacing:.1em;
-  padding:3px 9px;text-transform:uppercase;white-space:nowrap;z-index:3;box-shadow:0 3px 0 var(--green-d)}
+  padding:3px 9px;text-transform:uppercase;white-space:nowrap;z-index:4;box-shadow:0 3px 0 var(--green-d)}
+
+/* крамниця персонажа */
+.hs--shop{width:min(240px,74%)}
+.shop{border:0;background:var(--panel);border-radius:14px;padding:8px 10px 10px;position:relative;
+  width:100%;display:grid;justify-items:center;gap:2px;box-shadow:0 5px 0 var(--c);transition:transform .07s}
+.shop:active{transform:translateY(4px);box-shadow:0 1px 0 var(--c)}
+.shop[disabled]{opacity:.55;cursor:not-allowed}
+.shop__awning{display:block;width:100%;height:14px;border-radius:8px 8px 3px 3px;
+  background:repeating-linear-gradient(90deg,var(--c) 0 12px,#fff 12px 24px)}
+.shop__face{display:block;margin-top:2px}
+.shop__face svg{width:64px;height:auto}
+.shop__sign{font-family:var(--disp);font-weight:800;font-size:12px;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--c)}
 
 /* ---------- day sheet ---------- */
 .sheet{position:fixed;inset:0;z-index:90;background:rgba(34,31,26,.5);display:none;align-items:flex-end;justify-content:center}
@@ -345,6 +393,102 @@ h1 span{display:block}
 @keyframes fall{to{transform:translateY(105vh) rotate(760deg);opacity:.2}}
 footer{border-top:2px solid var(--line);margin-top:32px;padding:20px 0 30px}
 footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:60ch}
+
+/* ---------- КАРТКА-ЗНАЙОМСТВО В УРОЦІ ---------- */
+.teach{background:var(--panel);border:2px solid var(--line);border-radius:var(--r);padding:22px 18px;text-align:center;margin-top:6px}
+.teach__de{font-family:var(--disp);font-weight:800;font-size:clamp(30px,9vw,50px);line-height:1.05}
+.teach__tr{font-family:var(--mono);font-size:14px;color:var(--ink-60);letter-spacing:.04em;margin-top:5px}
+.teach__uk{font-size:19px;color:#4A443A;margin-top:10px}
+.teach__pl{font-family:var(--mono);font-size:12px;color:var(--ink-30);margin-top:7px}
+.teach .speak--sm{margin:14px auto 0}
+.teach--rule{text-align:left}
+.teach__tag{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-60)}
+.teach__title{font-family:var(--disp);font-weight:800;font-size:21px;text-transform:uppercase;margin:4px 0 8px}
+.teach__txt{font-size:15.5px;margin:0 0 12px}
+
+/* ---------- ПІДКАЗКА ---------- */
+.hintbox{margin-top:18px;border-top:2px dashed var(--line);padding-top:14px}
+.hintbtn{border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 15px 8px 9px;
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-size:13px;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--ink-60)}
+.hintbtn__ic{width:22px;height:22px;border-radius:50%;background:var(--gold);color:var(--ink);
+  display:grid;place-items:center;font-size:14px}
+.hintbox.is-open .hintbtn{display:none}
+.hintbody{display:none;background:var(--gold-l);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;
+  padding:12px 14px;font-size:15px;line-height:1.5}
+.hintbox.is-open .hintbody{display:block;animation:fade .2s}
+.lcount{font-family:var(--mono);font-size:12px;color:var(--ink-60);white-space:nowrap}
+.opts--3{grid-template-columns:repeat(3,1fr)}
+.opt--art{text-align:center;font-family:var(--disp);font-weight:800;font-size:clamp(21px,6vw,30px);padding:18px 4px}
+.typein.ok{border-color:var(--green);background:var(--green-l)}
+.typein.no{border-color:var(--red);background:var(--red-l)}
+.pairs__col{display:grid;gap:9px}
+.endcrown{font-family:var(--mono);font-size:12px;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- ПЕРСОНАЖ У ЗАВДАННІ ---------- */
+.chhead{display:flex;gap:14px;align-items:center;margin-bottom:4px}
+.chhead svg{width:84px;flex:none}
+.chhead__n{font-family:var(--disp);font-size:26px;text-transform:uppercase;margin:2px 0 4px;color:var(--c)}
+.chhead__l{font-size:14.5px;color:#4A443A;margin:0;line-height:1.4}
+
+/* Ельза: список помилок */
+.mlist{display:grid;gap:5px;max-height:240px;overflow-y:auto}
+.mrow{display:grid;grid-template-columns:1fr auto auto;gap:9px;align-items:center;
+  background:var(--paper);border-radius:9px;padding:7px 10px;font-size:14px}
+.mrow.is-due{background:var(--gold-l)}
+.mrow b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow__box,.mrow__due{font-family:var(--mono);font-size:10px;color:var(--ink-60);white-space:nowrap}
+
+/* Бруно: словобуд */
+.cw__uk{font-family:var(--disp);font-weight:800;font-size:clamp(22px,6vw,32px);text-transform:uppercase;margin:4px 0}
+.cw__hint{font-family:var(--mono);font-size:12.5px;color:var(--ink-60);margin-bottom:12px}
+.cw__slot{min-height:52px;border-bottom:3px dashed var(--line);display:flex;flex-wrap:wrap;gap:8px;
+  align-content:flex-start;padding-bottom:8px;margin-bottom:14px}
+.tile--in{box-shadow:none;border-color:var(--blue);background:var(--blue-l)}
+.cw__fb{margin-top:12px;font-size:15px}
+.cw__fb.ok{color:var(--green-d)}.cw__fb.no{color:var(--red-d)}
+.cw__fb b{font-family:var(--disp);font-size:19px;display:block}
+.cw__fb .tr{font-family:var(--mono);font-size:12.5px;color:var(--ink-60)}
+.cw__fb p{margin:6px 0 0;font-size:14px;color:#4A443A}
+
+/* Курт: спринт */
+.sprintbar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.sprintbar__c{font-family:var(--disp);font-weight:800;font-size:34px;color:var(--purple-d)}
+.sprintbar__s{font-family:var(--disp);font-weight:800;font-size:22px;color:var(--green-d)}
+
+/* Ґрета: слово дня */
+.wotd{background:var(--panel);border:2px solid var(--line);border-radius:var(--r);padding:20px 17px;text-align:center;margin-top:12px}
+.wotd__de{font-family:var(--disp);font-weight:800;font-size:clamp(26px,8vw,44px);line-height:1.05}
+.wotd__tr{font-family:var(--mono);font-size:13.5px;color:var(--ink-60);margin-top:4px}
+.wotd__uk{font-size:18px;color:#4A443A;margin-top:12px}
+.wotd__story{font-size:15px;line-height:1.55;margin:14px 0;text-align:left;
+  background:var(--gold-l);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:11px 13px}
+.wotd .ex{text-align:left}
+.wotd .speak--sm{margin:12px auto 0}
+
+/* ---------- ВИБІР ГОЛОСУ ---------- */
+.vlist{display:grid;gap:6px;max-height:230px;overflow-y:auto}
+.vrow{display:flex;align-items:center;gap:10px;border:2px solid var(--line);background:var(--panel);
+  border-radius:11px;padding:9px 12px;text-align:left;font-size:14.5px}
+.vrow.is-on{border-color:var(--green);background:var(--green-l)}
+.vrow__r{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex:none}
+.vrow.is-on .vrow__r{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 3px #fff}
+.vrow b{font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vrow__t{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60)}
+
+/* картка-знайомство зі списком слів */
+.teach--list{text-align:left;padding:14px 12px}
+.tw{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;
+  padding:9px 10px;border-radius:11px;transition:background .18s}
+.tw+.tw{border-top:1px solid var(--line)}
+.tw.is-said{background:var(--gold-l)}
+.tw__l b{font-weight:700;font-size:17px}
+.tw__l i{font-family:var(--mono);font-size:10.5px;color:var(--ink-30);font-style:normal;margin-left:7px}
+.tw__tr{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-60);letter-spacing:.03em}
+.tw__uk{font-size:14.5px;color:#4A443A;text-align:right}
+.tw__say{border:0;background:none;padding:3px;flex:none}
+.tw__say svg{width:18px;height:18px;fill:var(--ink-30)}
+.teach__tip{font-family:var(--mono);font-size:11px;color:var(--ink-60);text-align:center;margin:12px 0 0}
 </style>
 </head>
 <body>
@@ -370,23 +514,22 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
   <div class="hero">
     <span class="eyebrow">Повна програма · українською · 2000 слів · 75 правил</span>
     <h1><span>Von Null</span><span>bis <em class="gold" style="font-style:normal">C1</em></span></h1>
-    <div class="waldi-box" style="margin-top:16px">
+    <div class="waldi-box" style="margin-top:14px">
       <div id="waldiHero"></div>
       <div class="bubble"><b>Вальді</b><span id="waldiSay">Привіт! Я Вальді. Разом дійдемо до C1 — по одному дню за раз.</span></div>
     </div>
-    <div class="facts">
-      <div class="fact"><b>2000</b><span>слів у 100 днях</span></div>
-      <div class="fact"><b>100</b><span>днів-уроків</span></div>
-      <div class="fact"><b>75</b><span>правил граматики</span></div>
-      <div class="fact"><b>12</b><span>типів вправ</span></div>
-    </div>
     <div class="goalbar">
-      <div class="goalbar__top"><span class="eyebrow">Ціль на сьогодні</span><span class="eyebrow" id="goalTxt">0 / 40 XP</span></div>
+      <div class="goalbar__top"><span class="eyebrow">Ціль на сьогодні</span><span class="eyebrow" id="goalTxt">0 / 30 XP</span></div>
       <div class="bar"><i id="goalBar" style="width:0%"></i></div>
-      <p class="note" id="goalNote" style="margin-top:9px">Один урок ≈ 20 XP. Два уроки на день — і за 100 днів ти пройдеш усю програму.</p>
+      <p class="note" id="goalNote" style="margin-top:9px"></p>
     </div>
   </div>
-  <div id="pathWrap"></div>
+
+  <div class="weg">
+    <aside class="side" id="sideRail"></aside>
+    <div class="streetcol" id="pathWrap"></div>
+  </div>
+
   <footer>
     <p>Прогрес зберігається у твоєму браузері. Найважливіше правило: щоденні 30 хвилин сильніші за чотири години раз на тиждень.</p>
     <p class="note" id="savedNote"></p>
@@ -467,6 +610,14 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
       <p class="note">Пропуски не «доганяються» подвійним заняттям. 30 хвилин щодня сильніші за 4 години в неділю.</p>
     </div>
     <div class="tool" style="margin-top:12px">
+      <span class="eyebrow">Озвучка</span>
+      <p style="font-size:14.5px;margin:8px 0 10px">Голоси відрізняються на кожному пристрої. Обери той, що звучить найживіше — вибір запам'ятається.</p>
+      <div id="voicePick"></div>
+      <div style="margin-top:12px"><span class="eyebrow">Швидкість · <b id="rateOut">0.95</b></span>
+        <input type="range" id="rateRange" min="0.6" max="1.2" step="0.05" value="0.95" style="width:100%" aria-label="Швидкість озвучки"></div>
+      <button class="btn" id="voiceTest" style="margin-top:10px">Прослухати зразок</button>
+    </div>
+    <div class="tool" style="margin-top:12px">
       <span class="eyebrow">Дані</span>
       <p style="font-size:14.5px;margin:8px 0 12px">Скидання видалить увесь прогрес: вивчені слова, пройдені дні, XP і серію.</p>
       <button class="btn" id="resetBtn">Скинути прогрес</button>
@@ -483,7 +634,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
   <div class="lesson__top">
     <button class="xbtn" id="lQuit" aria-label="Вийти">&times;</button>
     <div class="bar" style="flex:1"><i id="lBar" style="width:0%"></i></div>
-    <span class="hearts" id="lHearts"></span>
+    <span class="lcount" id="lCount">0 / 0</span>
   </div>
   <div class="lesson__body"><div class="lesson__in" id="lBody"></div></div>
   <div class="lfoot" id="lFoot"><div class="lfoot__in" id="lFootIn"></div></div>
@@ -754,8 +905,394 @@ VID.A2=`DW Deutsch lernen|Nicos Weg A2 Beruf und Arbeit;Easy German|Geld und Bez
 VID.B1=`DW Deutsch lernen|Nicos Weg B1 Ausbildung Studium;Easy German|Bewerbung und Vorstellungsgespräch Deutsch;DW Deutsch lernen|Nicos Weg B1 Wohnen in Deutschland;Easy German|Gesundheitssystem Deutschland erklärt;Easy German|Gesellschaft und Zusammenleben Deutschland;Deutsch mit Rieke|Technik Wortschatz Deutsch B1;24h Deutsch|Nomen-Verb-Verbindungen B1;Learn German with Anja|Verben mit Präpositionen B1 Liste;Deutsch mit Marija|Charaktereigenschaften Deutsch B1;24h Deutsch|Konnektoren obwohl trotzdem deshalb;Easy German|Arbeitsalltag im Büro Deutsch;Slow German mit Annik Rubens|Medien in Deutschland;Easy German|Mülltrennung und Recycling in Deutschland;Easy German|Leben als Ausländer in Deutschland;Slow German mit Annik Rubens|Geld und Sparen in Deutschland;Slow German mit Annik Rubens|Kultur und Museen in Deutschland;Easy German|Öffentliche Verkehrsmittel Deutschland;24h Deutsch|Konjunktiv II höfliche Bitten B1;Learn German with Anja|Reflexive Verben Deutsch B1;24h Deutsch|Argumentieren auf Deutsch B1`;
 VID.B2=`Deutsch mit Benjamin|Politik Wortschatz Deutsch B2;Slow German mit Annik Rubens|Deutsche Wirtschaft erklärt;Easy German|Medien und Nachrichten Deutschland;Deutsch mit Rieke|Umwelt und Klima Wortschatz B2;Slow German mit Annik Rubens|Wissenschaft in Deutschland;Deutsch mit Benjamin|Rechtssprache Deutsch B2;Deutsch mit Benjamin|Abstrakte Verben B2 Wortschatz;24h Deutsch|Komparativ Superlativ Steigerung B2;Deutsch mit Benjamin|Formelle Briefe schreiben B2;Deutsch mit Benjamin|Konnektoren B2 Übersicht;Easy German|Arbeitsmarkt in Deutschland;Easy German|Das deutsche Schulsystem erklärt;Slow German mit Annik Rubens|Krankenversicherung Deutschland;Deutsch mit Rieke|Digitalisierung Wortschatz Deutsch;Easy German|Wohnungsmarkt in deutschen Städten;Deutsch mit Benjamin|Grafik beschreiben Statistik B2;Deutsch mit Benjamin|Diskussion und Verhandlung Deutsch B2;Deutsch mit Benjamin|Kausale Zusammenhänge ausdrücken B2;Deutsch mit Benjamin|Nominalisierung Deutsch B2;Deutsch mit Benjamin|Funktionsverbgefüge B2 C1`;
 VID.C1=`Deutsch mit Benjamin|Akademischer Wortschatz C1;Deutsch mit Benjamin|Feste Wendungen C1 Deutsch;Easy German|Modalpartikeln doch mal eben erklärt;Easy German|Deutsche Redewendungen erklärt;Deutsch mit Benjamin|Gehobene Sprache Deutsch C1;Deutsch mit Benjamin|Synonyme unterscheiden C1;Slow German mit Annik Rubens|Psychologie und Philosophie Deutsch;Deutsch mit Benjamin|Amtssprache Behördendeutsch verstehen;Easy German|Umgangssprache auf der Straße;Deutsch mit Benjamin|Literarische Texte lesen C1;Deutsch mit Benjamin|Wissenschaftlich argumentieren C1;Deutsch mit Benjamin|Vertragssprache Deutsch verstehen;Easy German|Wie deutsche Medien argumentieren;Deutsch mit Benjamin|Gefühle differenziert ausdrücken C1;Slow German mit Annik Rubens|Deutsche Geschichte Erinnerungskultur;Slow German mit Annik Rubens|Ethik Debatten in Deutschland;Deutsch mit Benjamin|Metaphern im Deutschen C1;Easy German|Slang und Jugendsprache Deutsch;Deutsch mit Benjamin|Wortbildung Präfixe Suffixe Deutsch;Deutsch mit Benjamin|Diskursmarker C1 Textkohärenz`;
+/* ================= СЛОВОБУД · дані Бруно =================
+   формат: ціле слово | частини через + | переклад | переклади частин через + | нотатка
+   Німецька не вигадує нових слів — вона склеює старі. Це найкраща
+   мнемоніка, яка є в мові: знаєш дві частини — знаєш третє слово.        */
+const COMP=`
+der Handschuh|Hand+Schuh|рукавичка|рука+черевик|Черевик для руки — і все, це вже не треба зубрити;
+der Bahnhof|Bahn+Hof|вокзал|колія+двір|;
+das Krankenhaus|Kranken+Haus|лікарня|хворі+дім|;
+der Kühlschrank|Kühl+Schrank|холодильник|прохолодний+шафа|;
+das Schlafzimmer|Schlaf+Zimmer|спальня|сон+кімната|;
+das Wohnzimmer|Wohn+Zimmer|вітальня|проживання+кімната|;
+der Wasserfall|Wasser+Fall|водоспад|вода+падіння|;
+die Sonnenbrille|Sonnen+Brille|сонцезахисні окуляри|сонце+окуляри|;
+der Regenschirm|Regen+Schirm|парасолька|дощ+щит|Щит від дощу — німці описали предмет буквально;
+die Zahnbürste|Zahn+Bürste|зубна щітка|зуб+щітка|;
+der Geburtstag|Geburts+Tag|день народження|народження+день|;
+das Wörterbuch|Wörter+Buch|словник|слова+книга|;
+der Kindergarten|Kinder+Garten|дитячий садок|діти+сад|Слово поїхало в англійську без перекладу;
+der Apfelsaft|Apfel+Saft|яблучний сік|яблуко+сік|;
+das Frühstück|Früh+Stück|сніданок|рано+шматок|Ранній шматок — так і є;
+der Flughafen|Flug+Hafen|аеропорт|політ+гавань|Гавань для польотів: літак причалює, як корабель;
+die Straßenbahn|Straßen+Bahn|трамвай|вулиця+колія|;
+das Fahrrad|Fahr+Rad|велосипед|їхати+колесо|;
+der Führerschein|Führer+Schein|водійські права|водій+посвідка|;
+die Hausaufgabe|Haus+Aufgabe|домашнє завдання|дім+завдання|;
+der Schreibtisch|Schreib+Tisch|письмовий стіл|писати+стіл|;
+das Taschentuch|Taschen+Tuch|носовичок|кишеня+хустка|;
+der Staubsauger|Staub+Sauger|пилосос|пил+смоктач|Точний близнюк українського слова;
+der Wasserhahn|Wasser+Hahn|водопровідний кран|вода+півень|Кран — це «водяний півень». Через форму дзьоба;
+die Glühbirne|Glüh+Birne|лампочка|розжарення+груша|Розжарена груша — за формою;
+der Lebenslauf|Lebens+Lauf|резюме|життя+біг|Життєпробіг: куди ти встиг добігти;
+die Muttersprache|Mutter+Sprache|рідна мова|мати+мова|;
+die Krankenkasse|Kranken+Kasse|лікарняна каса|хворі+каса|;
+der Klimawandel|Klima+Wandel|зміна клімату|клімат+переміна|;
+die Umweltverschmutzung|Umwelt+Verschmutzung|забруднення довкілля|довкілля+забруднення|;
+der Rechtsanwalt|Rechts+Anwalt|адвокат|право+повірений|;
+der Wortschatz|Wort+Schatz|словниковий запас|слово+скарб|Слова — це скарб, і німецька каже це прямо;
+das Heimweh|Heim+Weh|туга за домом|дім+біль|;
+das Fernweh|Fern+Weh|потяг до мандрів|даль+біль|Протилежність Heimweh: болить не дім, а те, що ти ще не поїхала;
+der Zeitgeist|Zeit+Geist|дух часу|час+дух|;
+die Schadenfreude|Schaden+Freude|зловтіха|шкода+радість|Англійська запозичила це слово цілком — свого не мала;
+der Feierabend|Feier+Abend|кінець робочого дня|свято+вечір|Не «вечір після роботи», а «святковий вечір». Ставлення видно зі слова;
+die Sehnsucht|Sehn+Sucht|туга за далеким|тужити+жага|;
+der Ohrwurm|Ohr+Wurm|нав'язлива мелодія|вухо+черв'як|Пісня, що заповзла у вухо й не вилазить;
+der Kummerspeck|Kummer+Speck|вага від переживань|горе+сало|Сало, наїдене з горя. Слово без аналога;
+das Kopfkino|Kopf+Kino|уява, що розігралася|голова+кіно|;
+der Drahtesel|Draht+Esel|велосипед (розмовне)|дріт+осел|Дротяний осел — як його називають між своїми;
+die Fußgängerzone|Fußgänger+Zone|пішохідна зона|пішохід+зона|;
+die Geschwindigkeitsbegrenzung|Geschwindigkeits+Begrenzung|обмеження швидкості|швидкість+обмеження|;
+der Arbeitsplatz|Arbeits+Platz|робоче місце|робота+місце|;
+die Lebensmittel|Lebens+Mittel|продукти харчування|життя+засоби|Засоби для життя — так у Німеччині називають їжу в магазині;
+der Briefkasten|Brief+Kasten|поштова скринька|лист+скриня|;
+das Tagebuch|Tage+Buch|щоденник|дні+книга|;
+die Nachspeise|Nach+Speise|десерт|після+страва|;
+der Fahrplan|Fahr+Plan|розклад руху|їзда+план|;
+die Waschmaschine|Wasch+Maschine|пральна машина|прання+машина|;
+das Bücherregal|Bücher+Regal|книжкова полиця|книги+полиця|;
+der Sonnenschein|Sonnen+Schein|сонячне сяйво|сонце+сяйво|;
+die Handtasche|Hand+Tasche|сумочка|рука+сумка|;
+der Bleistift|Blei+Stift|олівець|свинець+стрижень|Свинцевий стрижень — назва старша за сам графіт;
+das Meerschweinchen|Meer+Schweinchen|морська свинка|море+свинка|;
+die Weltanschauung|Welt+Anschauung|світогляд|світ+погляд|;
+das Fingerspitzengefühl|Fingerspitzen+Gefühl|тонке чуття|кінчики пальців+відчуття|Чуття на кінчиках пальців — про делікатність у справах;
+die Torschlusspanik|Torschluss+Panik|страх не встигнути|зачинення брами+паніка|Паніка перед тим, як брама зачиниться. Про вік і втрачені шанси;
+der Schweinehund|Schweine+Hund|власна лінь|свиня+собака|«Внутрішній свинопес» — те, що не пускає тебе на пробіжку`;
+/* ================= СЛОВО ДНЯ · дані Ґрети =================
+   формат: слово | переклад | звідки воно взялося | приклад DE | приклад UK
+   Тільки слова, за якими стоїть історія. Транскрипція рахується tr() на льоту. */
+const WOTD=`
+die Sehnsucht|туга за чимось далеким|Sehnen (тужити) плюс Sucht (жага, залежність). Не сум, а тяга до того, чого немає поруч|Ich habe Sehnsucht nach dem Meer.|Я тужу за морем.;
+der Feierabend|кінець робочого дня|Дослівно «святковий вечір». Не «вечір після роботи» — саме свято. Ставлення до відпочинку видно просто зі слова|Schönen Feierabend!|Гарного вечора після роботи!;
+die Gemütlichkeit|затишок із теплом усередині|Не про меблі, а про стан. Свічки, тиша, свої люди й нікуди не треба поспішати|Bei ihr herrscht eine besondere Gemütlichkeit.|У неї вдома особливий затишок.;
+das Fernweh|потяг до мандрів|Дзеркало Heimweh: там болить дім, тут — усе те, чого ти ще не бачила|Im Winter packt mich das Fernweh.|Узимку мене охоплює жага мандрів.;
+die Schadenfreude|зловтіха|Schaden (шкода) плюс Freude (радість). Англійська не мала свого слова й запозичила це цілком|Ein bisschen Schadenfreude war dabei.|Трохи зловтіхи там таки було.;
+der Ohrwurm|нав'язлива мелодія|Дослівно «вушний черв'як» — пісня заповзла у вухо й не вилазить|Dieses Lied ist ein echter Ohrwurm.|Ця пісня справді не йде з голови.;
+die Vorfreude|радість передчуття|Vor (перед) плюс Freude (радість). Німці вважають її сильнішою за саму подію|Vorfreude ist die schönste Freude.|Передчуття радості — найкраща радість.;
+die Geborgenheit|відчуття захищеності|Від bergen — укривати, рятувати. Стан, коли тобі нічого не загрожує й тебе тримають|Kinder brauchen Geborgenheit.|Дітям потрібне відчуття захищеності.;
+der Weltschmerz|світова скорбота|Придумав письменник Жан Поль. Біль від того, що світ не такий, яким мав би бути|Mit siebzehn hatte ich großen Weltschmerz.|У сімнадцять я страшенно тужила за кращим світом.;
+die Eselsbrücke|мнемонічна підказка|«Ослячий міст». Осел не піде через воду, тож для нього будували місток — обхідний шлях для пам'яті|Ich brauche eine Eselsbrücke für diese Regel.|Мені потрібна підказка для цього правила.;
+das Fettnäpfchen|незручна ситуація|Дослівно «мисочка з жиром». Наступити в неї — бовкнути щось недоречне|Da bin ich ins Fettnäpfchen getreten.|Отут я сіла в калюжу.;
+der Treppenwitz|дотеп, що спав на думку запізно|Жарт, який ти придумала вже на сходах, виходячи. Коли відповідати пізно|Mir fiel nur ein Treppenwitz ein.|Влучна відповідь спала мені на думку запізно.;
+das Sitzfleisch|посидючість|Дослівно «м'ясо для сидіння». Здатність висидіти над роботою, скільки треба|Für dieses Studium braucht man Sitzfleisch.|Для цього навчання потрібна посидючість.;
+die Fremdscham|сором за іншого|Fremd (чужий) плюс Scham (сором). Коли незручно тобі, а дурницю зробив хтось інший|Ich hatte Fremdscham für ihn.|Мені було соромно за нього.;
+der Innere Schweinehund|власна лінь|«Внутрішній свинопес» — те, що не пускає тебе на пробіжку. З ним борються|Ich muss meinen inneren Schweinehund überwinden.|Мушу перебороти власну лінь.;
+das Kopfkino|уява, що розігралася|«Кіно в голові». Коли сцена крутиться сама, хоч ти її не просила|Sofort lief mein Kopfkino los.|У мене одразу увімкнулася уява.;
+der Kummerspeck|вага від переживань|Kummer (горе) плюс Speck (сало). Те, що наїдається зі смутку. Аналога немає|Nach der Trennung kam der Kummerspeck.|Після розриву прийшли зайві кілограми.;
+die Torschlusspanik|страх не встигнути|Паніка перед тим, як брама міста зачиниться. Тепер — про вік і втрачені шанси|Mit dreißig bekam sie Torschlusspanik.|У тридцять її охопив страх не встигнути.;
+die Waldeinsamkeit|самота в лісі|Романтики вигадали це слово для стану, а не для місця. Добра самота, не гірка|Er suchte die Waldeinsamkeit.|Він шукав лісової самоти.;
+der Zungenbrecher|скоромовка|Дослівно «ламач язика»|Das ist ein echter Zungenbrecher.|Це справжня скоромовка.;
+die Schnapsidee|безглузда ідея|«Ідея з-під чарки». Те, що здавалося геніальним опівночі|Das war eine Schnapsidee.|Це була дурна затія.;
+der Morgenmuffel|той, хто зранку буркотун|Muffel — понурий тип. Не чіпайте його до кави|Sprich mich vor acht nicht an, ich bin Morgenmuffel.|Не чіпай мене до восьмої — зранку я буркотун.;
+die Naschkatze|ласун|«Кішка-ласунка» — той, хто не мине солодкого|Meine Schwester ist eine Naschkatze.|Моя сестра — страшна ласунка.;
+der Kabelsalat|плутанина дротів|«Салат із кабелів». Те, що завжди в шухляді|Hinter dem Schreibtisch ist Kabelsalat.|За столом суцільна плутанина дротів.;
+das Lampenfieber|хвилювання перед виступом|«Лампова лихоманка» — від світла софітів|Vor jedem Auftritt habe ich Lampenfieber.|Перед кожним виступом я хвилююся.;
+die Gänsehaut|мурашки по шкірі|Дослівно «гусяча шкіра» — точно як українською|Bei diesem Lied bekomme ich Gänsehaut.|Від цієї пісні в мене мурашки.;
+der Purzelbaum|перекид|«Дерево-перекид». Дитяче слово, яке дорослі теж уживають|Das Kind schlug einen Purzelbaum.|Дитина зробила перекид.;
+das Luftschloss|нездійсненна мрія|«Повітряний замок» — точний двійник українського вислову|Bau keine Luftschlösser.|Не будуй повітряних замків.;
+der Tapetenwechsel|зміна обстановки|Дослівно «зміна шпалер». Коли треба просто кудись поїхати|Ich brauche einen Tapetenwechsel.|Мені потрібно змінити обстановку.;
+die Sternstunde|зоряна година|Вислів Стефана Цвайґа — мить, коли все складається|Das war eine Sternstunde des Sports.|Це була зоряна година спорту.;
+der Hexenschuss|простріл у попереку|«Постріл відьми» — так пояснювали раптовий біль до появи медицини|Ich habe einen Hexenschuss.|Мені прострілило спину.;
+die Katzenwäsche|вмивання нашвидкуруч|«Котяче вмивання» — коли тільки вигляд зробила|Für mehr als Katzenwäsche war keine Zeit.|На щось більше за швидке вмивання часу не було.;
+mutterseelenallein|зовсім сам|Дослівно «сам-один без материної душі». Найсамотніше слово в мові|Er stand mutterseelenallein am Bahnhof.|Він стояв на вокзалі зовсім сам.;
+der Klugscheißer|всезнайко|Грубувате, але вживане щодня. Той, хто поправляє всіх і завжди|Sei kein Klugscheißer.|Не будь усезнайком.;
+die Zweisamkeit|усамітнення вдвох|Побудоване за зразком Einsamkeit (самота), але для двох|Sie genossen ihre Zweisamkeit.|Вони втішалися часом удвох.;
+der Augenblick|мить|Auge (око) плюс Blick (погляд) — рівно стільки, скільки триває погляд|Einen Augenblick, bitte.|Одну хвилинку, будь ласка.;
+die Bettschwere|сонливість|«Ліжкова вага» — стан, коли тебе вже тягне в ліжко|Ich habe die nötige Bettschwere.|Мене вже хилить на сон.;
+der Lebenskünstler|той, хто вміє жити|«Митець життя» — вміє влаштуватися й радіти за будь-яких обставин|Er ist ein echter Lebenskünstler.|Він справжній митець життя.;
+die Erklärungsnot|потреба виправдовуватися|«Скрута пояснення» — коли треба щось пояснити, а нічим|Er geriet in Erklärungsnot.|Йому довелося виправдовуватися.;
+die Vergangenheitsbewältigung|переосмислення минулого|Найважче слово німецької історії: робота країни над власною провиною|Vergangenheitsbewältigung dauert Generationen.|Переосмислення минулого триває поколіннями.;
+doch|та ні, все ж таки|Слово, якого немає в українській. Ним заперечують заперечення: «Ти не йдеш?» — «Doch!» (Іду!)|Kommst du nicht? — Doch!|Ти не йдеш? — Та ні, йду!;
+mal|-но, якось|Частка, що пом'якшує наказ. Sag mal звучить по-дружньому, Sag — як команда|Sag mal, hast du Zeit?|Слухай, маєш час?;
+eben|саме так, ну от|Погоджується й водночас каже «а я що казав»|Eben das meine ich.|Саме це я й маю на увазі.;
+na ja|ну що ж|Дві літери, за якими ціла інтонація сумніву|Na ja, so schlimm war es nicht.|Ну що ж, не так уже й погано було.;
+die Schlafmütze|соня|«Нічний ковпак» — так називають того, хто вічно не виспався|Steh auf, du Schlafmütze!|Вставай, сонько!;
+das Sandmännchen|пісочний чоловічок|Персонаж, що сипле дітям пісок в очі перед сном. Досі йде по телебаченню|Das Sandmännchen kommt um sieben.|Пісочний чоловічок приходить о сьомій.;
+der Ohrensessel|крісло з високою спинкою|«Крісло з вухами» — бічні виступи справді схожі на вуха|Opa saß in seinem Ohrensessel.|Дідусь сидів у своєму кріслі.;
+die Schnapszahl|число з однакових цифр|22, 55, 111. За переказом, стільки треба випити, щоб таке побачити|Heute ist der 22.2. — eine Schnapszahl.|Сьогодні 22.02 — число з однакових цифр.;
+der Zeitgeist|дух часу|Гердер і Геґель зробили це слово філософським терміном|Der Film traf den Zeitgeist.|Фільм влучив у дух часу.;
+das Fingerspitzengefühl|тонке чуття|«Відчуття кінчиками пальців» — про делікатність у складних справах|Das erfordert Fingerspitzengefühl.|Це потребує тонкого чуття.;
+der Wortschatz|словниковий запас|Слово плюс скарб. Німецька прямо каже, що слова — це багатство|Mein Wortschatz wächst jeden Tag.|Мій словниковий запас росте щодня.;
+die Muttersprache|рідна мова|«Материнська мова» — не країна дає мову, а мати|Ukrainisch ist meine Muttersprache.|Українська — моя рідна мова.;
+der Drahtesel|велосипед|«Дротяний осел» — тепле прізвисько для старого велосипеда|Mein Drahtesel ist zwanzig Jahre alt.|Моєму велосипеду двадцять років.;
+die Rabeneltern|недбалі батьки|«Батьки-круки». Наклеп на птахів: круки якраз турботливі|Man nannte sie zu Unrecht Rabeneltern.|Їх несправедливо назвали недбалими батьками.;
+der Hüftgold|зайві кілограми|«Золото на стегнах» — лагідна назва для того, що наїлося|Schokolade ist reines Hüftgold.|Шоколад — це чисте золото на стегнах.;
+der Zugzwang|вимушений хід|Шаховий термін, що пішов у всі мови: ходити мусиш, і будь-який хід гіршає|Er befand sich im Zugzwang.|Він опинився у безвиході.;
+die Torschlussangst|страх зачинених дверей|Молодший брат Torschlusspanik — тихіший, але постійний|Torschlussangst begleitet viele.|Страх не встигнути супроводжує багатьох.;
+der Brückentag|день між святом і вихідними|«Місток» — беруть відпустку на один день і отримують чотири|Freitag nehme ich als Brückentag.|П'ятницю візьму як місток до вихідних.;
+die Schnapsdrossel|випивака|«Горілчаний дрізд». Птах тут ні до чого, але слово прижилося|Sein Onkel war eine Schnapsdrossel.|Його дядько був неабияким випивакою.;
+der Kummerkasten|скринька для скарг|Куди складають те, що болить. Буквально і фігурально|Sie war sein Kummerkasten.|Вона була його жилеткою.`;
 
 /* ===== ДОДАТОК ===== */
+/* ================= КАСТ ВУЛИЦІ =================
+   Усі — звірі в тому ж пласкому стилі, що й Вальді: суцільні заливки,
+   без обведень і градієнтів, читаються від 36px. Кожен тримає одну
+   крамницю на вулиці й одне завдання.                                  */
+
+/* --- Ельза, сорока. Збирає твої помилки, як сорока — блискітки.
+       Профіль, а не «стовпчик»: інакше чорно-біла птаха читається як пінгвін.
+       Прикмети сороки — довгий клиноподібний хвіст і біла пляма на плечі. --- */
+function elsa(size,mood){
+  size=size||110; mood=mood||"idle";
+  const eye = mood==="happy"
+    ? '<path d="M44 44c2-2.5 5.5-2.5 7.5 0" stroke="#F7F5EE" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+    : '<circle cx="47" cy="45" r="4.2" fill="#F7F5EE"/><circle cx="48" cy="44" r="1.9" fill="#1A1A22"/>';
+  return '<svg class="ch ch--elsa" viewBox="0 0 120 140" width="'+size+'" role="img" aria-label="Ельза, сорока">'
+  +'<ellipse cx="56" cy="130" rx="26" ry="4.5" fill="#221F1A" opacity=".10"/>'
+  /* довгий клиноподібний хвіст — головна прикмета */
+  +'<path d="M70 78L112 116l-9 6-38-32z" fill="#1F2A4D"/>'
+  +'<path d="M68 80L104 114l-6 4-32-28z" fill="#33477F"/>'
+  /* лапки */
+  +'<path d="M50 112v12M46 124h9M62 112v12M58 124h9" stroke="#E8A33D" stroke-width="3.4" stroke-linecap="round" fill="none"/>'
+  /* тіло у профіль */
+  +'<ellipse cx="57" cy="84" rx="25" ry="27" fill="#1A1A22"/>'
+  /* біле черево збоку, не по центру */
+  +'<path d="M40 76c-6 12-4 26 6 32 8 5 16 1 18-6-10-2-20-12-24-26z" fill="#F7F5EE"/>'
+  /* крило з білою плямою на плечі */
+  +'<path d="M62 66c13 4 20 18 18 32-8 0-16-8-20-18z" fill="#33477F"/>'
+  +'<path d="M62 68c6 2 10 6 12 11-5 1-10-2-12-7z" fill="#F7F5EE"/>'
+  /* голова */
+  +'<circle cx="52" cy="47" r="21" fill="#1A1A22"/>'
+  /* гострий дзьоб */
+  +'<path d="M32 45l-17 4 17 6z" fill="#E8A33D"/>'
+  +eye
+  /* блискітка — вкрадена помилка */
+  +'<path d="m92 34 3 6.5 7 1-5 5 1.3 7-6.3-3.5-6.3 3.5 1.3-7-5-5 7-1z" fill="#FFC814"/>'
+  +'</svg>';
+}
+
+/* --- Бруно, бобер-інженер. Будує довгі складені слова. --- */
+function bruno(size,mood){
+  size=size||110; mood=mood||"idle";
+  const eye = mood==="happy"
+    ? '<path d="M48 52c2-2.5 5.5-2.5 7.5 0M66 52c2-2.5 5.5-2.5 7.5 0" stroke="#2A1B0E" stroke-width="2.8" fill="none" stroke-linecap="round"/>'
+    : '<circle cx="52" cy="52" r="3.6" fill="#2A1B0E"/><circle cx="70" cy="52" r="3.6" fill="#2A1B0E"/>'
+      +'<circle cx="53" cy="51" r="1.3" fill="#fff"/><circle cx="71" cy="51" r="1.3" fill="#fff"/>';
+  return '<svg class="ch ch--bruno" viewBox="0 0 120 140" width="'+size+'" role="img" aria-label="Бруно, бобер-інженер">'
+  +'<ellipse cx="60" cy="132" rx="32" ry="4.5" fill="#221F1A" opacity=".10"/>'
+  /* плаский хвіст */
+  +'<ellipse cx="94" cy="112" rx="20" ry="12" fill="#6B4423" transform="rotate(18 94 112)"/>'
+  +'<path d="M82 106h22M82 114h22M88 100v22" stroke="#4E3018" stroke-width="2" opacity=".5"/>'
+  /* лапи */
+  +'<rect x="42" y="112" width="14" height="16" rx="6" fill="#7A5230"/>'
+  +'<rect x="62" y="112" width="14" height="16" rx="6" fill="#7A5230"/>'
+  /* тіло */
+  +'<ellipse cx="60" cy="92" rx="30" ry="27" fill="#8B5E34"/>'
+  +'<ellipse cx="60" cy="97" rx="20" ry="20" fill="#B98A5A"/>'
+  /* голова */
+  +'<circle cx="61" cy="52" r="27" fill="#8B5E34"/>'
+  /* вушка */
+  +'<circle cx="40" cy="34" r="7" fill="#6B4423"/><circle cx="82" cy="34" r="7" fill="#6B4423"/>'
+  /* морда */
+  +'<ellipse cx="61" cy="64" rx="16" ry="12" fill="#D9B183"/>'
+  +'<ellipse cx="61" cy="57" rx="6" ry="4.5" fill="#2A1B0E"/>'
+  +eye
+  /* два різці — головна прикмета бобра */
+  +'<rect x="55" y="66" width="5.5" height="11" rx="1.6" fill="#fff"/>'
+  +'<rect x="61.5" y="66" width="5.5" height="11" rx="1.6" fill="#fff"/>'
+  /* каска інженера */
+  +'<path d="M35 32a26 26 0 0 1 52 0z" fill="#FFC814"/>'
+  +'<rect x="31" y="30" width="60" height="7" rx="3.5" fill="#E0A800"/>'
+  +'<rect x="58" y="12" width="6" height="20" rx="3" fill="#E0A800"/>'
+  +'</svg>';
+}
+
+/* --- Курт, кріт-машиніст U-Bahn. Ганяє на час. --- */
+function kurt(size,mood){
+  size=size||110; mood=mood||"idle";
+  const eye = mood==="happy"
+    ? '<path d="M48 54c2-2 5-2 7 0M67 54c2-2 5-2 7 0" stroke="#2B2438" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+    : '<path d="M47 54h8M66 54h8" stroke="#2B2438" stroke-width="3" stroke-linecap="round"/>';
+  return '<svg class="ch ch--kurt" viewBox="0 0 120 140" width="'+size+'" role="img" aria-label="Курт, кріт-машиніст">'
+  +'<ellipse cx="60" cy="132" rx="30" ry="4.5" fill="#221F1A" opacity=".10"/>'
+  /* лапи-копалки */
+  +'<ellipse cx="34" cy="96" rx="11" ry="13" fill="#E8A0A8" transform="rotate(-18 34 96)"/>'
+  +'<path d="M27 90v14M32 88v16M37 90v14" stroke="#C97F88" stroke-width="2.2" stroke-linecap="round"/>'
+  +'<ellipse cx="88" cy="96" rx="11" ry="13" fill="#E8A0A8" transform="rotate(18 88 96)"/>'
+  +'<path d="M83 90v14M88 88v16M93 90v14" stroke="#C97F88" stroke-width="2.2" stroke-linecap="round"/>'
+  /* ноги */
+  +'<rect x="47" y="114" width="12" height="14" rx="5" fill="#4A4160"/>'
+  +'<rect x="61" y="114" width="12" height="14" rx="5" fill="#4A4160"/>'
+  /* тіло */
+  +'<ellipse cx="60" cy="94" rx="27" ry="26" fill="#5C5175"/>'
+  +'<ellipse cx="60" cy="99" rx="17" ry="18" fill="#7A6E94"/>'
+  /* голова */
+  +'<circle cx="60" cy="56" r="26" fill="#5C5175"/>'
+  +eye
+  /* рожевий ніс-п'ятачок */
+  +'<ellipse cx="60" cy="68" rx="11" ry="8" fill="#E8A0A8"/>'
+  +'<circle cx="56" cy="67" r="2" fill="#B9707A"/><circle cx="64" cy="67" r="2" fill="#B9707A"/>'
+  /* кашкет машиніста */
+  +'<path d="M34 40a26 26 0 0 1 52 0z" fill="#2B6FE8"/>'
+  +'<rect x="30" y="38" width="60" height="8" rx="4" fill="#1D51B0"/>'
+  +'<path d="M28 46h30v5H28z" fill="#16367A"/>'
+  +'<circle cx="60" cy="30" r="7" fill="#FFC814"/>'
+  +'<text x="60" y="34" font-size="9" font-family="Arial Black,sans-serif" font-weight="900" text-anchor="middle" fill="#1D51B0">U</text>'
+  +'</svg>';
+}
+
+/* --- Ґрета, їжачка-булочниця. Слово дня. --- */
+function greta(size,mood){
+  size=size||110; mood=mood||"idle";
+  const eye = mood==="happy"
+    ? '<path d="M50 58c2-2.5 5.5-2.5 7.5 0M67 58c2-2.5 5.5-2.5 7.5 0" stroke="#3A2A18" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+    : '<circle cx="54" cy="58" r="3.4" fill="#3A2A18"/><circle cx="71" cy="58" r="3.4" fill="#3A2A18"/>'
+      +'<circle cx="55" cy="57" r="1.2" fill="#fff"/><circle cx="72" cy="57" r="1.2" fill="#fff"/>';
+  /* колючки — трикутники по дузі */
+  let sp='';
+  for(let i=0;i<11;i++){
+    const a=Math.PI*(1.06+i*0.088), r=30;
+    const cx=62+Math.cos(a)*r, cy=58+Math.sin(a)*r;
+    const tx=62+Math.cos(a)*(r+13), ty=58+Math.sin(a)*(r+13);
+    sp+='<path d="M'+(cx-6)+' '+cy+'L'+tx+' '+ty+'L'+(cx+6)+' '+cy+'z" fill="#6B4E2E"/>';
+  }
+  return '<svg class="ch ch--greta" viewBox="0 0 120 140" width="'+size+'" role="img" aria-label="Ґрета, їжачка-булочниця">'
+  +'<ellipse cx="60" cy="132" rx="30" ry="4.5" fill="#221F1A" opacity=".10"/>'
+  /* ніжки */
+  +'<rect x="48" y="112" width="11" height="15" rx="5" fill="#C08A5A"/>'
+  +'<rect x="63" y="112" width="11" height="15" rx="5" fill="#C08A5A"/>'
+  /* тіло у фартуху */
+  +'<ellipse cx="61" cy="94" rx="29" ry="26" fill="#8B6239"/>'
+  +'<path d="M42 84h38v22a19 19 0 0 1-38 0z" fill="#F7F5EE"/>'
+  +'<path d="M52 84h18v6H52z" fill="#E4342F" opacity=".85"/>'
+  +sp
+  /* голова */
+  +'<circle cx="62" cy="58" r="26" fill="#D9AE7C"/>'
+  +'<ellipse cx="62" cy="70" rx="14" ry="11" fill="#EBCFA8"/>'
+  +'<ellipse cx="62" cy="64" rx="5.5" ry="4.5" fill="#3A2A18"/>'
+  +eye
+  /* кухарський ковпак, зсунутий набік */
+  +'<ellipse cx="80" cy="30" rx="15" ry="11" fill="#fff"/>'
+  +'<rect x="68" y="34" width="24" height="9" rx="4" fill="#F0EDE2"/>'
+  /* крендель у лапці */
+  +'<g transform="translate(22 86)">'
+  +'<circle cx="12" cy="12" r="12" fill="none" stroke="#C98430" stroke-width="5"/>'
+  +'<path d="M4 6c4 8 16 8 16 0" stroke="#C98430" stroke-width="5" fill="none" stroke-linecap="round"/>'
+  +'</g>'
+  +'</svg>';
+}
+
+/* ---- реєстр: хто де стоїть і що дає ---- */
+const CAST={
+  elsa :{name:"Ельза", who:"сорока",            shop:"Гніздо",      task:"mistakes", color:"#2B3A6B", draw:elsa,
+         line:"Я підбираю все, на чому ти спіткнулася. Повернемо це, поки не забулося."},
+  bruno:{name:"Бруно", who:"бобер-інженер",     shop:"Майстерня",   task:"compound", color:"#8B5E34", draw:bruno,
+         line:"Німці не вигадують нові слова — вони склеюють старі. Складаймо."},
+  kurt :{name:"Курт",  who:"кріт-машиніст",     shop:"Станція",     task:"sprint",   color:"#5C5175", draw:kurt,
+         line:"У розмові ніхто не чекає, поки ти згадаєш. Шістдесят секунд. Поїхали."},
+  greta:{name:"Ґрета", who:"їжачка-булочниця",  shop:"Пекарня",     task:"wotd",     color:"#8B6239", draw:greta,
+         line:"Одне слово на день, але до самого кореня. Свіже, ще тепле."}
+};
+const CASTKEYS=["elsa","bruno","kurt","greta"];
+/* ================= ВУЛИЦЯ =================
+   Замість кружечків у порожнечі — німецька вуличка: будинки з гострими
+   дахами обабіч дороги, бруківка, ліхтарі. Фасади — це один SVG-кахель,
+   що повторюється по вертикалі як фон, тож хоч 20 днів, хоч 200 —
+   малюється однаково швидко і нічого не ламається.                     */
+
+/* палітра кварталу для кожного рівня */
+const VIERTEL={
+  A1:{name:"Фундамент",  road:"#EFE7D2", wall:["#F2C879","#E8A85C","#F5D9A0"], roof:"#B5502F", sky:"#FFF6E2"},
+  A2:{name:"Alltag",     road:"#E7EAF2", wall:["#A8C4E8","#8FB0DE","#C6D8F0"], roof:"#2F4E7A", sky:"#F0F5FF"},
+  B1:{name:"Selbstständig",road:"#EBE6F2",wall:["#C3B0E0","#AE97D4","#DACFEC"], roof:"#5B3F8C", sky:"#F6F2FF"},
+  B2:{name:"Argument",   road:"#F3E7DC", wall:["#F0B98E","#E5A06D","#F7D4B8"], roof:"#9C4A1E", sky:"#FFF3E8"},
+  C1:{name:"Nuance",     road:"#F2E4E4", wall:["#E8A6A2","#DC8B86","#F2C7C4"], roof:"#8E2B26", sky:"#FFEFEE"}
+};
+
+/* один фасад: вузький будинок із гострим дахом і вікнами */
+function facade(x,w,h,wall,roof,base){
+  const top=base-h;
+  let s='';
+  /* дах — трикутник, трохи ширший за стіни */
+  s+='<path d="M'+(x-5)+' '+top+'L'+(x+w/2)+' '+(top-26)+'L'+(x+w+5)+' '+top+'z" fill="'+roof+'"/>';
+  /* стіна */
+  s+='<rect x="'+x+'" y="'+top+'" width="'+w+'" height="'+h+'" fill="'+wall+'"/>';
+  /* вікна сіткою */
+  const cols=w>60?2:1, rows=Math.max(1,Math.floor(h/42));
+  const ww=w>60?18:20, wh=22;
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const wx=x+(w-(cols*ww+(cols-1)*10))/2+c*(ww+10);
+      const wy=top+16+r*40;
+      if(wy+wh>base-16) continue;
+      s+='<rect x="'+wx+'" y="'+wy+'" width="'+ww+'" height="'+wh+'" rx="2" fill="#FFF8E0" opacity=".92"/>';
+      s+='<path d="M'+(wx+ww/2)+' '+wy+'v'+wh+'M'+wx+' '+(wy+wh/2)+'h'+ww+'" stroke="'+roof+'" stroke-width="1.4" opacity=".55"/>';
+    }
+  }
+  return s;
+}
+
+/* кахель фасадів для однієї сторони вулиці — повторюється по вертикалі */
+function houseTile(lv,flip){
+  const V=VIERTEL[lv]||VIERTEL.A1, W=170, H=430;
+  let s='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+  /* три будинки різної висоти, щоб силует не був монотонним */
+  s+=facade(6,   62, 150, V.wall[0], V.roof, 150);
+  s+=facade(76,  84, 196, V.wall[1], V.roof, 196);
+  s+=facade(14,  74, 168, V.wall[2], V.roof, 372);
+  s+=facade(98,  60, 132, V.wall[0], V.roof, 372);
+  s+='<rect x="0" y="372" width="'+W+'" height="58" fill="'+V.roof+'" opacity=".13"/>';
+  s+='</svg>';
+  /* без лапок і з екранованим апострофом: інакше рядок рве атрибут style="…" */
+  return "url(data:image/svg+xml,"+encodeURIComponent(s).replace(/'/g,"%27")+")";
+}
+
+/* будиночок-день: дах, стіна, двері. Стан читається з першого погляду:
+   зачинені віконниці — зарано, зелені двері — тобі сюди, світло — пройдено */
+function houseArt(stateName,n,lv){
+  const V=VIERTEL[lv]||VIERTEL.A1;
+  const wall=V.wall[n%V.wall.length];
+  const lit=stateName==="done", now=stateName==="now", lock=stateName==="lock";
+  const gray="#D8CFBB", grayRoof="#B9AF98";
+  const W=lock?gray:wall, R=lock?grayRoof:V.roof;
+  let s='<svg viewBox="0 0 110 118" width="100%" height="100%" aria-hidden="true">';
+  /* дах */
+  s+='<path d="M6 44L55 8l49 36z" fill="'+R+'"/>';
+  s+='<rect x="14" y="42" width="82" height="4" rx="2" fill="'+R+'"/>';
+  /* стіна */
+  s+='<rect x="16" y="46" width="78" height="66" rx="3" fill="'+W+'"/>';
+  /* вікна обабіч дверей */
+  const winF = lit?"#FFF3C4":(lock?"#C6BCA6":"#FFF8E0");
+  s+='<rect x="24" y="54" width="17" height="17" rx="2" fill="'+winF+'"/>';
+  s+='<rect x="69" y="54" width="17" height="17" rx="2" fill="'+winF+'"/>';
+  s+='<path d="M32.5 54v17M24 62.5h17M77.5 54v17M69 62.5h17" stroke="'+R+'" stroke-width="1.5" opacity=".6"/>';
+  /* двері */
+  if(lock){
+    s+='<rect x="42" y="76" width="26" height="36" rx="3" fill="#B9AF98"/>';
+    s+='<path d="M55 76v36M44 88h22M44 100h22" stroke="#A2977E" stroke-width="2.4"/>';
+  } else if(lit){
+    s+='<rect x="42" y="76" width="26" height="36" rx="3" fill="#E0A800"/>';
+    s+='<rect x="46" y="81" width="18" height="26" rx="2" fill="#FFF3C4"/>';
+    s+='<path d="M55 81v26M46 94h18" stroke="#E0A800" stroke-width="2"/>';
+  } else {
+    s+='<rect x="42" y="76" width="26" height="36" rx="3" fill="'+(now?"#1FB86B":"#159154")+'"/>';
+    if(now){ s+='<path d="M48 80h16v32H48z" fill="#D8F7E8"/>'; }
+    s+='<circle cx="'+(now?"62":"63")+'" cy="96" r="2.6" fill="'+(now?"#159154":"#D8F7E8")+'"/>';
+  }
+  /* сходинка */
+  s+='<rect x="38" y="110" width="34" height="5" rx="2" fill="'+R+'" opacity=".55"/>';
+  s+='</svg>';
+  return s;
+}
+
+/* ліхтар — ставиться між будинками для ритму */
+const LAMP='<svg class="lamp" viewBox="0 0 24 80" aria-hidden="true">'
+ +'<rect x="10" y="18" width="4" height="62" fill="#4A4238"/>'
+ +'<path d="M6 10h12l3 10H3z" fill="#4A4238"/>'
+ +'<ellipse cx="12" cy="15" rx="6" ry="5" fill="#FFD84D"/>'
+ +'</svg>';
 /* ================= ВАЛЬДІ · маскот ================= */
 /* Вальді — такса. Не сова: такса це найнімецькіший пес, якого лише можна уявити,
    а ще в неї довге тіло, у яке чудово вміщається довге німецьке слово.
@@ -860,7 +1397,8 @@ const DAYKEY=(lv,i)=>lv+"#"+i;
 const ALLDAYS=LV.flatMap(l=>DAYS[l]);
 
 /* ================= СТАН ================= */
-let state={known:{},days:{},xp:0,xpToday:0,xpDate:"",streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0};
+let state={known:{},days:{},xp:0,xpToday:0,xpDate:"",streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
+  mistakes:{},voice:"",rate:0.95,sprintBest:0,wotdSeen:""};
 const KEY="de-c1-v3";
 const ST={
   async get(k){if(window.storage&&window.storage.get){try{return await window.storage.get(k);}catch(e){}}try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch(e){return null;}},
@@ -892,6 +1430,31 @@ function addXP(n){
   }
   hud(); save();
 }
+/* ---- помилки за Лейтнером: коробки 0..4, повтор через 0/1/3/7/16 днів ----
+   Раніше програма забувала помилки одразу. Тепер кожен промах живе доти,
+   доки не буде відтворений правильно чотири рази поспіль.               */
+const BOXDAYS=[0,1,3,7,16];
+const addDays=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
+const mkey=(lv,t)=>lv+"|"+String(t||"").trim();
+function logMistake(lv,t){
+  t=String(t||"").trim(); if(!t)return;
+  const k=mkey(lv,t);
+  const m=state.mistakes[k]||{t:t,lv:lv,box:0,n:0};
+  m.n=(m.n||0)+1; m.box=0; m.due=today();
+  state.mistakes[k]=m; save();
+}
+function logCorrect(lv,t){
+  t=String(t||"").trim(); if(!t)return;
+  const k=mkey(lv,t), m=state.mistakes[k];
+  if(!m)return;
+  m.box=Math.min(BOXDAYS.length-1,(m.box||0)+1);
+  if(m.box>=BOXDAYS.length-1) delete state.mistakes[k];   /* засвоєно — відпускаємо */
+  else m.due=addDays(BOXDAYS[m.box]);
+  save();
+}
+const allMistakes=()=>Object.values(state.mistakes||{});
+const dueMistakes=()=>{const t=today();return allMistakes().filter(m=>!m.due||m.due<=t);};
+
 const dayDone=(lv,i)=>!!state.days[DAYKEY(lv,i)];
 const dayCrowns=(lv,i)=>state.days[DAYKEY(lv,i)]||0;
 const lvlDone=l=>DAYS[l].filter((d,i)=>dayDone(l,i)).length;
@@ -930,19 +1493,55 @@ function beep(type){
     });
   }catch(e){}
 }
-/* ================= ОЗВУЧКА ================= */
-let deVoice=null;
-function pickVoice(){
-  try{const vs=speechSynthesis.getVoices();
-    deVoice=vs.find(v=>/de[-_]DE/i.test(v.lang))||vs.find(v=>/^de/i.test(v.lang))||null;}catch(e){}
+/* ================= ОЗВУЧКА =================
+   Головна причина «робота» в попередній версії: бралося просто перше-ліпше
+   de-DE, а перше-ліпше майже завжди — стара Anna (macOS) або compact-голос.
+   Тепер голоси ранжуються за якістю, і на кожній платформі вибирається
+   найкращий доступний: Google Deutsch на Android, Katja/Conrad Online на
+   Windows, Siri/Premium на Apple.                                          */
+let deVoice=null, deVoices=[];
+const VOICE_GOOD=[
+  [/siri/i,60],[/premium/i,55],[/enhanced/i,50],[/neural/i,50],[/natural/i,50],
+  [/\bonline\b/i,45],[/google/i,45],
+  [/helena|martin|katja|conrad|petra|markus|hedda|stefan/i,40],
+  [/sandy|reed|flo|rocko|eddy|shelley|grandma|grandpa/i,25]
+];
+const VOICE_BAD=[[/compact/i,-40],[/eloquence/i,-60],[/\banna\b|анна/i,-30]];
+function voiceScore(v){
+  let n=0; const name=v.name||"";
+  VOICE_GOOD.forEach(([re,pts])=>{ if(re.test(name)) n+=pts; });
+  VOICE_BAD.forEach(([re,pts])=>{ if(re.test(name)) n+=pts; });
+  if(/^de[-_]DE/i.test(v.lang)) n+=10;          /* саме німецька Німеччини */
+  if(v.localService===false) n+=8;              /* хмарні зазвичай нейронні */
+  return n;
 }
-if(window.speechSynthesis){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function voiceTag(v){
+  const n=voiceScore(v);
+  return n<0?"застарілий":n>=38?"найкращий":n>=20?"хороший":"звичайний";
+}
+function pickVoice(){
+  try{
+    const vs=speechSynthesis.getVoices();
+    if(!vs||!vs.length) return;
+    deVoices=vs.filter(v=>/^de/i.test(v.lang)).sort((a,b)=>voiceScore(b)-voiceScore(a));
+    const saved=state&&state.voice ? deVoices.find(v=>v.name===state.voice) : null;
+    deVoice = saved || deVoices[0] || null;
+  }catch(e){}
+}
+if(window.speechSynthesis){
+  pickVoice();
+  speechSynthesis.onvoiceschanged=function(){ pickVoice(); if(typeof renderVoicePicker==="function")renderVoicePicker(); };
+}
 function say(text){
   if(!window.speechSynthesis)return;
   try{
+    if(!deVoice) pickVoice();               /* голоси могли доїхати із запізненням */
     speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(String(text).replace(ARTS,m=>m));
-    u.lang="de-DE"; u.rate=.85; if(deVoice)u.voice=deVoice;
+    const u=new SpeechSynthesisUtterance(String(text));
+    u.lang="de-DE";
+    u.rate=(state&&state.rate)||0.95;       /* 0.85 саме по собі звучало тягуче */
+    u.pitch=1;
+    if(deVoice)u.voice=deVoice;
     speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -1166,26 +1765,117 @@ function ctx(lv,words){
   };
 }
 
-/* ================= ДВИГУН УРОКУ ================= */
+/* ================= ДВИГУН УРОКУ =================
+   Три відмінності від попередньої версії:
+   1. Життя безлімітні. Помилка не «віднімає серце», а повертає питання
+      в кінець черги — урок не закінчиться, поки слово не сяде.
+   2. Слова вводяться картками-знайомствами прямо в уроці: вивчив четвірку —
+      одразу її й перевірив. Ніякої стіни тексту перед стартом.
+   3. У кожної вправи є підказка на вимогу. Вона нічого не забирає,
+      лише знімає бонус за бездоганний урок.                              */
 let L=null;
 const lessonEl=document.getElementById("lesson");
 const lBody=document.getElementById("lBody"), lFoot=document.getElementById("lFoot"), lFootIn=document.getElementById("lFootIn");
+
+/* ---- підказка: будуємо риштування під конкретний тип вправи ---- */
+function answerOf(q){
+  return q.k==="choice" ? q.opts[q.ans] : (q.ans||"");
+}
+function hintFor(q){
+  const a=answerOf(q);
+  switch(q.ex){
+    case "artikel": case "artpl":
+      return q.hint||"Дивись на закінчення слова — воно майже завжди й вирішує рід.";
+    case "uk_de":
+      return "Починається на <b>"+esc(a.replace(ARTS,"").slice(0,2))+"…</b> · вимова: "+esc(tr(a));
+    case "de_uk": case "audio":
+      return "Вимова: <b>"+esc(tr(q.say||a))+"</b>";
+    case "type":
+      return "Вимова: <b>"+esc(tr(a))+"</b> · "+a.replace(ARTS,"").length+" літер у слові";
+    case "dictate":
+      return "Вимова: <b>"+esc(tr(a))+"</b>";
+    case "plural":
+      return q.hint||"Подивись на позначку множини у словнику.";
+    case "build": case "listen":
+      return "Перше слово: <b>"+esc(String(q.ans).split(" ")[0])+"</b>. Дієслово в простому реченні — на другому місці.";
+    case "gap":
+      return q.hint||"Подивись, якого відмінка вимагає прийменник.";
+    default:
+      return q.hint||"Спробуй пригадати корінь слова.";
+  }
+}
+
+/* ---- картки-знайомства: вчимо перед тим, як питати ----
+   П'ятірка слів на одній картці, а не двадцять карток поспіль:
+   так знайомство займає чотири кроки замість двадцяти.                 */
+function teachGroup(ws,n,total){
+  return {k:"teach",ex:"teach",head:"Нові слова · "+n+" з "+total,
+    say:ws[0].de, words:ws,
+    body:'<div class="teach teach--list">'
+      +ws.map((w,i)=>'<div class="tw" data-say="'+esc(w.de)+'">'
+        +'<div class="tw__l"><b>'+esc(w.de)+'</b>'
+        +(w.pl&&w.pl!=="—"?'<i>мн. '+esc(plForm(w.de.replace(ARTS,""),w.pl))+'</i>':'')
+        +'<span class="tw__tr">'+esc(tr(w.de))+'</span></div>'
+        +'<div class="tw__uk">'+esc(w.uk)+'</div>'
+        +(canSpeak()?'<button class="tw__say" aria-label="Прослухати">'+SPKF+'</button>':'')
+        +'</div>').join("")
+      +'</div>'
+      +'<p class="teach__tip">Тисни на слово, щоб почути. Далі — вправи саме на ці п\'ять.</p>'};
+}
+function teachRule(g){
+  return {k:"teach",ex:"teach",head:"Правило дня",
+    say:(g.ex&&g.ex[0])?g.ex[0][0]:"",
+    body:'<div class="teach teach--rule">'
+      +'<div class="teach__tag">'+esc(g.tag)+'</div>'
+      +'<div class="teach__title">'+esc(g.t)+'</div>'
+      +'<p class="teach__txt">'+g.txt+'</p>'
+      +((g.ex&&g.ex[0])?'<div class="ex"><b>'+esc(g.ex[0][0])+'</b><div class="tr">'+esc(tr(g.ex[0][0]))+'</div><span>'+esc(g.ex[0][1])+'</span></div>':'')
+      +(canSpeak()&&g.ex&&g.ex[0]?'<button class="speak speak--sm" id="bigSpeak" aria-label="Прослухати">'+SPKF+'</button>':'')
+      +'</div>'};
+}
+
+/* ---- складання черги ---- */
+function makeOne(d,k){ try{ return Object.assign({ex:k},EX[k].make(d)); }catch(e){ return null; } }
 
 function buildQueue(d,n){
   const avail=EXKEYS.filter(k=>EX[k].need(d));
   const q=[]; let guard=0;
   while(q.length<n && guard++<300){
     const k=avail[q.length%avail.length];
-    try{ q.push(Object.assign({ex:k},EX[k].make(d))); }catch(e){}
+    const item=makeOne(d,k); if(item) q.push(item);
   }
   return shuffle(q);
 }
+
+/* урок дня: 4 нових слова → вправи на них → наступна четвірка */
+function buildDayQueue(day){
+  const lv=day.lv, q=[];
+  const rule = day.rule!=null ? G[lv][day.rule] : null;
+  if(rule) q.push(teachRule(rule));
+  const groups=[];
+  for(let i=0;i<day.words.length;i+=5) groups.push(day.words.slice(i,i+5));
+  groups.forEach((grp,gi)=>{
+    q.push(teachGroup(grp,gi+1,groups.length));
+    const d=ctx(lv,grp);
+    const avail=EXKEYS.filter(k=>EX[k].need(d));
+    /* по три вправи на четвірку — різних типів */
+    shuffle(avail).slice(0,3).forEach(k=>{ const it=makeOne(d,k); if(it) q.push(it); });
+  });
+  /* фінальний блок: змішані вправи на всі 20 слів дня */
+  const dAll=ctx(lv,day.words);
+  buildQueue(dAll,5).forEach(x=>q.push(x));
+  return q;
+}
+
 function startLesson(opts){
   const d=ctx(opts.lv,opts.words);
-  const queue = opts.only ? Array.from({length:opts.n||14},()=>Object.assign({ex:opts.only},EX[opts.only].make(d)))
-                          : buildQueue(d,opts.n||14);
+  let queue;
+  if(opts.day)        queue=buildDayQueue(opts.day);
+  else if(opts.queue) queue=opts.queue;
+  else if(opts.only)  queue=Array.from({length:opts.n||14},()=>makeOne(d,opts.only)).filter(Boolean);
+  else                queue=buildQueue(d,opts.n||14);
   if(!queue.length){alert("Для цього рівня вправа недоступна.");return;}
-  L={...opts,d,queue,i:0,hearts:opts.hearts===false?Infinity:5,right:0,t0:Date.now(),xp:0};
+  L={...opts,d,queue,i:0,right:0,asked:0,solved:0,t0:Date.now(),xp:0,hintsUsed:0,total:queue.length};
   lessonEl.classList.add("is-on");
   document.body.style.overflow="hidden";
   renderQ();
@@ -1193,26 +1883,29 @@ function startLesson(opts){
 function endLesson(){
   lessonEl.classList.remove("is-on");
   document.body.style.overflow="";
-  L=null; renderPath(); renderProfile(); hud();
+  try{speechSynthesis.cancel();}catch(e){}
+  L=null; renderStreet(); renderProfile(); renderSide(); hud();
 }
 document.getElementById("lQuit").addEventListener("click",()=>{
   if(!L)return;
   if(L.i>0 && L.done!==true && !confirm("Вийти з уроку? Прогрес цього уроку не збережеться."))return;
   endLesson();
 });
-function hearts(){
-  const h=document.getElementById("lHearts");
-  if(L.hearts===Infinity){h.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" style="opacity:.35"><path d="M12 20s-7-4.6-7-9.5A4 4 0 0 1 12 7a4 4 0 0 1 7 3.5C19 15.4 12 20 12 20z"/></svg><b style="color:var(--ink-30)">∞</b>';return;}
-  h.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7-4.6-7-9.5A4 4 0 0 1 12 7a4 4 0 0 1 7 3.5C19 15.4 12 20 12 20z"/></svg><b>'+L.hearts+'</b>';
+
+function lessonProgress(){
+  const remain=L.queue.length-L.i;
+  const denom=Math.max(1,L.solved+remain);
+  return Math.round(L.solved/denom*100);
 }
 function renderQ(){
   const q=L.queue[L.i];
-  document.getElementById("lBar").style.width=Math.round(L.i/L.queue.length*100)+"%";
-  hearts(); lFoot.className="lfoot"; L.locked=false; L.sel=null;
+  document.getElementById("lBar").style.width=lessonProgress()+"%";
+  document.getElementById("lCount").textContent=L.solved+" / "+Math.max(L.total,L.solved+(L.queue.length-L.i));
+  lFoot.className="lfoot"; L.locked=false; L.sel=null; L.hintOpen=false;
   let h='<div class="qtype">'+esc(q.head)+'</div>'+(q.body||"");
   if(q.k==="choice"){
-    h+='<div class="opts'+(q.cols===3?"":" opts--2")+'" '+(q.cols===3?'style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px"':'')+' id="qOpts">'
-      + q.opts.map((o,i)=>'<button class="opt'+(q.art?" k-"+o:"")+'" data-i="'+i+'"'+(q.art?' style="text-align:center;font-family:var(--disp);font-weight:800;font-size:clamp(21px,6vw,30px);padding:18px 4px"':'')+'>'+esc(o)+'</button>').join("")
+    h+='<div class="opts'+(q.cols===3?" opts--3":" opts--2")+'" id="qOpts">'
+      + q.opts.map((o,i)=>'<button class="opt'+(q.art?" opt--art k-"+o:"")+'" data-i="'+i+'">'+esc(o)+'</button>').join("")
       +'</div>';
   } else if(q.k==="type"){
     h+='<input class="typein" id="qType" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="німецькою…">';
@@ -1224,20 +1917,43 @@ function renderQ(){
     const right=shuffle(q.pairs.map((p,i)=>({t:p[1],i,s:"uk"})));
     L.pairsLeft=q.pairs.length;
     h+='<div class="pairs" id="qPairs">'
-      +'<div style="display:grid;gap:9px">'+left.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="de">'+esc(x.t)+'</button>').join("")+'</div>'
-      +'<div style="display:grid;gap:9px">'+right.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="uk">'+esc(x.t)+'</button>').join("")+'</div>'
+      +'<div class="pairs__col">'+left.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="de">'+esc(x.t)+'</button>').join("")+'</div>'
+      +'<div class="pairs__col">'+right.map(x=>'<button class="pair" data-i="'+x.i+'" data-s="uk">'+esc(x.t)+'</button>').join("")+'</div>'
       +'</div>';
+  }
+  /* підказка живе в тому місці, що раніше було порожнім */
+  if(q.k!=="teach" && q.k!=="pairs"){
+    h+='<div class="hintbox" id="hintBox">'
+      +'<button class="hintbtn" id="hintBtn"><span class="hintbtn__ic">?</span>Підказка</button>'
+      +'<div class="hintbody" id="hintBody"></div></div>';
   }
   lBody.innerHTML=h;
   lBody.parentElement.scrollTop=0;
   wire(q);
-  lFootIn.innerHTML = q.k==="pairs" ? '<p class="note" style="margin:0">Тисни німецьке слово, тоді його переклад.</p>'
-    : '<button class="btn btn--green btn--wide" id="lCheck" disabled>Перевірити</button>';
-  const chk=document.getElementById("lCheck"); if(chk)chk.addEventListener("click",check);
+  if(q.k==="teach"){
+    lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="lNext">Зрозуміло</button>';
+    document.getElementById("lNext").addEventListener("click",next);
+  } else if(q.k==="pairs"){
+    lFootIn.innerHTML='<p class="note" style="margin:0">Тисни німецьке слово, тоді його переклад.</p>';
+  } else {
+    lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="lCheck" disabled>Перевірити</button>';
+    document.getElementById("lCheck").addEventListener("click",check);
+  }
+  const hb=document.getElementById("hintBtn");
+  if(hb)hb.addEventListener("click",()=>{
+    if(L.hintOpen)return;
+    L.hintOpen=true; L.hintsUsed++;
+    document.getElementById("hintBox").classList.add("is-open");
+    document.getElementById("hintBody").innerHTML=hintFor(q);
+  });
 }
 function wire(q){
   const big=document.getElementById("bigSpeak");
-  if(big){big.addEventListener("click",()=>say(q.say)); if(q.autoSay)setTimeout(()=>say(q.say),260);}
+  if(big){big.addEventListener("click",()=>say(q.say)); if(q.autoSay||q.k==="teach")setTimeout(()=>say(q.say),260);}
+  lBody.querySelectorAll(".tw").forEach(row=>row.addEventListener("click",()=>{
+    say(row.dataset.say);
+    row.classList.add("is-said"); setTimeout(()=>row.classList.remove("is-said"),400);
+  }));
   if(q.k==="choice"){
     lBody.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
       if(L.locked)return;
@@ -1271,14 +1987,12 @@ function wire(q){
       if(sel.dataset.s===b.dataset.s){ sel.classList.remove("is-sel"); sel=b; b.classList.add("is-sel"); return; }
       if(sel.dataset.i===b.dataset.i){
         beep("ok"); [sel,b].forEach(x=>{x.classList.remove("is-sel");x.classList.add("gone");});
-        sel=null; L.pairsLeft--; L.right+=.2;
-        if(L.pairsLeft===0){ L.right=Math.round(L.right); addXP(2); L.xp+=2; setTimeout(next,340); }
+        sel=null; L.pairsLeft--;
+        if(L.pairsLeft===0){ L.right++; L.solved++; L.asked++; addXP(2); L.xp+=2; setTimeout(next,340); }
       }else{
         beep("bad"); const a=sel,c=b; a.classList.add("no"); c.classList.add("no");
-        if(L.hearts!==Infinity){L.hearts--;hearts();}
         setTimeout(()=>{a.classList.remove("no","is-sel");c.classList.remove("no");},550);
         sel=null;
-        if(L.hearts===0)setTimeout(fail,600);
       }
     }));
   }
@@ -1300,59 +2014,56 @@ function check(){
     const accept=[q.ans].concat(q.strictArt?[]:(q.alt||[]));
     ok=accept.some(a=>norm(a)===v); corr=q.ans;
     const inp=document.getElementById("qType");
-    inp.style.borderColor= ok?"var(--green)":"var(--red)";
-    inp.style.background = ok?"var(--green-l)":"var(--red-l)";
-    inp.blur();
+    inp.classList.add(ok?"ok":"no"); inp.blur();
   } else if(q.k==="build"){
     const got=[...document.getElementById("qSlot").children].map(x=>x.textContent).join(" ");
     ok=norm(got)===norm(q.ans); corr=q.ans;
   }
-  if(ok){ L.right++; beep("ok"); addXP(1); L.xp+=1; }
-  else { beep("bad"); if(L.hearts!==Infinity){L.hearts--;hearts();} }
+  L.asked++;
+  if(ok){
+    L.right++; L.solved++; beep("ok"); addXP(1); L.xp+=1;
+    if(!q.retried) logCorrect(L.lv,q.say);
+  } else {
+    beep("bad");
+    logMistake(L.lv,q.say);
+    /* безлімітні життя: питання не зникає, а повертається наприкінці */
+    if(!q.retried){
+      const again=Object.assign({},q,{retried:true});
+      L.queue.push(again);
+    } else { L.solved++; }
+  }
   if(q.say)setTimeout(()=>say(q.say), ok?120:420);
   lFoot.className="lfoot "+(ok?"ok":"no");
   lFootIn.innerHTML=
     '<div class="verdict">'
     + (ok?'<svg viewBox="0 0 24 24" fill="none" stroke="var(--green-d)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg>'
         :'<svg viewBox="0 0 24 24" fill="none" stroke="var(--red-d)" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="m9 9 6 6M15 9l-6 6"/></svg>')
-    +'<div><b>'+(ok?pick(WALDI_LINES.good):"Правильно: "+esc(corr))+'</b>'
-    + (ok?"":'<p>'+esc(pick(WALDI_LINES.bad))+'</p>')
+    +'<div><b>'+(ok?esc(pick(WALDI_LINES.good)):"Правильно: "+esc(corr))+'</b>'
+    + (ok?"":'<p>'+esc(q.retried?"Це слово повернеться ще раз наприкінці.":"Не страшно — покажу його ще раз у кінці уроку.")+'</p>')
     + (q.hint?'<span class="k">'+q.hint+'</span>':'')
     +'</div></div>'
     +'<button class="btn '+(ok?"btn--green":"btn--gold")+' btn--wide" id="lNext">Далі</button>';
   document.getElementById("lNext").addEventListener("click",next);
-  if(L.hearts===0){ setTimeout(fail,300); }
 }
 function next(){
-  if(L.hearts===0){fail();return;}
+  if(L.queue[L.i] && L.queue[L.i].k==="teach"){ L.solved++; L.total++; }
   L.i++;
   if(L.i>=L.queue.length) finish(); else renderQ();
-}
-function fail(){
-  L.done=true;
-  document.getElementById("lBar").style.width="100%";
-  lBody.innerHTML='<div class="endcard">'+waldi("sad",150)
-    +'<h2>Серця скінчилися</h2><p style="color:var(--ink-60);max-width:34ch;margin:0 auto">'
-    +'Це не поразка — це сигнал, що тему варто пройти ще раз. Слова з цього уроку нікуди не поділися.</p></div>';
-  lFoot.className="lfoot"; 
-  lFootIn.innerHTML='<button class="btn btn--gold btn--wide" id="lRetry" style="margin-bottom:9px">Спробувати ще раз</button>'
-    +'<button class="btn btn--wide" id="lBack">Вийти</button>';
-  document.getElementById("lRetry").addEventListener("click",()=>{const o=L; endLesson(); startLesson(o);});
-  document.getElementById("lBack").addEventListener("click",endLesson);
 }
 function finish(){
   L.done=true;
   const secs=Math.round((Date.now()-L.t0)/1000);
-  const acc=Math.round(L.right/L.queue.length*100);
-  state.answered+=L.queue.length; state.correct+=Math.round(L.right); state.lessons++;
-  let bonus=10; if(acc>=100)bonus+=10;
+  const acc=L.asked?Math.round(L.right/L.asked*100):100;
+  state.answered+=L.asked; state.correct+=L.right; state.lessons++;
+  let bonus=10;
+  if(acc>=100 && !L.hintsUsed) bonus+=10;
   addXP(bonus); L.xp+=bonus;
   let crowned=false;
   if(L.day){
     const k=DAYKEY(L.day.lv,L.day.i), cur=state.days[k]||0;
-    if(acc>=60 && cur<3){ state.days[k]=cur+1; crowned=true; }
-    else if(!cur && acc>=60) state.days[k]=1;
+    if(cur<3){ state.days[k]=cur+1; crowned=true; }
   }
+  if(L.mode==="sprint" && L.right>(state.sprintBest||0)) state.sprintBest=L.right;
   save(); beep("win"); confetti();
   document.getElementById("lBar").style.width="100%";
   lBody.innerHTML='<div class="endcard">'+waldi("happy",160)
@@ -1363,7 +2074,8 @@ function finish(){
     +'<div class="endstat es-acc"><b>'+acc+'%</b><span>влучність</span></div>'
     +'<div class="endstat es-time"><b>'+Math.floor(secs/60)+":"+String(secs%60).padStart(2,"0")+'</b><span>час</span></div>'
     +'</div>'
-    +(crowned?'<p style="font-family:var(--mono);font-size:12px;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase">+1 корона за цей день</p>':'')
+    +(crowned?'<p class="endcrown">+1 корона за цей день</p>':'')
+    +(L.hintsUsed?'<p class="note">Підказок узято: '+L.hintsUsed+'. Це нормально — вони для того й є.</p>':'')
     +'</div>';
   lFoot.className="lfoot ok";
   lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="lDone">Далі</button>';
@@ -1376,31 +2088,51 @@ document.querySelectorAll("#tabs .tab").forEach(t=>t.addEventListener("click",()
   window.scrollTo(0,0);
 }));
 
-/* ================= ШЛЯХ ================= */
-const LVLC={A1:"bA1",A2:"bA2",B1:"bB1",B2:"bB2",C1:"bC1"};
-const LOCK='<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
-const STAR='<svg viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="m12 3 2.6 5.6 6 .8-4.4 4.2 1.1 6-5.3-3-5.3 3 1.1-6L3.4 9.4l6-.8z"/></svg>';
-const BOOK='<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 8h6"/></svg>';
+/* ================= ВУЛИЦЯ =================
+   Кожен рівень — квартал зі своїм кольором. Кожен день — будинок:
+   зачинені віконниці = ще зарано, відчинені двері = тобі сюди,
+   світло у вікні = пройдено. Кожен п'ятий будинок — крамниця персонажа. */
 
-function renderPath(){
+const LVLC={A1:"bA1",A2:"bA2",B1:"bB1",B2:"bB2",C1:"bC1"};
+const SHOPAT=[4,9,14,19];                    /* на яких днях стоять крамниці */
+const shopFor=i=>CASTKEYS[SHOPAT.indexOf(i)];
+
+function renderStreet(){
   const cur=currentDay();
   document.getElementById("pathWrap").innerHTML=LV.map(l=>{
-    const done=lvlDone(l), pct=Math.round(done/DAYS[l].length*100);
-    return '<div class="lvlband"><div class="lvlband__head"><div class="lvlband__card '+LVLC[l]+'">'
-      +'<b>'+l+'</b><span>'+esc(LEVELS.find(x=>x.code===l).name)+' · '+DAYS[l].length+' днів</span>'
-      +'<span class="lp">'+pct+'%</span></div></div>'
-      +'<div class="path">'+DAYS[l].map((d,i)=>{
+    const V=VIERTEL[l], done=lvlDone(l), pct=Math.round(done/DAYS[l].length*100);
+    return '<section class="viertel" style="--road:'+V.road+';--sky:'+V.sky+';--roof:'+V.roof+'">'
+      +'<div class="viertel__head"><div class="viertel__card '+LVLC[l]+'">'
+        +'<b>'+l+'</b><span>'+esc(V.name)+' · '+DAYS[l].length+' будинків</span>'
+        +'<span class="lp">'+pct+'%</span></div></div>'
+      +'<div class="street" style="--tileL:'+houseTile(l)+';--tileR:'+houseTile(l)+'">'
+      +DAYS[l].map((d,i)=>{
         const dn=dayDone(l,i), op=dayOpen(l,i), now=cur&&cur.lv===l&&cur.i===i;
-        const cls="node"+(dn?" node--done":op?(now?" node--now":""):" node--lock");
-        return '<div class="'+cls+'">'
+        const st=dn?"done":op?(now?"now":"open"):"lock";
+        const sh=shopFor(i);
+        if(sh){
+          const c=CAST[sh];
+          return '<div class="hs hs--shop'+(op?"":" hs--lock")+'">'
+            +'<button class="shop" data-task="'+sh+'"'+(op?"":" disabled")+' style="--c:'+c.color+'" aria-label="'+esc(c.name)+' · '+esc(c.shop)+'">'
+              +'<span class="shop__awning"></span>'
+              +'<span class="shop__face">'+c.draw(64)+'</span>'
+              +'<span class="shop__sign">'+esc(c.shop)+'</span>'
+            +'</button>'
+            +'<span class="hs__lbl">'+esc(c.name)+'</span></div>';
+        }
+        return '<div class="hs hs--'+st+'">'
           +(now?'<span class="now-here">ти тут</span>':'')
-          +'<button class="node__btn" data-lv="'+l+'" data-i="'+i+'"'+(op?"":" disabled")+' aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
-          +(dn?STAR:op?(d.rule!=null?BOOK:'<b>'+(i+1)+'</b>'):LOCK)+'</button>'
-          +(dayCrowns(l,i)>1?'<span class="node__crowns">×'+dayCrowns(l,i)+'</span>':'')
-          +'<span class="node__lbl">'+(i+1)+' · '+esc(d.theme)+'</span></div>';
-      }).join("")+'</div></div>';
+          +'<button class="house" data-lv="'+l+'" data-i="'+i+'"'+(op?"":" disabled")+' aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
+            +'<span class="house__num">'+(i+1)+'</span>'
+            +'<span class="house__door">'+houseArt(st,i,l)+'</span>'
+          +'</button>'
+          +(dayCrowns(l,i)>1?'<span class="hs__crowns">×'+dayCrowns(l,i)+'</span>':'')
+          +'<span class="hs__lbl">'+esc(d.theme)+'</span></div>';
+      }).join("")
+      +'</div></section>';
   }).join("");
-  document.querySelectorAll(".node__btn").forEach(b=>b.addEventListener("click",()=>openDay(b.dataset.lv,+b.dataset.i)));
+  document.querySelectorAll(".house").forEach(b=>b.addEventListener("click",()=>openDay(b.dataset.lv,+b.dataset.i)));
+  document.querySelectorAll(".shop").forEach(b=>b.addEventListener("click",()=>openTask(b.dataset.task)));
   const w=document.getElementById("waldiHero"); if(w)w.innerHTML=waldi(state.xpToday>=GOAL?"happy":"idle",104);
   const ws=document.getElementById("waldiSay");
   if(ws)ws.textContent = state.streak>0
@@ -1413,47 +2145,242 @@ function currentDay(){
   return null;
 }
 
-/* ---- картка дня ---- */
+/* ---- бічна панель: завдання персонажів ---- */
+function renderSide(){
+  const el=document.getElementById("sideRail"); if(!el)return;
+  const due=dueMistakes().length, tot=allMistakes().length;
+  const w=wotdToday();
+  const info={
+    elsa: due? due+" "+plural(due,"слово","слова","слів")+" чекають" : (tot?"усе повторено":"поки що чисто"),
+    bruno:"60 складених слів",
+    kurt: state.sprintBest?"рекорд: "+state.sprintBest:"ще без рекорду",
+    greta:w?w.de:"слово дня"
+  };
+  el.innerHTML='<div class="side__t"><span class="eyebrow">Сьогодні на вулиці</span></div>'
+   +CASTKEYS.map(k=>{
+     const c=CAST[k], hot=(k==="elsa"&&due>0);
+     return '<button class="tcard tcard--ch'+(hot?" is-hot":"")+'" data-task="'+k+'" style="--c:'+c.color+'">'
+      +'<span class="tcard__ch">'+c.draw(58)+'</span>'
+      +'<span class="tcard__txt"><b>'+esc(c.name)+'</b><span>'+esc(TASKNAME[k])+'</span>'
+      +'<span class="tcard__meta">'+esc(info[k])+'</span></span>'
+      +(hot?'<span class="tcard__dot">'+due+'</span>':'')
+      +'</button>';
+   }).join("");
+  el.querySelectorAll(".tcard").forEach(b=>b.addEventListener("click",()=>openTask(b.dataset.task)));
+}
+const TASKNAME={elsa:"Робота над помилками",bruno:"Словобуд",kurt:"Спринт на час",greta:"Слово дня"};
+
+/* ---- день: одразу в урок, без стіни тексту ---- */
+function openDay(lv,i){
+  const d=DAYS[lv][i];
+  startLesson({lv,words:d.words,day:d});
+}
+
+/* ================= ЗАВДАННЯ ПЕРСОНАЖІВ ================= */
 const sheet=document.getElementById("sheet"), sheetIn=document.getElementById("sheetIn");
 sheet.addEventListener("click",e=>{if(e.target===sheet)closeSheet();});
 function closeSheet(){sheet.classList.remove("is-on");document.body.style.overflow="";}
-function openDay(lv,i){
-  const d=DAYS[lv][i], g=d.rule!=null?G[lv][d.rule]:null;
-  const knownN=d.words.filter(w=>state.known[wid(w)]).length;
-  sheetIn.innerHTML='<div class="sheet__grab"></div>'
-    +'<span class="eyebrow">'+lv+' · день '+(i+1)+' зі '+DAYS[lv].length+'</span>'
-    +'<h2 style="font-size:clamp(24px,7vw,36px);text-transform:uppercase;margin:5px 0 0">'+esc(d.theme)+'</h2>'
-    +'<div class="dayblock"><h4>20 слів дня · вивчено '+knownN+'</h4><div class="wordgrid">'
-      +d.words.map(w=>'<div><b>'+esc(w.de)+'</b><span>'+esc(w.uk)+'</span></div>').join("")
-    +'</div></div>'
-    +(g?'<div class="dayblock"><h4>Правило дня · '+esc(g.tag)+'</h4>'
-       +'<b style="font-family:var(--disp);font-size:17px;text-transform:uppercase">'+esc(g.t)+'</b>'
-       +'<p style="font-size:15px;margin:7px 0 0">'+g.txt+'</p>'
-       +(g.ex&&g.ex[0]?'<div class="ex" style="margin-top:10px"><b>'+esc(g.ex[0][0])+'</b><div class="tr">'+esc(tr(g.ex[0][0]))+'</div><span>'+esc(g.ex[0][1])+'</span></div>':'')
-       +'</div>'
-      :'<div class="dayblock"><h4>День закріплення</h4><p style="font-size:15px;margin:0">Нового правила сьогодні немає — сьогодні працює тільки повторення. Це не менш важливо: саме тут вчорашнє переходить у автоматизм.</p></div>')
-    +(d.vid?'<div class="dayblock"><h4>Відео за бажанням</h4>'
-       +'<a class="ytlink" href="https://www.youtube.com/results?search_query='+encodeURIComponent(d.vid.q)+'" target="_blank" rel="noopener">'
-       +'<svg viewBox="0 0 24 24"><rect x="1.5" y="5" width="21" height="14" rx="4" fill="#E4342F"/><path d="M10 9.2v5.6l5-2.8z" fill="#fff"/></svg>'
-       +'<span><b>'+esc(d.vid.q)+'</b><span>'+esc(d.vid.ch)+'</span></span></a>'
-       +'<p class="note" style="margin-top:9px">Посилання відкриє пошук YouTube за цією темою — так воно не зламається, коли автор перезаллє відео.</p></div>':'')
-    +'<div style="display:grid;gap:9px;margin-top:16px">'
-      +'<button class="btn btn--green btn--wide" id="dStart">'+(dayDone(lv,i)?"Пройти ще раз":"Почати урок")+' · 14 вправ</button>'
-      +'<button class="btn btn--wide" id="dWords">Спершу подивитись слова</button>'
-    +'</div>';
-  document.getElementById("dStart").addEventListener("click",()=>{
-    closeSheet(); startLesson({lv,words:d.words,day:d,n:14});
-  });
-  document.getElementById("dWords").addEventListener("click",()=>{
-    closeSheet(); vLv=lv; vQ=""; document.getElementById("vSearch").value="";
-    document.querySelectorAll("#vLevels .pill").forEach(x=>x.classList.toggle("is-on",x.dataset.l===lv));
-    renderVocab();
-    document.querySelectorAll("#tabs .tab").forEach(x=>x.classList.toggle("is-on",x.dataset.v==="woerter"));
-    document.querySelectorAll(".view").forEach(v=>v.classList.toggle("is-on",v.id==="v-woerter"));
-    window.scrollTo(0,0);
-    setTimeout(()=>{const el=[...document.querySelectorAll(".thblock>h3")].find(h=>h.textContent===d.theme); if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},120);
-  });
+function openSheet(html){
+  sheetIn.innerHTML='<div class="sheet__grab"></div>'+html;
   sheet.classList.add("is-on"); document.body.style.overflow="hidden";
+}
+function charHead(k,sub){
+  const c=CAST[k];
+  return '<div class="chhead" style="--c:'+c.color+'">'+c.draw(84)
+    +'<div><span class="eyebrow">'+esc(c.who)+'</span>'
+    +'<h2 class="chhead__n">'+esc(c.name)+'</h2>'
+    +'<p class="chhead__l">'+esc(sub||c.line)+'</p></div></div>';
+}
+function openTask(k){
+  if(k==="elsa") taskMistakes();
+  else if(k==="bruno") taskCompound();
+  else if(k==="kurt") taskSprint();
+  else if(k==="greta") taskWotd();
+}
+
+/* --- Ельза: робота над помилками --- */
+function taskMistakes(){
+  const due=dueMistakes(), all=allMistakes();
+  if(!all.length){
+    openSheet(charHead("elsa","Поки що порожньо. Помились кілька разів — і я почну збирати.")
+      +'<p class="note">Тут з\'являється все, на чому ти спіткнулася в уроках. Слово повертається через день, потім через три, потім через тиждень — і зникає, коли ти відповіси правильно чотири рази поспіль.</p>');
+    return;
+  }
+  const rows=all.slice().sort((a,b)=>(a.due||"").localeCompare(b.due||"")).slice(0,40);
+  openSheet(charHead("elsa")
+    +'<div class="dayblock"><h4>Зібрано '+all.length+' · дозріло '+due.length+'</h4>'
+    +'<div class="mlist">'+rows.map(m=>
+       '<div class="mrow'+((!m.due||m.due<=today())?" is-due":"")+'">'
+       +'<b>'+esc(m.t)+'</b>'
+       +'<span class="mrow__box">коробка '+(m.box||0)+'/4</span>'
+       +'<span class="mrow__due">'+((!m.due||m.due<=today())?"сьогодні":esc(m.due))+'</span></div>').join("")
+    +'</div></div>'
+    +(due.length?'<button class="btn btn--green btn--wide" id="mStart" style="margin-top:14px">Повторити '+due.length+' '+plural(due.length,"слово","слова","слів")+'</button>'
+                :'<p class="note">На сьогодні все повторено. Наступні слова дозріють завтра.</p>'));
+  const b=document.getElementById("mStart");
+  if(b)b.addEventListener("click",()=>{ closeSheet(); startMistakeLesson(dueMistakes()); });
+}
+function startMistakeLesson(due){
+  const q=[];
+  due.slice(0,15).forEach(m=>{
+    const lv=m.lv||"A1";
+    const w=FLAT.find(x=>x.de===m.t)||FLAT.find(x=>x.de.replace(ARTS,"")===String(m.t).replace(ARTS,""));
+    const d=ctx(lv, w?[w]:ALL[lv]);
+    if(w){
+      const kinds=EXKEYS.filter(k=>k!=="pairs"&&k!=="build"&&k!=="listen"&&k!=="gap"&&EX[k].need(d));
+      const k=kinds.length?rnd(kinds):"de_uk";
+      const it=makeOne(d,k); if(it) q.push(it);
+    } else {
+      const sd=ctx(lv);
+      const it=makeOne(sd,"build"); if(it) q.push(it);
+    }
+  });
+  if(!q.length){alert("Нема чого повторювати.");return;}
+  startLesson({lv:due[0].lv||"A1",queue:shuffle(q),mode:"review"});
+}
+
+/* --- Бруно: словобуд --- */
+const COMPS=COMP.trim().split(";").map(x=>{
+  const p=x.trim().split("|");
+  return {whole:p[0],parts:p[1].split("+"),uk:p[2],ukParts:p[3].split("+"),note:p[4]||""};
+}).filter(x=>x.whole);
+let cIdx=0,cScore=0;
+function taskCompound(){
+  cScore=0; nextCompound();
+}
+function nextCompound(){
+  const c=rnd(COMPS);
+  const bare=c.whole.replace(ARTS,"");
+  const decoys=distinct(COMPS.filter(x=>x!==c),3,c,x=>x.whole).map(x=>x.parts[rnd([0,1])]||x.parts[0]);
+  const tiles=shuffle(c.parts.concat(decoys.filter(d=>c.parts.indexOf(d)<0)).slice(0,c.parts.length+3));
+  openSheet(charHead("bruno")
+    +'<div class="dayblock"><h4>Збери слово · рахунок '+cScore+'</h4>'
+    +'<div class="cw__uk">'+esc(c.uk)+'</div>'
+    +'<div class="cw__hint">'+esc(c.ukParts.join(" + "))+'</div>'
+    +'<div class="cw__slot" id="cwSlot"></div>'
+    +'<div class="tiles" id="cwTiles">'+tiles.map((t,i)=>'<button class="tile" data-t="'+esc(t)+'">'+esc(t)+'</button>').join("")+'</div>'
+    +'<div class="cw__fb" id="cwFb"></div>'
+    +'</div>'
+    +'<div style="display:grid;gap:9px;margin-top:12px">'
+    +'<button class="btn btn--green btn--wide" id="cwCheck" disabled>Перевірити</button>'
+    +'<button class="btn btn--wide" id="cwSkip">Інше слово</button></div>');
+  const slot=document.getElementById("cwSlot"), fb=document.getElementById("cwFb");
+  const picked=[];
+  const sync=()=>{ slot.innerHTML=picked.map(t=>'<span class="tile tile--in">'+esc(t)+'</span>').join("");
+                   document.getElementById("cwCheck").disabled=!picked.length; };
+  document.querySelectorAll("#cwTiles .tile").forEach(t=>t.addEventListener("click",()=>{
+    if(t.classList.contains("used"))return;
+    t.classList.add("used"); picked.push(t.dataset.t); sync();
+  }));
+  slot.addEventListener("click",()=>{ if(!picked.length)return; const last=picked.pop();
+    const t=[...document.querySelectorAll("#cwTiles .tile")].find(x=>x.dataset.t===last&&x.classList.contains("used"));
+    if(t)t.classList.remove("used"); sync(); });
+  document.getElementById("cwCheck").addEventListener("click",()=>{
+    const ok=picked.join("").toLowerCase()===c.parts.join("").toLowerCase();
+    if(ok){
+      cScore++; beep("ok"); addXP(2); say(c.whole);
+      fb.className="cw__fb ok";
+      fb.innerHTML='<b>'+esc(c.whole)+'</b><div class="tr">'+esc(tr(c.whole))+'</div>'
+        +(c.note?'<p>'+esc(c.note)+'</p>':'');
+      setTimeout(nextCompound,c.note?2600:1500);
+    }else{
+      beep("bad"); fb.className="cw__fb no";
+      fb.innerHTML='<b>Правильно: '+esc(c.parts.join(" + "))+'</b>'
+        +(c.note?'<p>'+esc(c.note)+'</p>':'');
+      setTimeout(nextCompound,2400);
+    }
+  });
+  document.getElementById("cwSkip").addEventListener("click",nextCompound);
+}
+
+/* --- Курт: спринт на 60 секунд --- */
+let spT=null;
+function taskSprint(){
+  openSheet(charHead("kurt")
+    +'<div class="dayblock"><h4>Рекорд: '+(state.sprintBest||0)+'</h4>'
+    +'<p style="font-size:15px;margin:0 0 10px">Шістдесят секунд. Стільки слів, скільки встигнеш. Помилка не карає — просто йдемо далі.</p>'
+    +'<span class="eyebrow">Рівень</span><div class="pillrow" id="spLv" style="margin-top:6px"></div></div>'
+    +'<button class="btn btn--green btn--wide" id="spGo" style="margin-top:12px">Поїхали</button>');
+  let lv="A1";
+  document.getElementById("spLv").innerHTML=LV.map(l=>'<button class="pill'+(l==="A1"?" is-on":"")+'" data-l="'+l+'">'+l+'</button>').join("");
+  document.querySelectorAll("#spLv .pill").forEach(p=>p.addEventListener("click",()=>{
+    lv=p.dataset.l; document.querySelectorAll("#spLv .pill").forEach(x=>x.classList.toggle("is-on",x===p));}));
+  document.getElementById("spGo").addEventListener("click",()=>{ closeSheet(); runSprint(lv); });
+}
+function runSprint(lv){
+  const d=ctx(lv);
+  let score=0, left=60;
+  lessonEl.classList.add("is-on"); document.body.style.overflow="hidden";
+  document.getElementById("lCount").textContent="";
+  const tick=()=>{
+    left--;
+    document.getElementById("lBar").style.width=(left/60*100)+"%";
+    const t=document.getElementById("spClock"); if(t)t.textContent="0:"+String(Math.max(0,left)).padStart(2,"0");
+    if(left<=0){ clearInterval(spT); endSprint(score); }
+  };
+  clearInterval(spT); spT=setInterval(tick,1000);
+  const step=()=>{
+    const q=makeOne(d,rnd(["uk_de","de_uk","artikel"]));
+    if(!q){endSprint(score);return;}
+    lBody.innerHTML='<div class="sprintbar"><span class="sprintbar__c" id="spClock">1:00</span>'
+      +'<span class="sprintbar__s">✓ '+score+'</span></div>'
+      +'<div class="qtype">'+esc(q.head)+'</div>'+(q.body||"")
+      +'<div class="opts'+(q.cols===3?" opts--3":" opts--2")+'">'
+      +q.opts.map((o,i)=>'<button class="opt'+(q.art?" opt--art k-"+o:"")+'" data-i="'+i+'">'+esc(o)+'</button>').join("")+'</div>';
+    lFoot.className="lfoot"; lFootIn.innerHTML='<p class="note" style="margin:0">Тисни варіант — далі одразу наступне.</p>';
+    lBody.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+      const ok=+b.dataset.i===q.ans;
+      b.classList.add(ok?"ok":"no");
+      if(ok){score++;beep("ok");} else {beep("bad"); logMistake(lv,q.say);}
+      setTimeout(()=>{ if(left>0) step(); },ok?170:520);
+    }));
+  };
+  step();
+}
+function endSprint(score){
+  clearInterval(spT);
+  const rec=score>(state.sprintBest||0);
+  if(rec) state.sprintBest=score;
+  addXP(Math.round(score/2)); save();
+  if(rec) confetti(); beep("win");
+  document.getElementById("lBar").style.width="100%";
+  lBody.innerHTML='<div class="endcard">'+kurt(150,"happy")
+    +'<h2>'+(rec?"Новий рекорд":"Час вийшов")+'</h2>'
+    +'<div class="endstats"><div class="endstat es-xp"><b>'+score+'</b><span>правильних</span></div>'
+    +'<div class="endstat es-acc"><b>'+(state.sprintBest||0)+'</b><span>рекорд</span></div>'
+    +'<div class="endstat es-time"><b>+'+Math.round(score/2)+'</b><span>XP</span></div></div></div>';
+  lFoot.className="lfoot ok";
+  lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="spDone">Далі</button>';
+  document.getElementById("spDone").addEventListener("click",()=>{
+    lessonEl.classList.remove("is-on"); document.body.style.overflow="";
+    renderStreet(); renderSide(); renderProfile(); hud();
+  });
+}
+
+/* --- Ґрета: слово дня --- */
+const WOTDS=WOTD.trim().split(";").map(x=>{
+  const p=x.trim().split("|");
+  return {de:p[0],uk:p[1],story:p[2],ex:p[3],exUk:p[4]};
+}).filter(x=>x.de);
+function wotdToday(){
+  const d=new Date(), n=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);
+  return WOTDS[n%WOTDS.length];
+}
+function taskWotd(){
+  const w=wotdToday();
+  openSheet(charHead("greta")
+    +'<div class="wotd">'
+    +'<div class="wotd__de">'+esc(w.de)+'</div>'
+    +'<div class="wotd__tr">'+esc(tr(w.de))+'</div>'
+    +(canSpeak()?'<button class="speak speak--sm" id="wotdSay" aria-label="Прослухати">'+SPKF+'</button>':'')
+    +'<div class="wotd__uk">'+esc(w.uk)+'</div>'
+    +'<div class="wotd__story">'+esc(w.story)+'</div>'
+    +'<div class="ex"><b>'+esc(w.ex)+'</b><div class="tr">'+esc(tr(w.ex))+'</div><span>'+esc(w.exUk)+'</span></div>'
+    +'</div>'
+    +'<p class="note">Завтра тут буде інше слово. Усього в Ґрети їх '+WOTDS.length+'.</p>');
+  const b=document.getElementById("wotdSay");
+  if(b){ b.addEventListener("click",()=>say(w.de)); setTimeout(()=>say(w.de),300); }
+  if(state.wotdSeen!==today()){ state.wotdSeen=today(); addXP(2); save(); }
 }
 
 /* ================= СЛОВА ================= */
@@ -1603,6 +2530,32 @@ function showLvl(code){
   document.getElementById("lvlDetail").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
+/* ---- вибір голосу ---- */
+function renderVoicePicker(){
+  const el=document.getElementById("voicePick"); if(!el)return;
+  if(!deVoices.length){ el.innerHTML='<p class="note" style="margin:0">Браузер не дає списку голосів. Озвучка працюватиме системним голосом.</p>'; return; }
+  el.innerHTML='<div class="vlist">'+deVoices.map((v,i)=>{
+    const on=(state.voice? v.name===state.voice : i===0);
+    const tag=voiceTag(v);
+    return '<button class="vrow'+(on?" is-on":"")+'" data-n="'+esc(v.name)+'">'
+      +'<span class="vrow__r"></span><b>'+esc(v.name)+'</b><span class="vrow__t">'+tag+'</span></button>';
+  }).join("")+'</div>';
+  el.querySelectorAll(".vrow").forEach(b=>b.addEventListener("click",()=>{
+    state.voice=b.dataset.n; pickVoice(); save(); renderVoicePicker();
+    say("Guten Tag! Ich helfe dir beim Deutschlernen.");
+  }));
+}
+const rr=document.getElementById("rateRange");
+if(rr){
+  rr.addEventListener("input",e=>{
+    state.rate=+e.target.value;
+    document.getElementById("rateOut").textContent=state.rate.toFixed(2);
+    save();
+  });
+}
+const vt=document.getElementById("voiceTest");
+if(vt)vt.addEventListener("click",()=>say("Guten Tag! Ich helfe dir beim Deutschlernen."));
+
 /* планувальник */
 const MS=[["A1",90],["A2",210],["B1",420],["B2",680],["C1",1000]];
 function planner(){
@@ -1617,14 +2570,18 @@ function planner(){
 document.getElementById("mins").addEventListener("input",planner);
 document.getElementById("resetBtn").addEventListener("click",()=>{
   if(!confirm("Точно скинути весь прогрес? Це не можна відмінити."))return;
-  state={known:{},days:{},xp:0,xpToday:0,xpDate:today(),streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0};
-  save(); renderPath(); renderVocab(); renderProfile(); hud();
+  state={known:{},days:{},xp:0,xpToday:0,xpDate:today(),streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
+    mistakes:{},voice:state.voice,rate:state.rate,sprintBest:0,wotdSeen:""};
+  save(); renderStreet(); renderSide(); renderVocab(); renderProfile(); hud();
 });
 
 /* ================= СТАРТ ================= */
 (async function(){
   await load();
-  hud(); renderPath(); renderVocab(); renderG(); renderDecl(); renderTrainer(); renderProfile(); planner();
+  pickVoice();                       /* стан уже є — підхопить збережений голос */
+  renderVoicePicker();
+  hud(); renderStreet(); renderSide(); renderVocab(); renderG(); renderDecl();
+  renderTrainer(); renderProfile(); planner();
 })();
 
 </script>

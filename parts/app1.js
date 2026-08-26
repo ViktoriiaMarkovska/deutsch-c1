@@ -102,7 +102,8 @@ const DAYKEY=(lv,i)=>lv+"#"+i;
 const ALLDAYS=LV.flatMap(l=>DAYS[l]);
 
 /* ================= СТАН ================= */
-let state={known:{},days:{},xp:0,xpToday:0,xpDate:"",streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0};
+let state={known:{},days:{},xp:0,xpToday:0,xpDate:"",streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
+  mistakes:{},voice:"",rate:0.95,sprintBest:0,wotdSeen:""};
 const KEY="de-c1-v3";
 const ST={
   async get(k){if(window.storage&&window.storage.get){try{return await window.storage.get(k);}catch(e){}}try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch(e){return null;}},
@@ -134,6 +135,31 @@ function addXP(n){
   }
   hud(); save();
 }
+/* ---- помилки за Лейтнером: коробки 0..4, повтор через 0/1/3/7/16 днів ----
+   Раніше програма забувала помилки одразу. Тепер кожен промах живе доти,
+   доки не буде відтворений правильно чотири рази поспіль.               */
+const BOXDAYS=[0,1,3,7,16];
+const addDays=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
+const mkey=(lv,t)=>lv+"|"+String(t||"").trim();
+function logMistake(lv,t){
+  t=String(t||"").trim(); if(!t)return;
+  const k=mkey(lv,t);
+  const m=state.mistakes[k]||{t:t,lv:lv,box:0,n:0};
+  m.n=(m.n||0)+1; m.box=0; m.due=today();
+  state.mistakes[k]=m; save();
+}
+function logCorrect(lv,t){
+  t=String(t||"").trim(); if(!t)return;
+  const k=mkey(lv,t), m=state.mistakes[k];
+  if(!m)return;
+  m.box=Math.min(BOXDAYS.length-1,(m.box||0)+1);
+  if(m.box>=BOXDAYS.length-1) delete state.mistakes[k];   /* засвоєно — відпускаємо */
+  else m.due=addDays(BOXDAYS[m.box]);
+  save();
+}
+const allMistakes=()=>Object.values(state.mistakes||{});
+const dueMistakes=()=>{const t=today();return allMistakes().filter(m=>!m.due||m.due<=t);};
+
 const dayDone=(lv,i)=>!!state.days[DAYKEY(lv,i)];
 const dayCrowns=(lv,i)=>state.days[DAYKEY(lv,i)]||0;
 const lvlDone=l=>DAYS[l].filter((d,i)=>dayDone(l,i)).length;
@@ -172,19 +198,55 @@ function beep(type){
     });
   }catch(e){}
 }
-/* ================= ОЗВУЧКА ================= */
-let deVoice=null;
-function pickVoice(){
-  try{const vs=speechSynthesis.getVoices();
-    deVoice=vs.find(v=>/de[-_]DE/i.test(v.lang))||vs.find(v=>/^de/i.test(v.lang))||null;}catch(e){}
+/* ================= ОЗВУЧКА =================
+   Головна причина «робота» в попередній версії: бралося просто перше-ліпше
+   de-DE, а перше-ліпше майже завжди — стара Anna (macOS) або compact-голос.
+   Тепер голоси ранжуються за якістю, і на кожній платформі вибирається
+   найкращий доступний: Google Deutsch на Android, Katja/Conrad Online на
+   Windows, Siri/Premium на Apple.                                          */
+let deVoice=null, deVoices=[];
+const VOICE_GOOD=[
+  [/siri/i,60],[/premium/i,55],[/enhanced/i,50],[/neural/i,50],[/natural/i,50],
+  [/\bonline\b/i,45],[/google/i,45],
+  [/helena|martin|katja|conrad|petra|markus|hedda|stefan/i,40],
+  [/sandy|reed|flo|rocko|eddy|shelley|grandma|grandpa/i,25]
+];
+const VOICE_BAD=[[/compact/i,-40],[/eloquence/i,-60],[/\banna\b|анна/i,-30]];
+function voiceScore(v){
+  let n=0; const name=v.name||"";
+  VOICE_GOOD.forEach(([re,pts])=>{ if(re.test(name)) n+=pts; });
+  VOICE_BAD.forEach(([re,pts])=>{ if(re.test(name)) n+=pts; });
+  if(/^de[-_]DE/i.test(v.lang)) n+=10;          /* саме німецька Німеччини */
+  if(v.localService===false) n+=8;              /* хмарні зазвичай нейронні */
+  return n;
 }
-if(window.speechSynthesis){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function voiceTag(v){
+  const n=voiceScore(v);
+  return n<0?"застарілий":n>=38?"найкращий":n>=20?"хороший":"звичайний";
+}
+function pickVoice(){
+  try{
+    const vs=speechSynthesis.getVoices();
+    if(!vs||!vs.length) return;
+    deVoices=vs.filter(v=>/^de/i.test(v.lang)).sort((a,b)=>voiceScore(b)-voiceScore(a));
+    const saved=state&&state.voice ? deVoices.find(v=>v.name===state.voice) : null;
+    deVoice = saved || deVoices[0] || null;
+  }catch(e){}
+}
+if(window.speechSynthesis){
+  pickVoice();
+  speechSynthesis.onvoiceschanged=function(){ pickVoice(); if(typeof renderVoicePicker==="function")renderVoicePicker(); };
+}
 function say(text){
   if(!window.speechSynthesis)return;
   try{
+    if(!deVoice) pickVoice();               /* голоси могли доїхати із запізненням */
     speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(String(text).replace(ARTS,m=>m));
-    u.lang="de-DE"; u.rate=.85; if(deVoice)u.voice=deVoice;
+    const u=new SpeechSynthesisUtterance(String(text));
+    u.lang="de-DE";
+    u.rate=(state&&state.rate)||0.95;       /* 0.85 саме по собі звучало тягуче */
+    u.pitch=1;
+    if(deVoice)u.voice=deVoice;
     speechSynthesis.speak(u);
   }catch(e){}
 }

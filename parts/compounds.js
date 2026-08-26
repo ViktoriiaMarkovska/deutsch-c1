@@ -1,0 +1,65 @@
+/* ================= СЛОВОБУД · дані Бруно =================
+   формат: ціле слово | частини через + | переклад | переклади частин через + | нотатка
+   Німецька не вигадує нових слів — вона склеює старі. Це найкраща
+   мнемоніка, яка є в мові: знаєш дві частини — знаєш третє слово.        */
+const COMP=`
+der Handschuh|Hand+Schuh|рукавичка|рука+черевик|Черевик для руки — і все, це вже не треба зубрити;
+der Bahnhof|Bahn+Hof|вокзал|колія+двір|;
+das Krankenhaus|Kranken+Haus|лікарня|хворі+дім|;
+der Kühlschrank|Kühl+Schrank|холодильник|прохолодний+шафа|;
+das Schlafzimmer|Schlaf+Zimmer|спальня|сон+кімната|;
+das Wohnzimmer|Wohn+Zimmer|вітальня|проживання+кімната|;
+der Wasserfall|Wasser+Fall|водоспад|вода+падіння|;
+die Sonnenbrille|Sonnen+Brille|сонцезахисні окуляри|сонце+окуляри|;
+der Regenschirm|Regen+Schirm|парасолька|дощ+щит|Щит від дощу — німці описали предмет буквально;
+die Zahnbürste|Zahn+Bürste|зубна щітка|зуб+щітка|;
+der Geburtstag|Geburts+Tag|день народження|народження+день|;
+das Wörterbuch|Wörter+Buch|словник|слова+книга|;
+der Kindergarten|Kinder+Garten|дитячий садок|діти+сад|Слово поїхало в англійську без перекладу;
+der Apfelsaft|Apfel+Saft|яблучний сік|яблуко+сік|;
+das Frühstück|Früh+Stück|сніданок|рано+шматок|Ранній шматок — так і є;
+der Flughafen|Flug+Hafen|аеропорт|політ+гавань|Гавань для польотів: літак причалює, як корабель;
+die Straßenbahn|Straßen+Bahn|трамвай|вулиця+колія|;
+das Fahrrad|Fahr+Rad|велосипед|їхати+колесо|;
+der Führerschein|Führer+Schein|водійські права|водій+посвідка|;
+die Hausaufgabe|Haus+Aufgabe|домашнє завдання|дім+завдання|;
+der Schreibtisch|Schreib+Tisch|письмовий стіл|писати+стіл|;
+das Taschentuch|Taschen+Tuch|носовичок|кишеня+хустка|;
+der Staubsauger|Staub+Sauger|пилосос|пил+смоктач|Точний близнюк українського слова;
+der Wasserhahn|Wasser+Hahn|водопровідний кран|вода+півень|Кран — це «водяний півень». Через форму дзьоба;
+die Glühbirne|Glüh+Birne|лампочка|розжарення+груша|Розжарена груша — за формою;
+der Lebenslauf|Lebens+Lauf|резюме|життя+біг|Життєпробіг: куди ти встиг добігти;
+die Muttersprache|Mutter+Sprache|рідна мова|мати+мова|;
+die Krankenkasse|Kranken+Kasse|лікарняна каса|хворі+каса|;
+der Klimawandel|Klima+Wandel|зміна клімату|клімат+переміна|;
+die Umweltverschmutzung|Umwelt+Verschmutzung|забруднення довкілля|довкілля+забруднення|;
+der Rechtsanwalt|Rechts+Anwalt|адвокат|право+повірений|;
+der Wortschatz|Wort+Schatz|словниковий запас|слово+скарб|Слова — це скарб, і німецька каже це прямо;
+das Heimweh|Heim+Weh|туга за домом|дім+біль|;
+das Fernweh|Fern+Weh|потяг до мандрів|даль+біль|Протилежність Heimweh: болить не дім, а те, що ти ще не поїхала;
+der Zeitgeist|Zeit+Geist|дух часу|час+дух|;
+die Schadenfreude|Schaden+Freude|зловтіха|шкода+радість|Англійська запозичила це слово цілком — свого не мала;
+der Feierabend|Feier+Abend|кінець робочого дня|свято+вечір|Не «вечір після роботи», а «святковий вечір». Ставлення видно зі слова;
+die Sehnsucht|Sehn+Sucht|туга за далеким|тужити+жага|;
+der Ohrwurm|Ohr+Wurm|нав'язлива мелодія|вухо+черв'як|Пісня, що заповзла у вухо й не вилазить;
+der Kummerspeck|Kummer+Speck|вага від переживань|горе+сало|Сало, наїдене з горя. Слово без аналога;
+das Kopfkino|Kopf+Kino|уява, що розігралася|голова+кіно|;
+der Drahtesel|Draht+Esel|велосипед (розмовне)|дріт+осел|Дротяний осел — як його називають між своїми;
+die Fußgängerzone|Fußgänger+Zone|пішохідна зона|пішохід+зона|;
+die Geschwindigkeitsbegrenzung|Geschwindigkeits+Begrenzung|обмеження швидкості|швидкість+обмеження|;
+der Arbeitsplatz|Arbeits+Platz|робоче місце|робота+місце|;
+die Lebensmittel|Lebens+Mittel|продукти харчування|життя+засоби|Засоби для життя — так у Німеччині називають їжу в магазині;
+der Briefkasten|Brief+Kasten|поштова скринька|лист+скриня|;
+das Tagebuch|Tage+Buch|щоденник|дні+книга|;
+die Nachspeise|Nach+Speise|десерт|після+страва|;
+der Fahrplan|Fahr+Plan|розклад руху|їзда+план|;
+die Waschmaschine|Wasch+Maschine|пральна машина|прання+машина|;
+das Bücherregal|Bücher+Regal|книжкова полиця|книги+полиця|;
+der Sonnenschein|Sonnen+Schein|сонячне сяйво|сонце+сяйво|;
+die Handtasche|Hand+Tasche|сумочка|рука+сумка|;
+der Bleistift|Blei+Stift|олівець|свинець+стрижень|Свинцевий стрижень — назва старша за сам графіт;
+das Meerschweinchen|Meer+Schweinchen|морська свинка|море+свинка|;
+die Weltanschauung|Welt+Anschauung|світогляд|світ+погляд|;
+das Fingerspitzengefühl|Fingerspitzen+Gefühl|тонке чуття|кінчики пальців+відчуття|Чуття на кінчиках пальців — про делікатність у справах;
+die Torschlusspanik|Torschluss+Panik|страх не встигнути|зачинення брами+паніка|Паніка перед тим, як брама зачиниться. Про вік і втрачені шанси;
+der Schweinehund|Schweine+Hund|власна лінь|свиня+собака|«Внутрішній свинопес» — те, що не пускає тебе на пробіжку`;

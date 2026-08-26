@@ -31,7 +31,10 @@ parts = [
     R('parts/sentences.js'),
     R('parts/gaps.js'),
     R('parts/videos.js'),
+    R('parts/compounds.js'),
+    R('parts/wotd.js'),
     '\n/* ===== ДОДАТОК ===== */\n',
+    R('parts/chars.js'), R('parts/street.js'),
     R('parts/app1.js'), R('parts/app2.js'), R('parts/app3.js'),
     '\n</script>\n</body>\n</html>\n',
 ]
