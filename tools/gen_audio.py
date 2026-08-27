@@ -26,6 +26,17 @@ def fnv1a(s):
         h=(h*0x01000193)&0xffffffff
     return format(h,'08x')
 
+def speakable(t):
+    """Те, що піде в синтезатор. Хеш рахуємо від оригіналу, а озвучуємо
+       причесаний варіант: стрілки й слеші синтезатор читає незграбно."""
+    import re as _re
+    t=t.replace('\u2192',', ').replace('/',', ')
+    t=' '.join(t.split())
+    t=_re.sub(r'\s+([,.;:!?])', r'\1', t)      # прибрати пробіл перед розділовим
+    t=_re.sub(r'([.!?]),', r'\1', t)            # «Bock., Ich» -> «Bock. Ich»
+    t=_re.sub(r',{2,}', ',', t)
+    return t.strip(' ,')
+
 def path_for(text):
     hh=fnv1a(text)
     return os.path.join(OUT,hh[:2],hh+'.mp3')
@@ -34,7 +45,7 @@ URL='https://texttospeech.googleapis.com/v1/text:synthesize?key='+KEY
 
 def synth(text, tries=4):
     body=json.dumps({
-        "input":{"text":text},
+        "input":{"text":speakable(text)},
         "voice":{"languageCode":"de-DE","name":VOICE},
         "audioConfig":{"audioEncoding":"MP3","speakingRate":RATE,"sampleRateHertz":24000}
     }).encode('utf-8')
@@ -54,6 +65,8 @@ def synth(text, tries=4):
     return None
 
 texts=json.load(io.open(os.path.join(H,'tools','texts.json'),encoding='utf-8'))
+LIMIT=int(os.environ.get('LIMIT','0'))          # для пробного запуску
+if LIMIT: texts=texts[:LIMIT]
 todo=[t for t in texts if not os.path.exists(path_for(t))]
 print("усього рядків: %d · лишилось озвучити: %d"%(len(texts),len(todo)))
 print("голос: %s · темп: %s"%(VOICE,RATE))
