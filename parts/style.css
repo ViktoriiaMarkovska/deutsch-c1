@@ -430,14 +430,14 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .wotd .speak--sm{margin:12px auto 0}
 
 /* ---------- ВИБІР ГОЛОСУ ---------- */
-.vlist{display:grid;gap:6px;max-height:230px;overflow-y:auto}
-.vrow{display:flex;align-items:center;gap:10px;border:2px solid var(--line);background:var(--panel);
+.vlist{display:grid;gap:6px;max-height:230px;overflow-y:auto;overflow-x:hidden}
+.vrow{display:flex;align-items:center;gap:10px;min-width:0;border:2px solid var(--line);background:var(--panel);
   border-radius:11px;padding:9px 12px;text-align:left;font-size:14.5px}
 .vrow.is-on{border-color:var(--green);background:var(--green-l)}
 .vrow__r{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex:none}
 .vrow.is-on .vrow__r{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 3px #fff}
-.vrow b{font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vrow__t{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60)}
+.vrow b{font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vrow__t{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60);flex:none}
 
 /* картка-знайомство зі списком слів */
 .teach--list{text-align:left;padding:14px 12px}
@@ -452,3 +452,16 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .tw__say{border:0;background:none;padding:3px;flex:none}
 .tw__say svg{width:18px;height:18px;fill:var(--ink-30)}
 .teach__tip{font-family:var(--mono);font-size:11px;color:var(--ink-60);text-align:center;margin:12px 0 0}
+
+/* підказка про голос */
+.vwarn{background:var(--red-l);border:2px solid #F3B9B6;border-radius:12px;padding:11px 13px;margin-top:12px}
+.vwarn b{font-family:var(--disp);text-transform:uppercase;font-size:13px;letter-spacing:.04em;display:block}
+.vwarn p{margin:4px 0 0;font-size:14px;line-height:1.45}
+.vhelp{margin-top:12px;border:2px solid var(--line);border-radius:12px;background:var(--panel);padding:10px 13px}
+.vhelp summary{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:13px;
+  letter-spacing:.04em;cursor:pointer;list-style:none}
+.vhelp summary::-webkit-details-marker{display:none}
+.vhelp summary::after{content:"+";float:right;font-family:var(--mono);color:var(--ink-30)}
+.vhelp[open] summary::after{content:"−"}
+.vsteps{margin:0;padding-left:19px;font-size:14.5px}
+.vsteps li{margin-bottom:6px;line-height:1.45}

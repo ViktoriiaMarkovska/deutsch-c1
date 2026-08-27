@@ -443,14 +443,14 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .wotd .speak--sm{margin:12px auto 0}
 
 /* ---------- ВИБІР ГОЛОСУ ---------- */
-.vlist{display:grid;gap:6px;max-height:230px;overflow-y:auto}
-.vrow{display:flex;align-items:center;gap:10px;border:2px solid var(--line);background:var(--panel);
+.vlist{display:grid;gap:6px;max-height:230px;overflow-y:auto;overflow-x:hidden}
+.vrow{display:flex;align-items:center;gap:10px;min-width:0;border:2px solid var(--line);background:var(--panel);
   border-radius:11px;padding:9px 12px;text-align:left;font-size:14.5px}
 .vrow.is-on{border-color:var(--green);background:var(--green-l)}
 .vrow__r{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex:none}
 .vrow.is-on .vrow__r{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 3px #fff}
-.vrow b{font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vrow__t{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60)}
+.vrow b{font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vrow__t{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60);flex:none}
 
 /* картка-знайомство зі списком слів */
 .teach--list{text-align:left;padding:14px 12px}
@@ -465,6 +465,19 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .tw__say{border:0;background:none;padding:3px;flex:none}
 .tw__say svg{width:18px;height:18px;fill:var(--ink-30)}
 .teach__tip{font-family:var(--mono);font-size:11px;color:var(--ink-60);text-align:center;margin:12px 0 0}
+
+/* підказка про голос */
+.vwarn{background:var(--red-l);border:2px solid #F3B9B6;border-radius:12px;padding:11px 13px;margin-top:12px}
+.vwarn b{font-family:var(--disp);text-transform:uppercase;font-size:13px;letter-spacing:.04em;display:block}
+.vwarn p{margin:4px 0 0;font-size:14px;line-height:1.45}
+.vhelp{margin-top:12px;border:2px solid var(--line);border-radius:12px;background:var(--panel);padding:10px 13px}
+.vhelp summary{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:13px;
+  letter-spacing:.04em;cursor:pointer;list-style:none}
+.vhelp summary::-webkit-details-marker{display:none}
+.vhelp summary::after{content:"+";float:right;font-family:var(--mono);color:var(--ink-30)}
+.vhelp[open] summary::after{content:"−"}
+.vsteps{margin:0;padding-left:19px;font-size:14.5px}
+.vsteps li{margin-bottom:6px;line-height:1.45}
 </style>
 </head>
 <body>
@@ -586,6 +599,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
       <span class="eyebrow">Озвучка</span>
       <p style="font-size:14.5px;margin:8px 0 10px">Голоси відрізняються на кожному пристрої. Обери той, що звучить найживіше — вибір запам'ятається.</p>
       <div id="voicePick"></div>
+      <div id="voiceHelp"></div>
       <div style="margin-top:12px"><span class="eyebrow">Швидкість · <b id="rateOut">0.95</b></span>
         <input type="range" id="rateRange" min="0.6" max="1.2" step="0.05" value="0.95" style="width:100%" aria-label="Швидкість озвучки"></div>
       <button class="btn" id="voiceTest" style="margin-top:10px">Прослухати зразок</button>
@@ -1905,6 +1919,29 @@ function voiceScore(v){
   if(v.localService===false) n+=8;              /* хмарні зазвичай нейронні */
   return n;
 }
+/* Голоси не можна «привезти» з сайту — їх дає сам пристрій. Зате майже
+   скрізь кращий голос ставиться за півхвилини в налаштуваннях, тому
+   показуємо інструкцію саме під ту систему, з якої зайшли.              */
+function platformKey(){
+  const ua=navigator.userAgent||"";
+  if(/iPhone|iPad|iPod/.test(ua)) return "ios";
+  if(/Android/.test(ua)) return "android";
+  if(/Macintosh/.test(ua)) return (navigator.maxTouchPoints>1)?"ios":"mac";
+  if(/Windows/.test(ua)) return "win";
+  return "other";
+}
+const VOICE_HELP={
+ ios:{t:"iPhone або iPad",note:"iOS ставить компактний голос за замовчуванням. «Покращений» звучить майже як людина і важить кілька мегабайтів.",
+   steps:["Налаштування → Універсальний доступ","Усне мовлення → Голоси → Deutsch","Вибери Anna або Helena і натисни значок завантаження — це версія «Покращена» чи «Преміум»","Повернись сюди й онови сторінку"]},
+ android:{t:"Android",note:"Стандартний рушій виробника часто звучить роботом. Google-івський — нейронний і безкоштовний.",
+   steps:["Налаштування → Спеціальні можливості → Синтез мовлення","Механізм: вибери Google Text-to-speech","Шестерня поруч → Установити голосові дані → Deutsch","Повернись сюди й онови сторінку"]},
+ mac:{t:"Mac",note:"У системі лежить компактна Anna. Покращені голоси качаються безкоштовно.",
+   steps:["Системні параметри → Універсальний доступ → Мовлення","Системний голос → Керувати голосами","Знайди Deutsch і завантаж Anna (Покращена) або Helena","Онови сторінку"]},
+ win:{t:"Windows",note:"Онлайн-голоси Katja й Conrad нейронні й помітно живіші за вбудовані.",
+   steps:["Параметри → Час і мова → Мовлення","Додати голоси → Deutsch (Deutschland)","Після встановлення онови сторінку"]},
+ other:{t:"Твій пристрій",note:"Якість озвучки задає система, а не сайт.",
+   steps:["Пошукай у налаштуваннях «синтез мовлення» або «text-to-speech»","Додай німецький голос і вибери найкращий доступний","Онови сторінку"]}
+};
 function voiceTag(v){
   const n=voiceScore(v);
   return n<0?"застарілий":n>=38?"найкращий":n>=20?"хороший":"звичайний";
@@ -2912,6 +2949,23 @@ function renderVoicePicker(){
     state.voice=b.dataset.n; pickVoice(); save(); renderVoicePicker();
     say("Guten Tag! Ich helfe dir beim Deutschlernen.");
   }));
+  renderVoiceHelp();
+}
+/* якщо все, що дає пристрій, звучить погано — розгортаємо інструкцію одразу */
+function renderVoiceHelp(){
+  const box=document.getElementById("voiceHelp"); if(!box)return;
+  const h=VOICE_HELP[platformKey()]||VOICE_HELP.other;
+  const best=deVoices.length?voiceScore(deVoices[0]):-99;
+  const weak=best<38;
+  box.innerHTML=
+    (weak?'<div class="vwarn"><b>Голос звучить роботом?</b>'
+        +'<p>Це не сайт — це пристрій. '+(deVoices.length===1?'У тебе встановлено лише один німецький голос.':'Усі наявні голоси тут компактні.')
+        +' Кращий ставиться безкоштовно за півхвилини.</p></div>':'')
+    +'<details class="vhelp"'+(weak?' open':'')+'>'
+    +'<summary>Як поставити кращий голос · '+esc(h.t)+'</summary>'
+    +'<p class="note" style="margin:8px 0 10px">'+esc(h.note)+'</p>'
+    +'<ol class="vsteps">'+h.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol>'
+    +'</details>';
 }
 const rr=document.getElementById("rateRange");
 if(rr){

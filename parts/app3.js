@@ -439,6 +439,23 @@ function renderVoicePicker(){
     state.voice=b.dataset.n; pickVoice(); save(); renderVoicePicker();
     say("Guten Tag! Ich helfe dir beim Deutschlernen.");
   }));
+  renderVoiceHelp();
+}
+/* якщо все, що дає пристрій, звучить погано — розгортаємо інструкцію одразу */
+function renderVoiceHelp(){
+  const box=document.getElementById("voiceHelp"); if(!box)return;
+  const h=VOICE_HELP[platformKey()]||VOICE_HELP.other;
+  const best=deVoices.length?voiceScore(deVoices[0]):-99;
+  const weak=best<38;
+  box.innerHTML=
+    (weak?'<div class="vwarn"><b>Голос звучить роботом?</b>'
+        +'<p>Це не сайт — це пристрій. '+(deVoices.length===1?'У тебе встановлено лише один німецький голос.':'Усі наявні голоси тут компактні.')
+        +' Кращий ставиться безкоштовно за півхвилини.</p></div>':'')
+    +'<details class="vhelp"'+(weak?' open':'')+'>'
+    +'<summary>Як поставити кращий голос · '+esc(h.t)+'</summary>'
+    +'<p class="note" style="margin:8px 0 10px">'+esc(h.note)+'</p>'
+    +'<ol class="vsteps">'+h.steps.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol>'
+    +'</details>';
 }
 const rr=document.getElementById("rateRange");
 if(rr){
