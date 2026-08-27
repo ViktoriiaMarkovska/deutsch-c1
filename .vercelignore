@@ -1,3 +1,5 @@
 parts
+tools
 build.py
+deploy.sh
 README.md

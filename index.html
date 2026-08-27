@@ -1959,18 +1959,71 @@ if(window.speechSynthesis){
   pickVoice();
   speechSynthesis.onvoiceschanged=function(){ pickVoice(); if(typeof renderVoicePicker==="function")renderVoicePicker(); };
 }
-function say(text){
+/* ---- озвучка ----
+   Спершу шукаємо заздалегідь записаний файл: тоді голос однаковий на
+   будь-якому пристрої й не залежить від того, що поставив виробник.
+   Якщо файлу немає (або аудіо ще не згенероване) — читає системний голос.
+   Ім'я файлу — FNV-1a від тексту, та сама функція, що й у tools/gen_audio.py. */
+const AUDIO_BASE="audio/";
+let audioOK=null;            /* null — ще не знаємо, чи є записане аудіо */
+const audioMiss={};          /* що вже точно не знайшлося — не смикаємо двічі */
+let curAudio=null;
+function fnv1a(str){
+  let h=0x811c9dc5;
+  const b=new TextEncoder().encode(str);
+  for(let i=0;i<b.length;i++){ h^=b[i]; h=Math.imul(h,0x01000193)>>>0; }
+  return ("0000000"+h.toString(16)).slice(-8);
+}
+function audioUrl(text){
+  const hh=fnv1a(text);
+  return AUDIO_BASE+hh.slice(0,2)+"/"+hh+".mp3";
+}
+/* iOS не дає грати звук, поки користувач не торкнувся сторінки:
+   на першому ж дотику «розблоковуємо» аудіо тихим програванням */
+let audioUnlocked=false;
+function unlockAudio(){
+  if(audioUnlocked)return; audioUnlocked=true;
+  try{ const a=new Audio(); a.muted=true;
+       a.src="data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA";
+       a.play().catch(()=>{}); }catch(e){}
+}
+["pointerdown","keydown"].forEach(ev=>document.addEventListener(ev,unlockAudio,{once:true,passive:true}));
+
+function sayTTS(text){
   if(!window.speechSynthesis)return;
   try{
-    if(!deVoice) pickVoice();               /* голоси могли доїхати із запізненням */
+    if(!deVoice) pickVoice();
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(String(text));
     u.lang="de-DE";
-    u.rate=(state&&state.rate)||0.95;       /* 0.85 саме по собі звучало тягуче */
+    u.rate=(state&&state.rate)||0.95;
     u.pitch=1;
     if(deVoice)u.voice=deVoice;
     speechSynthesis.speak(u);
   }catch(e){}
+}
+function say(text){
+  text=String(text);
+  if(audioOK===false||audioMiss[text]){ sayTTS(text); return; }
+  try{
+    if(curAudio){ curAudio.pause(); curAudio=null; }
+    if(window.speechSynthesis) speechSynthesis.cancel();
+    const a=new Audio(audioUrl(text));
+    a.playbackRate=Math.max(.7,Math.min(1.3,(state&&state.rate)||1));
+    curAudio=a;
+    let fellBack=false;                    /* і error, і play() можуть спрацювати
+                                              на тому самому промаху — читаємо раз */
+    const fallback=()=>{
+      if(fellBack)return; fellBack=true;
+      audioMiss[text]=1;
+      if(audioOK===null) audioOK=false;    /* аудіо ще не залите — далі системним */
+      sayTTS(text);
+    };
+    a.addEventListener("error",fallback,{once:true});
+    a.addEventListener("playing",()=>{ audioOK=true; fellBack=true; },{once:true});
+    const pr=a.play();
+    if(pr&&pr.catch) pr.catch(fallback);
+  }catch(e){ sayTTS(text); }
 }
 const canSpeak=()=>!!(window.speechSynthesis);
 const SPK='<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
