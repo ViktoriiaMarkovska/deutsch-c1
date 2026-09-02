@@ -85,3 +85,33 @@ python3 build.py
 каналу й темою працює завжди. Канали в `videos.js` справжні (DW, Easy German,
 Learn German with Anja, Deutsch mit Marija, 24h Deutsch, Slow German, Deutsch mit
 Benjamin, Deutsch mit Rieke).
+
+## Озвучка
+
+Усі 4375 німецьких рядків озвучені **наперед** і лежать у `audio/` — тому
+голос однаковий на будь-якому пристрої й не залежить від того, які голоси
+поставив виробник телефона. Якщо файлу немає, `say()` тихо відкочується на
+системний синтезатор.
+
+Голос — **Piper `de_DE-thorsten-high`**: нейронна модель з відкритим кодом,
+працює локально, без акаунтів і ключів. Це єдиний німецький голос Piper
+у високій якості; жіночі доступні лише в low.
+
+Ім'я файлу — FNV-1a від оригінального тексту, шардинг по перших двох
+символах: `audio/67/673d24dc.m4a`. Та сама хеш-функція живе у двох місцях
+і мусить збігатися: `fnv1a()` у `parts/app1.js` і в `tools/gen_audio_local.py`.
+
+### Перегенерувати
+
+```bash
+python3 -m venv .venv-tts && .venv-tts/bin/pip install piper-tts
+# моделі: huggingface.co/rhasspy/piper-voices → de/de_DE/thorsten/high → .voices/
+python3 tools/collect_texts.py          # зібрати рядки з даних -> tools/texts.json
+.venv-tts/bin/python tools/gen_audio_local.py
+```
+
+Скрипт відновлюваний: готові файли пропускає. `LIMIT=20` — пробний прогін.
+Після зміни словника треба перезібрати `texts.json` і догенерувати нове.
+
+`tools/gen_audio.py` — той самий пайплайн через Google Cloud TTS, лишений
+про запас, якщо колись знадобиться інший голос.

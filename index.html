@@ -1976,7 +1976,7 @@ function fnv1a(str){
 }
 function audioUrl(text){
   const hh=fnv1a(text);
-  return AUDIO_BASE+hh.slice(0,2)+"/"+hh+".mp3";
+  return AUDIO_BASE+hh.slice(0,2)+"/"+hh+".m4a";
 }
 /* iOS не дає грати звук, поки користувач не торкнувся сторінки:
    на першому ж дотику «розблоковуємо» аудіо тихим програванням */

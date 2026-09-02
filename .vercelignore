@@ -3,3 +3,5 @@ tools
 build.py
 deploy.sh
 README.md
+.venv-tts
+.voices

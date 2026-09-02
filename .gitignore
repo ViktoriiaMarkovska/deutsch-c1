@@ -3,3 +3,5 @@
 *.bak
 .vercel
 .env*
+.venv-tts
+.voices
