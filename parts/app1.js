@@ -277,7 +277,7 @@ function fnv1a(str){
 }
 function audioUrl(text){
   const hh=fnv1a(text);
-  return AUDIO_BASE+hh.slice(0,2)+"/"+hh+".m4a";
+  return AUDIO_BASE+hh.slice(0,2)+"/"+hh+".mp3";
 }
 /* iOS не дає грати звук, поки користувач не торкнувся сторінки:
    на першому ж дотику «розблоковуємо» аудіо тихим програванням */
@@ -317,11 +317,15 @@ function say(text){
     const fallback=()=>{
       if(fellBack)return; fellBack=true;
       audioMiss[text]=1;
-      if(audioOK===null) audioOK=false;    /* аудіо ще не залите — далі системним */
+      if(audioOK===null){ audioOK=false;   /* цей браузер не тягне записане аудіо */
+        if(typeof renderVoiceHelp==="function") renderVoiceHelp(); }
       sayTTS(text);
     };
     a.addEventListener("error",fallback,{once:true});
-    a.addEventListener("playing",()=>{ audioOK=true; fellBack=true; },{once:true});
+    a.addEventListener("playing",()=>{
+      const was=audioOK; audioOK=true; fellBack=true;
+      if(was!==true && typeof renderVoiceHelp==="function") renderVoiceHelp();
+    },{once:true});
     const pr=a.play();
     if(pr&&pr.catch) pr.catch(fallback);
   }catch(e){ sayTTS(text); }

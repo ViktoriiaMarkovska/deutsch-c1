@@ -465,3 +465,6 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .vhelp[open] summary::after{content:"−"}
 .vsteps{margin:0;padding-left:19px;font-size:14.5px}
 .vsteps li{margin-bottom:6px;line-height:1.45}
+.vok{background:var(--green-l);border:2px solid #A9E9C9;border-radius:12px;padding:11px 13px;margin-top:12px}
+.vok b{font-family:var(--disp);text-transform:uppercase;font-size:13px;letter-spacing:.04em;display:block;color:var(--green-d)}
+.vok p{margin:4px 0 0;font-size:14px;line-height:1.45}

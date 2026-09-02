@@ -444,11 +444,23 @@ function renderVoicePicker(){
 /* якщо все, що дає пристрій, звучить погано — розгортаємо інструкцію одразу */
 function renderVoiceHelp(){
   const box=document.getElementById("voiceHelp"); if(!box)return;
+  /* Записане аудіо звучить однаково на будь-якому пристрої, тож коли воно
+     працює — решта підказок про системні голоси просто не потрібна. */
+  if(audioOK===true){
+    box.innerHTML='<div class="vok"><b>Записаний голос працює</b>'
+      +'<p>Озвучку начитано наперед, тож вона звучить однаково на цьому '
+      +'й на будь-якому іншому пристрої. Голоси системи нижче ні на що не впливають.</p></div>';
+    return;
+  }
   const h=VOICE_HELP[platformKey()]||VOICE_HELP.other;
   const best=deVoices.length?voiceScore(deVoices[0]):-99;
   const weak=best<38;
+  const noFile=(audioOK===false);
   box.innerHTML=
-    (weak?'<div class="vwarn"><b>Голос звучить роботом?</b>'
+    (noFile?'<div class="vwarn"><b>Записане аудіо не грає</b>'
+        +'<p>Цей браузер не зміг відтворити наші файли, тому читає системний голос. '
+        +'Спробуй оновити сторінку або відкрити в іншому браузері.</p></div>':'')
+    +(weak?'<div class="vwarn"><b>Голос звучить роботом?</b>'
         +'<p>Це не сайт — це пристрій. '+(deVoices.length===1?'У тебе встановлено лише один німецький голос.':'Усі наявні голоси тут компактні.')
         +' Кращий ставиться безкоштовно за півхвилини.</p></div>':'')
     +'<details class="vhelp"'+(weak?' open':'')+'>'

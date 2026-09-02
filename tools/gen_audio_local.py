@@ -14,7 +14,9 @@ H=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT=os.path.join(H,'audio')
 MODEL=os.path.join(H,'.voices','de_DE-thorsten-high.onnx')
 LIMIT=int(os.environ.get('LIMIT','0'))
-BITRATE=os.environ.get('BITRATE','32000')
+BITRATE=os.environ.get('BITRATE','40k')
+import imageio_ffmpeg
+FFMPEG=imageio_ffmpeg.get_ffmpeg_exe()   # mp3 грає скрізь без винятків, на відміну від aac
 
 def fnv1a(s):
     h=0x811c9dc5
@@ -33,7 +35,7 @@ def speakable(t):
 
 def path_for(text):
     hh=fnv1a(text)
-    return os.path.join(OUT,hh[:2],hh+'.m4a')
+    return os.path.join(OUT,hh[:2],hh+'.mp3')
 
 texts=json.load(io.open(os.path.join(H,'tools','texts.json'),encoding='utf-8'))
 if LIMIT: texts=texts[:LIMIT]
@@ -57,8 +59,8 @@ for t in todo:
     try:
         with wave.open(wav,'wb') as wf:
             voice.synthesize_wav(speakable(t), wf, syn_config=cfg)
-        r=subprocess.run(['afconvert','-f','m4af','-d','aac','-b',BITRATE,
-                          '--mix','-c','1',wav,p],
+        r=subprocess.run([FFMPEG,'-y','-i',wav,'-codec:a','libmp3lame',
+                          '-b:a',BITRATE,'-ac','1','-ar','22050',p],
                          capture_output=True)
         if r.returncode!=0 or not os.path.exists(p):
             failed.append(t)

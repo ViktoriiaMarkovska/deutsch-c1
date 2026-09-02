@@ -478,6 +478,9 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .vhelp[open] summary::after{content:"−"}
 .vsteps{margin:0;padding-left:19px;font-size:14.5px}
 .vsteps li{margin-bottom:6px;line-height:1.45}
+.vok{background:var(--green-l);border:2px solid #A9E9C9;border-radius:12px;padding:11px 13px;margin-top:12px}
+.vok b{font-family:var(--disp);text-transform:uppercase;font-size:13px;letter-spacing:.04em;display:block;color:var(--green-d)}
+.vok p{margin:4px 0 0;font-size:14px;line-height:1.45}
 </style>
 </head>
 <body>
@@ -1976,7 +1979,7 @@ function fnv1a(str){
 }
 function audioUrl(text){
   const hh=fnv1a(text);
-  return AUDIO_BASE+hh.slice(0,2)+"/"+hh+".m4a";
+  return AUDIO_BASE+hh.slice(0,2)+"/"+hh+".mp3";
 }
 /* iOS не дає грати звук, поки користувач не торкнувся сторінки:
    на першому ж дотику «розблоковуємо» аудіо тихим програванням */
@@ -2016,11 +2019,15 @@ function say(text){
     const fallback=()=>{
       if(fellBack)return; fellBack=true;
       audioMiss[text]=1;
-      if(audioOK===null) audioOK=false;    /* аудіо ще не залите — далі системним */
+      if(audioOK===null){ audioOK=false;   /* цей браузер не тягне записане аудіо */
+        if(typeof renderVoiceHelp==="function") renderVoiceHelp(); }
       sayTTS(text);
     };
     a.addEventListener("error",fallback,{once:true});
-    a.addEventListener("playing",()=>{ audioOK=true; fellBack=true; },{once:true});
+    a.addEventListener("playing",()=>{
+      const was=audioOK; audioOK=true; fellBack=true;
+      if(was!==true && typeof renderVoiceHelp==="function") renderVoiceHelp();
+    },{once:true});
     const pr=a.play();
     if(pr&&pr.catch) pr.catch(fallback);
   }catch(e){ sayTTS(text); }
@@ -3007,11 +3014,23 @@ function renderVoicePicker(){
 /* якщо все, що дає пристрій, звучить погано — розгортаємо інструкцію одразу */
 function renderVoiceHelp(){
   const box=document.getElementById("voiceHelp"); if(!box)return;
+  /* Записане аудіо звучить однаково на будь-якому пристрої, тож коли воно
+     працює — решта підказок про системні голоси просто не потрібна. */
+  if(audioOK===true){
+    box.innerHTML='<div class="vok"><b>Записаний голос працює</b>'
+      +'<p>Озвучку начитано наперед, тож вона звучить однаково на цьому '
+      +'й на будь-якому іншому пристрої. Голоси системи нижче ні на що не впливають.</p></div>';
+    return;
+  }
   const h=VOICE_HELP[platformKey()]||VOICE_HELP.other;
   const best=deVoices.length?voiceScore(deVoices[0]):-99;
   const weak=best<38;
+  const noFile=(audioOK===false);
   box.innerHTML=
-    (weak?'<div class="vwarn"><b>Голос звучить роботом?</b>'
+    (noFile?'<div class="vwarn"><b>Записане аудіо не грає</b>'
+        +'<p>Цей браузер не зміг відтворити наші файли, тому читає системний голос. '
+        +'Спробуй оновити сторінку або відкрити в іншому браузері.</p></div>':'')
+    +(weak?'<div class="vwarn"><b>Голос звучить роботом?</b>'
         +'<p>Це не сайт — це пристрій. '+(deVoices.length===1?'У тебе встановлено лише один німецький голос.':'Усі наявні голоси тут компактні.')
         +' Кращий ставиться безкоштовно за півхвилини.</p></div>':'')
     +'<details class="vhelp"'+(weak?' open':'')+'>'
