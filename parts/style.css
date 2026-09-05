@@ -468,3 +468,51 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .vok{background:var(--green-l);border:2px solid #A9E9C9;border-radius:12px;padding:11px 13px;margin-top:12px}
 .vok b{font-family:var(--disp);text-transform:uppercase;font-size:13px;letter-spacing:.04em;display:block;color:var(--green-d)}
 .vok p{margin:4px 0 0;font-size:14px;line-height:1.45}
+
+/* ---------- комбо в уроці ---------- */
+.combo{font-family:var(--disp);font-weight:800;font-size:11.5px;letter-spacing:.05em;
+  text-transform:uppercase;white-space:nowrap;opacity:0;transition:opacity .2s;color:var(--orange-d)}
+.combo.is-on{opacity:1}
+.combo--hot{color:#fff;background:linear-gradient(90deg,var(--orange),var(--red));
+  border-radius:999px;padding:4px 10px;animation:pop .3s}
+@keyframes pop{from{transform:scale(.7)}to{transform:scale(1)}}
+
+/* ---------- щоденні завдання ---------- */
+.quests{background:var(--panel);border:2px solid var(--line);border-radius:var(--r);
+  padding:14px var(--pad);margin-top:12px}
+.quests__top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:11px}
+.q{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.q:last-child{margin-bottom:0}
+.q__ic{width:34px;height:34px;border-radius:10px;background:var(--panel-2);display:grid;
+  place-items:center;font-size:17px;flex:none}
+.q.is-done .q__ic{background:var(--green-l)}
+.q__b{flex:1;min-width:0;display:block}
+.q__t{font-size:14px;line-height:1.25;display:block}
+.q.is-done .q__t{color:var(--ink-60);text-decoration:line-through}
+.q__bar{display:block;height:8px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:5px}
+.q__bar i{display:block;height:100%;border-radius:999px;background:var(--gold);transition:width .4s}
+.q.is-done .q__bar i{background:var(--green)}
+.q__n{font-family:var(--mono);font-size:11px;color:var(--ink-60);flex:none}
+.chest{display:flex;align-items:center;gap:11px;border:2px dashed var(--line);border-radius:12px;
+  padding:11px 13px;margin-top:12px;background:var(--panel-2)}
+.chest.is-ready{border-style:solid;border-color:var(--gold);background:var(--gold-l)}
+.chest b{font-family:var(--disp);font-size:14px;text-transform:uppercase;display:block}
+.chest span{font-size:12.5px;color:var(--ink-60)}
+.chest button{margin-left:auto}
+.frz{display:inline-flex;align-items:center;gap:4px;font-family:var(--disp);font-weight:800;
+  font-size:12px;color:var(--blue-d);background:var(--blue-l);border-radius:999px;padding:3px 9px}
+
+/* ---------- екран етапу ---------- */
+.mile{position:fixed;inset:0;z-index:130;background:var(--paper);display:none;
+  align-items:center;justify-content:center;padding:var(--pad);text-align:center}
+.mile.is-on{display:flex;animation:fade .3s}
+.mile__in{max-width:420px}
+.mile__n{font-family:var(--disp);font-weight:800;font-size:clamp(64px,22vw,120px);line-height:.9;
+  color:var(--orange);letter-spacing:-.04em}
+.mile__t{font-family:var(--disp);font-weight:800;font-size:clamp(20px,6vw,30px);
+  text-transform:uppercase;margin:6px 0 10px}
+.mile__p{font-size:16px;line-height:1.5;color:#4A443A;margin:0 0 18px}
+.mile__stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}
+.mile__s{border:2px solid var(--line);border-radius:14px;padding:11px 8px;background:var(--panel)}
+.mile__s b{display:block;font-family:var(--disp);font-size:24px;line-height:1.1}
+.mile__s span{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60)}

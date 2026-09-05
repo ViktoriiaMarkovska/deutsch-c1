@@ -248,7 +248,7 @@ function endSprint(score){
   lFootIn.innerHTML='<button class="btn btn--green btn--wide" id="spDone">Далі</button>';
   document.getElementById("spDone").addEventListener("click",()=>{
     lessonEl.classList.remove("is-on"); document.body.style.overflow="";
-    renderStreet(); renderProfile(); hud();
+    renderStreet(); renderProfile(); renderQuests(); hud(); checkMilestone();
   });
 }
 
@@ -278,6 +278,62 @@ function taskWotd(){
   if(state.wotdSeen!==today()){ state.wotdSeen=today(); addXP(2); save(); }
 }
 
+/* ================= ЩОДЕННІ ЗАВДАННЯ ================= */
+function renderQuests(){
+  const box=document.getElementById("quests"); if(!box)return;
+  const qs=questsToday();
+  const all=qs.every(questDone);
+  const claimed=state.questClaimed===today();
+  box.innerHTML=
+    '<div class="quests__top"><span class="eyebrow">Завдання дня</span>'
+    +((state.freeze||0)>0?'<span class="frz">❄ '+state.freeze+'</span>':'<span class="eyebrow">'+qs.filter(questDone).length+' з 3</span>')
+    +'</div>'
+    +qs.map(q=>{
+      const cur=Math.min(q.get(state),q.goal), done=cur>=q.goal;
+      return '<div class="q'+(done?" is-done":"")+'">'
+        +'<span class="q__ic">'+(done?"✓":q.ic)+'</span>'
+        +'<span class="q__b"><span class="q__t">'+esc(q.t)+'</span>'
+        +'<span class="q__bar"><i style="width:'+Math.round(cur/q.goal*100)+'%"></i></span></span>'
+        +'<span class="q__n">'+cur+'/'+q.goal+'</span></div>';
+    }).join("")
+    +'<div class="chest'+(all&&!claimed?" is-ready":"")+'">'
+      +'<span style="font-size:24px">'+(claimed?"🎁":all?"🎁":"🔒")+'</span>'
+      +'<span><b>'+(claimed?"Скриню відкрито":all?"Скриня готова":"Скриня")+'</b>'
+      +'<span>'+(claimed?"Завтра будуть нові завдання."
+                :all?"Заморозка серії та 20 XP."
+                :"Виконай усі три завдання дня.")+'</span></span>'
+      +(all&&!claimed?'<button class="btn btn--gold" id="qClaim">Забрати</button>':'')
+    +'</div>';
+  const b=document.getElementById("qClaim");
+  if(b)b.addEventListener("click",()=>{
+    if(claimQuests()){ beep("win"); confetti(); renderQuests(); hud(); }
+  });
+}
+
+/* ================= ЕКРАН ЕТАПУ ================= */
+function showMilestone(n){
+  const el=document.getElementById("mile"), box=document.getElementById("mileIn");
+  const days=ALLDAYS.filter(d=>dayDone(d.lv,d.i)).length;
+  box.innerHTML=waldi("happy",150)
+    +'<div class="mile__n">'+n+'</div>'
+    +'<div class="mile__t">'+plural(n,"день поспіль","дні поспіль","днів поспіль")+'</div>'
+    +'<p class="mile__p">'+esc(MILE_WORD[n]||"")+'</p>'
+    +'<div class="mile__stats">'
+      +'<div class="mile__s"><b>'+knownCount()+'</b><span>слів вивчено</span></div>'
+      +'<div class="mile__s"><b>'+days+'</b><span>днів пройдено</span></div>'
+      +'<div class="mile__s"><b>'+state.xp+'</b><span>усього XP</span></div>'
+      +'<div class="mile__s"><b>'+state.bestCombo+'</b><span>найдовше комбо</span></div>'
+    +'</div>'
+    +'<button class="btn btn--green btn--wide" id="mileOk">Далі</button>';
+  el.classList.add("is-on"); document.body.style.overflow="hidden";
+  beep("win"); confetti();
+  document.getElementById("mileOk").addEventListener("click",()=>{
+    el.classList.remove("is-on"); document.body.style.overflow="";
+    state.pendingMile=null; save();
+  });
+}
+function checkMilestone(){ if(state.pendingMile) showMilestone(state.pendingMile); }
+
 /* ================= СЛОВА ================= */
 let vLv="A1",vQ="",vHide=false;
 document.getElementById("vLevels").innerHTML=LV.map(l=>'<button class="pill'+(l==="A1"?" is-on":"")+'" data-l="'+l+'">'+l+'</button>').join("");
@@ -304,7 +360,8 @@ function renderVocab(){
     const row=b.closest(".w"), id=row.dataset.id;
     state.known[id]=!state.known[id]; row.classList.toggle("is-known",!!state.known[id]);
     if(state.known[id])beep("ok");
-    save(); vStat(); hud();
+    if(state.known[id]) todBump("words");
+    save(); vStat(); hud(); renderQuests();
   }));
   document.querySelectorAll("#vList .w__say").forEach(b=>b.addEventListener("click",()=>say(b.dataset.say)));
   vStat();
@@ -504,6 +561,6 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
   await load();
   pickVoice();                       /* стан уже є — підхопить збережений голос */
   renderVoicePicker();
-  hud(); renderStreet(); renderVocab(); renderG(); renderDecl();
+  hud(); renderStreet(); renderQuests(); renderVocab(); renderG(); renderDecl();
   renderTrainer(); renderProfile(); planner();
 })();

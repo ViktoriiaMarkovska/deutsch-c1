@@ -103,7 +103,9 @@ const ALLDAYS=LV.flatMap(l=>DAYS[l]);
 
 /* ================= СТАН ================= */
 let state={known:{},days:{},xp:0,xpToday:0,xpDate:"",streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
-  mistakes:{},voice:"",rate:0.95,sprintBest:0,wotdSeen:""};
+  mistakes:{},voice:"",rate:0.95,sprintBest:0,wotdSeen:"",
+  tod:{date:"",combo:0,days:0,perfect:0,words:0,mistakes:0,lessons:0,listen:0},
+  freeze:0,questClaimed:"",miles:{},bestCombo:0};
 const KEY="de-c1-v3";
 const ST={
   async get(k){if(window.storage&&window.storage.get){try{return await window.storage.get(k);}catch(e){}}try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch(e){return null;}},
@@ -114,7 +116,16 @@ const yday=()=>new Date(Date.now()-864e5).toISOString().slice(0,10);
 async function load(){
   try{const r=await ST.get(KEY); if(r&&r.value) state=Object.assign(state,JSON.parse(r.value));}catch(e){}
   if(state.xpDate!==today()){state.xpDate=today();state.xpToday=0;}
-  if(state.lastDay && state.lastDay!==today() && state.lastDay!==yday()) state.streak=0;
+  if(!state.tod||state.tod.date!==today())
+    state.tod={date:today(),combo:0,days:0,perfect:0,words:0,mistakes:0,lessons:0,listen:0};
+  /* Пропущений день не мусить убивати серію на сорок днів — саме через це
+     люди найчастіше кидають. Одну прогалину закриває заморозка.          */
+  if(state.lastDay && state.lastDay!==today() && state.lastDay!==yday()){
+    const gap=Math.round((Date.parse(today())-Date.parse(state.lastDay))/864e5);
+    if(gap===2 && (state.freeze||0)>0){
+      state.freeze--; state.lastDay=yday(); state.frozeJust=true;
+    } else state.streak=0;
+  }
 }
 let saveT=null;
 function save(){
@@ -132,6 +143,8 @@ function addXP(n){
   if(state.xpToday>=GOAL && state.lastDay!==today()){
     state.lastDay=today(); state.streak+=1;
     if(state.streak>state.best) state.best=state.streak;
+    const m=milestoneFor(state.streak);
+    if(m && !state.miles[m]){ state.miles[m]=1; state.pendingMile=m; }
   }
   hud(); save();
 }
@@ -164,6 +177,9 @@ const dayDone=(lv,i)=>!!state.days[DAYKEY(lv,i)];
 const dayCrowns=(lv,i)=>state.days[DAYKEY(lv,i)]||0;
 const lvlDone=l=>DAYS[l].filter((d,i)=>dayDone(l,i)).length;
 const knownCount=()=>Object.values(state.known).filter(Boolean).length;
+function todBump(k,v){ if(!state.tod||state.tod.date!==today())
+    state.tod={date:today(),combo:0,days:0,perfect:0,words:0,mistakes:0,lessons:0,listen:0};
+  state.tod[k]=Math.max(state.tod[k]||0, v===undefined?(state.tod[k]||0)+1:v); }
 const wid=w=>w.lv+"|"+w.de;
 /* перший день рівня відкритий завжди — щоб не починати з нуля, якщо ти вже не з нуля */
 const dayOpen=(lv,i)=> i===0 || dayDone(lv,i-1);

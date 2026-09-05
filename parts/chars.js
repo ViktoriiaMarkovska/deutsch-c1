@@ -39,69 +39,70 @@ function elsa(size,mood){
 function bruno(size,mood){
   size=size||110; mood=mood||"idle";
   const eye = mood==="happy"
-    ? '<path d="M48 52c2-2.5 5.5-2.5 7.5 0M66 52c2-2.5 5.5-2.5 7.5 0" stroke="#2A1B0E" stroke-width="2.8" fill="none" stroke-linecap="round"/>'
-    : '<circle cx="52" cy="52" r="3.6" fill="#2A1B0E"/><circle cx="70" cy="52" r="3.6" fill="#2A1B0E"/>'
-      +'<circle cx="53" cy="51" r="1.3" fill="#fff"/><circle cx="71" cy="51" r="1.3" fill="#fff"/>';
+    ? '<path d="M31 55c2-2.5 5.5-2.5 7.5 0" stroke="#2A1B0E" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+    : '<circle cx="34" cy="56" r="4" fill="#2A1B0E"/><circle cx="35.4" cy="54.8" r="1.5" fill="#fff"/>';
   return '<svg class="ch ch--bruno" viewBox="0 0 120 140" width="'+size+'" role="img" aria-label="Бруно, бобер-інженер">'
-  +'<ellipse cx="60" cy="132" rx="32" ry="4.5" fill="#221F1A" opacity=".10"/>'
-  /* плаский хвіст */
-  +'<ellipse cx="94" cy="112" rx="20" ry="12" fill="#6B4423" transform="rotate(18 94 112)"/>'
-  +'<path d="M82 106h22M82 114h22M88 100v22" stroke="#4E3018" stroke-width="2" opacity=".5"/>'
-  /* лапи */
-  +'<rect x="42" y="112" width="14" height="16" rx="6" fill="#7A5230"/>'
-  +'<rect x="62" y="112" width="14" height="16" rx="6" fill="#7A5230"/>'
-  /* тіло */
-  +'<ellipse cx="60" cy="92" rx="30" ry="27" fill="#8B5E34"/>'
-  +'<ellipse cx="60" cy="97" rx="20" ry="20" fill="#B98A5A"/>'
-  /* голова */
-  +'<circle cx="61" cy="52" r="27" fill="#8B5E34"/>'
-  /* вушка */
-  +'<circle cx="40" cy="34" r="7" fill="#6B4423"/><circle cx="82" cy="34" r="7" fill="#6B4423"/>'
-  /* морда */
-  +'<ellipse cx="61" cy="64" rx="16" ry="12" fill="#D9B183"/>'
-  +'<ellipse cx="61" cy="57" rx="6" ry="4.5" fill="#2A1B0E"/>'
+  +'<ellipse cx="58" cy="130" rx="30" ry="4.5" fill="#221F1A" opacity=".10"/>'
+  /* плаский лускатий хвіст — головна прикмета, лежить позаду */
+  +'<path d="M78 100c16-6 30-2 34 8 4 10-6 18-20 16-11-2-18-10-14-24z" fill="#6B4423"/>'
+  +'<path d="M84 104l24 6M82 112l26 4M92 100l-4 22M102 102l-4 20" stroke="#4E3018" stroke-width="1.8" opacity=".55"/>'
+  /* лапки */
+  +'<path d="M46 112v14M42 126h10M62 112v14M58 126h10" stroke="#5E3F1F" stroke-width="4" stroke-linecap="round" fill="none"/>'
+  /* тіло у профіль */
+  +'<ellipse cx="60" cy="92" rx="26" ry="25" fill="#8B5E34"/>'
+  +'<path d="M40 86c-5 10-2 22 8 26 7 3 14 0 16-6-9-2-19-8-24-20z" fill="#C89A6B"/>'
+  /* голова в профіль */
+  +'<circle cx="42" cy="58" r="21" fill="#8B5E34"/>'
+  /* морда витягнута вліво */
+  +'<path d="M24 56c-10 1-14 6-14 11 0 5 5 9 14 9 8 0 13-5 13-10s-5-10-13-10z" fill="#C89A6B"/>'
+  +'<ellipse cx="12" cy="63" rx="4.5" ry="3.5" fill="#2A1B0E"/>'
+  /* два різці — без них це не бобер */
+  +'<rect x="15" y="70" width="5" height="12" rx="1.6" fill="#fff"/>'
+  +'<rect x="21" y="70" width="5" height="12" rx="1.6" fill="#F2EEE2"/>'
   +eye
-  /* два різці — головна прикмета бобра */
-  +'<rect x="55" y="66" width="5.5" height="11" rx="1.6" fill="#fff"/>'
-  +'<rect x="61.5" y="66" width="5.5" height="11" rx="1.6" fill="#fff"/>'
-  /* каска інженера */
-  +'<path d="M35 32a26 26 0 0 1 52 0z" fill="#FFC814"/>'
-  +'<rect x="31" y="30" width="60" height="7" rx="3.5" fill="#E0A800"/>'
-  +'<rect x="58" y="12" width="6" height="20" rx="3" fill="#E0A800"/>'
+  /* вушко */
+  +'<circle cx="54" cy="42" r="6.5" fill="#6B4423"/>'
+  /* каска інженера, зсунута назад */
+  +'<path d="M23 42a21 21 0 0 1 40-6l-2 6z" fill="#FFC814"/>'
+  +'<rect x="20" y="40" width="46" height="7" rx="3.5" fill="#E0A800" transform="rotate(-6 43 43)"/>'
+  /* олівець за вухом — підпис персонажа */
+  +'<rect x="58" y="30" width="5" height="20" rx="1.5" fill="#E8A33D" transform="rotate(16 60 40)"/>'
+  +'<path d="M63 28l3 5-5 1z" fill="#2A1B0E" transform="rotate(16 60 40)"/>'
   +'</svg>';
 }
 
 /* --- Курт, кріт-машиніст U-Bahn. Ганяє на час. --- */
 function kurt(size,mood){
   size=size||110; mood=mood||"idle";
+  /* кроти майже не бачать — очі завжди примружені */
   const eye = mood==="happy"
-    ? '<path d="M48 54c2-2 5-2 7 0M67 54c2-2 5-2 7 0" stroke="#2B2438" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
-    : '<path d="M47 54h8M66 54h8" stroke="#2B2438" stroke-width="3" stroke-linecap="round"/>';
+    ? '<path d="M33 56c2.5-3 6-3 8 0" stroke="#2B2438" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+    : '<path d="M32 57h9" stroke="#2B2438" stroke-width="3" stroke-linecap="round"/>';
   return '<svg class="ch ch--kurt" viewBox="0 0 120 140" width="'+size+'" role="img" aria-label="Курт, кріт-машиніст">'
-  +'<ellipse cx="60" cy="132" rx="30" ry="4.5" fill="#221F1A" opacity=".10"/>'
-  /* лапи-копалки */
-  +'<ellipse cx="34" cy="96" rx="11" ry="13" fill="#E8A0A8" transform="rotate(-18 34 96)"/>'
-  +'<path d="M27 90v14M32 88v16M37 90v14" stroke="#C97F88" stroke-width="2.2" stroke-linecap="round"/>'
-  +'<ellipse cx="88" cy="96" rx="11" ry="13" fill="#E8A0A8" transform="rotate(18 88 96)"/>'
-  +'<path d="M83 90v14M88 88v16M93 90v14" stroke="#C97F88" stroke-width="2.2" stroke-linecap="round"/>'
+  +'<ellipse cx="58" cy="130" rx="28" ry="4.5" fill="#221F1A" opacity=".10"/>'
+  /* хвостик-ґудзик позаду */
+  +'<path d="M84 104c8 2 12 8 10 14" stroke="#4A4160" stroke-width="5" fill="none" stroke-linecap="round"/>'
   /* ноги */
-  +'<rect x="47" y="114" width="12" height="14" rx="5" fill="#4A4160"/>'
-  +'<rect x="61" y="114" width="12" height="14" rx="5" fill="#4A4160"/>'
-  /* тіло */
-  +'<ellipse cx="60" cy="94" rx="27" ry="26" fill="#5C5175"/>'
-  +'<ellipse cx="60" cy="99" rx="17" ry="18" fill="#7A6E94"/>'
+  +'<rect x="50" y="112" width="12" height="15" rx="5" fill="#4A4160"/>'
+  +'<rect x="64" y="112" width="12" height="15" rx="5" fill="#4A4160"/>'
+  /* тіло у профіль */
+  +'<ellipse cx="62" cy="92" rx="26" ry="25" fill="#5C5175"/>'
+  +'<path d="M43 86c-5 10-2 22 8 26 7 3 14 0 16-6-9-2-19-8-24-20z" fill="#8479A0"/>'
   /* голова */
-  +'<circle cx="60" cy="56" r="26" fill="#5C5175"/>'
+  +'<circle cx="44" cy="60" r="20" fill="#5C5175"/>'
+  /* рожевий ніс-рильце, витягнутий уперед */
+  +'<path d="M26 58c-9 1-13 5-13 9s5 8 13 8c7 0 12-4 12-8s-5-9-12-9z" fill="#E8A0A8"/>'
+  +'<circle cx="15" cy="65" r="2.6" fill="#B9707A"/><circle cx="15" cy="71" r="2.6" fill="#B9707A"/>'
   +eye
-  /* рожевий ніс-п'ятачок */
-  +'<ellipse cx="60" cy="68" rx="11" ry="8" fill="#E8A0A8"/>'
-  +'<circle cx="56" cy="67" r="2" fill="#B9707A"/><circle cx="64" cy="67" r="2" fill="#B9707A"/>'
-  /* кашкет машиніста */
-  +'<path d="M34 40a26 26 0 0 1 52 0z" fill="#2B6FE8"/>'
-  +'<rect x="30" y="38" width="60" height="8" rx="4" fill="#1D51B0"/>'
-  +'<path d="M28 46h30v5H28z" fill="#16367A"/>'
-  +'<circle cx="60" cy="30" r="7" fill="#FFC814"/>'
-  +'<text x="60" y="34" font-size="9" font-family="Arial Black,sans-serif" font-weight="900" text-anchor="middle" fill="#1D51B0">U</text>'
+  /* лапи-лопати — ними він копає тунелі */
+  +'<ellipse cx="42" cy="103" rx="9.5" ry="12" fill="#E8A0A8" transform="rotate(-26 42 103)"/>'
+  +'<path d="M37 98v12M42 96v14M47 98v12" stroke="#C97F88" stroke-width="2.2" stroke-linecap="round"/>'
+  /* кашкет машиніста з козирком уперед */
+  +'<path d="M26 46a20 20 0 0 1 38-4l-2 5z" fill="#2B6FE8"/>'
+  +'<rect x="24" y="44" width="42" height="7" rx="3.5" fill="#1D51B0" transform="rotate(-7 45 47)"/>'
+  +'<path d="M26 48c-9 1-14 3-16 6l20 2z" fill="#16367A"/>'
+  +'<circle cx="52" cy="34" r="7" fill="#FFC814"/>'
+  +'<text x="52" y="38" font-size="9.5" font-family="Arial Black,sans-serif" font-weight="900" text-anchor="middle" fill="#1D51B0">U</text>'
   +'</svg>';
 }
 
@@ -109,39 +110,46 @@ function kurt(size,mood){
 function greta(size,mood){
   size=size||110; mood=mood||"idle";
   const eye = mood==="happy"
-    ? '<path d="M50 58c2-2.5 5.5-2.5 7.5 0M67 58c2-2.5 5.5-2.5 7.5 0" stroke="#3A2A18" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
-    : '<circle cx="54" cy="58" r="3.4" fill="#3A2A18"/><circle cx="71" cy="58" r="3.4" fill="#3A2A18"/>'
-      +'<circle cx="55" cy="57" r="1.2" fill="#fff"/><circle cx="72" cy="57" r="1.2" fill="#fff"/>';
-  /* колючки — трикутники по дузі */
+    ? '<path d="M32 58c2-2.5 5.5-2.5 7.5 0" stroke="#3A2A18" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+    : '<circle cx="35" cy="59" r="3.8" fill="#3A2A18"/><circle cx="36.3" cy="57.9" r="1.4" fill="#fff"/>';
+  /* колючки ростуть зі СПИНИ по верхній дузі тіла, не з голови */
   let sp='';
-  for(let i=0;i<11;i++){
-    const a=Math.PI*(1.06+i*0.088), r=30;
-    const cx=62+Math.cos(a)*r, cy=58+Math.sin(a)*r;
-    const tx=62+Math.cos(a)*(r+13), ty=58+Math.sin(a)*(r+13);
-    sp+='<path d="M'+(cx-6)+' '+cy+'L'+tx+' '+ty+'L'+(cx+6)+' '+cy+'z" fill="#6B4E2E"/>';
+  const cx=64, cy=90, r=26;
+  for(let i=0;i<19;i++){
+    const a=Math.PI*(1.02+i*0.055);          /* від «загривка» назад до хвоста */
+    const nx=Math.cos(a), ny=Math.sin(a);
+    const tx=-ny, ty=nx;                      /* дотична — щоб розвести основу */
+    const w=4.6, len=17+(i%3)*3.5;            /* довжина трохи гуляє — живіше */
+    const b1x=cx+nx*r+tx*w, b1y=cy+ny*r+ty*w;
+    const b2x=cx+nx*r-tx*w, b2y=cy+ny*r-ty*w;
+    const px=cx+nx*(r+len), py=cy+ny*(r+len);
+    sp+='<path d="M'+b1x.toFixed(1)+' '+b1y.toFixed(1)
+       +'L'+px.toFixed(1)+' '+py.toFixed(1)
+       +'L'+b2x.toFixed(1)+' '+b2y.toFixed(1)+'z" fill="#6B4E2E"/>';
   }
   return '<svg class="ch ch--greta" viewBox="0 0 120 140" width="'+size+'" role="img" aria-label="Ґрета, їжачка-булочниця">'
-  +'<ellipse cx="60" cy="132" rx="30" ry="4.5" fill="#221F1A" opacity=".10"/>'
-  /* ніжки */
-  +'<rect x="48" y="112" width="11" height="15" rx="5" fill="#C08A5A"/>'
-  +'<rect x="63" y="112" width="11" height="15" rx="5" fill="#C08A5A"/>'
-  /* тіло у фартуху */
-  +'<ellipse cx="61" cy="94" rx="29" ry="26" fill="#8B6239"/>'
-  +'<path d="M42 84h38v22a19 19 0 0 1-38 0z" fill="#F7F5EE"/>'
-  +'<path d="M52 84h18v6H52z" fill="#E4342F" opacity=".85"/>'
+  +'<ellipse cx="60" cy="130" rx="29" ry="4.5" fill="#221F1A" opacity=".10"/>'
+  /* лапки */
+  +'<path d="M52 112v14M48 126h10M68 112v14M64 126h10" stroke="#B07C4C" stroke-width="4" stroke-linecap="round" fill="none"/>'
   +sp
-  /* голова */
-  +'<circle cx="62" cy="58" r="26" fill="#D9AE7C"/>'
-  +'<ellipse cx="62" cy="70" rx="14" ry="11" fill="#EBCFA8"/>'
-  +'<ellipse cx="62" cy="64" rx="5.5" ry="4.5" fill="#3A2A18"/>'
+  /* тіло у профіль */
+  +'<ellipse cx="64" cy="90" rx="27" ry="25" fill="#8B6239"/>'
+  /* фартух булочниці збоку */
+  +'<path d="M46 84c-5 11-2 24 8 28 7 3 15 0 17-6-10-2-20-9-25-22z" fill="#F7F5EE"/>'
+  +'<path d="M48 90c-2 5-2 10 0 14" stroke="#E4342F" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>'
+  /* голова в профіль */
+  +'<circle cx="44" cy="62" r="19" fill="#D9AE7C"/>'
+  /* гостра мордочка — у їжака вона довга */
+  +'<path d="M27 60c-11 1-16 5-16 9s5 8 15 8c8 0 13-4 13-8s-4-9-12-9z" fill="#EBCFA8"/>'
+  +'<ellipse cx="11" cy="67" rx="4.2" ry="3.4" fill="#3A2A18"/>'
   +eye
-  /* кухарський ковпак, зсунутий набік */
-  +'<ellipse cx="80" cy="30" rx="15" ry="11" fill="#fff"/>'
-  +'<rect x="68" y="34" width="24" height="9" rx="4" fill="#F0EDE2"/>'
-  /* крендель у лапці */
-  +'<g transform="translate(22 86)">'
-  +'<circle cx="12" cy="12" r="12" fill="none" stroke="#C98430" stroke-width="5"/>'
-  +'<path d="M4 6c4 8 16 8 16 0" stroke="#C98430" stroke-width="5" fill="none" stroke-linecap="round"/>'
+  /* кухарський ковпак набік */
+  +'<ellipse cx="46" cy="36" rx="15" ry="10" fill="#fff"/>'
+  +'<rect x="33" y="41" width="26" height="8" rx="4" fill="#F0EDE2"/>'
+  /* крендель у лапці — підпис персонажа */
+  +'<g transform="translate(12 92) scale(.72)">'
+  +'<circle cx="12" cy="12" r="11" fill="none" stroke="#C98430" stroke-width="5"/>'
+  +'<path d="M4 7c4 8 16 8 16 0" stroke="#C98430" stroke-width="5" fill="none" stroke-linecap="round"/>'
   +'</g>'
   +'</svg>';
 }

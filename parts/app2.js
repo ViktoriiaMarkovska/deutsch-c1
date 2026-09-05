@@ -324,10 +324,18 @@ function lessonProgress(){
   const denom=Math.max(1,L.solved+remain);
   return Math.round(L.solved/denom*100);
 }
+function comboBadge(){
+  const el=document.getElementById("lCombo"); if(!el)return;
+  const c=L.combo||0;
+  if(c<3){ el.className="combo"; el.textContent=""; return; }
+  el.className="combo is-on"+(c>=10?" combo--hot":"");
+  el.textContent = c>=10 ? c+" поспіль · ×2 XP" : c+" поспіль";
+}
 function renderQ(){
   const q=L.queue[L.i];
   document.getElementById("lBar").style.width=lessonProgress()+"%";
   document.getElementById("lCount").textContent=L.solved+" / "+Math.max(L.total,L.solved+(L.queue.length-L.i));
+  comboBadge();
   lFoot.className="lfoot"; L.locked=false; L.sel=null; L.hintOpen=false;
   let h='<div class="qtype">'+esc(q.head)+'</div>'+(q.body||"");
   if(q.k==="choice"){
@@ -448,9 +456,16 @@ function check(){
   }
   L.asked++;
   if(ok){
-    L.right++; L.solved++; beep("ok"); addXP(1); L.xp+=1;
+    L.right++; L.solved++; beep("ok");
+    L.combo=(L.combo||0)+1;
+    if(L.combo>state.bestCombo) state.bestCombo=L.combo;
+    todBump("combo",L.combo);
+    const gain=L.combo>=10?2:1;          /* з десятого поспіль XP іде подвійний */
+    addXP(gain); L.xp+=gain;
+    if(q.ex==="audio"||q.ex==="listen"||q.ex==="dictate") todBump("listen");
     if(!q.retried) logCorrect(L.lv,q.say);
   } else {
+    L.combo=0;
     beep("bad");
     logMistake(L.lv,q.say);
     /* безлімітні життя: питання не зникає, а повертається наприкінці */
@@ -482,6 +497,9 @@ function finish(){
   const secs=Math.round((Date.now()-L.t0)/1000);
   const acc=L.asked?Math.round(L.right/L.asked*100):100;
   state.answered+=L.asked; state.correct+=L.right; state.lessons++;
+  todBump("lessons");
+  if(acc>=100 && !L.hintsUsed) todBump("perfect");
+  if(L.day) todBump("days");
   let bonus=10;
   if(acc>=100 && !L.hintsUsed) bonus+=10;
   addXP(bonus); L.xp+=bonus;
