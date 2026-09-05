@@ -29,7 +29,7 @@ parts = [
     R('parts/_grammar_old.js'),
     R('parts/_levels_old.js'),
     R('parts/sentences.js'),
-    R('parts/gaps.js'),
+    R('parts/gaps.js'), R('parts/dialogs.js'),
     R('parts/videos.js'),
     R('parts/compounds.js'),
     R('parts/wotd.js'),

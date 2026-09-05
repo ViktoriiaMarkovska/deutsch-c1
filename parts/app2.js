@@ -178,7 +178,95 @@ EX.dictate={name:"Диктант",desc:"почути й записати — н�
       hint:w.uk+" · "+tr(w.de), say:w.de, autoSay:true};
   }};
 
-const EXKEYS=["artikel","uk_de","de_uk","audio","type","plural","pairs","build","gap","listen","artpl","dictate"];
+
+/* 13. Зайве слово — три з однієї теми й одне чуже */
+EX.odd={name:"Зайве слово",desc:"три слова з однієї теми й одне чуже",ic:"#8B5CF6",
+  icon:'<path d="M5 5h6v6H5zM13 5h6v6h-6zM5 13h6v6H5z"/><path d="M13 13l6 6M19 13l-6 6"/>',
+  need:d=>d.themes && d.themes.length>1,
+  make(d){
+    const th=rnd(d.themes.filter(t=>t.words.length>=3));
+    const other=rnd(d.themes.filter(t=>t.th!==th.th));
+    const three=distinct(th.words,3,{de:""},w=>w.de);
+    const odd=rnd(other.words);
+    if(three.length<3||!odd) return EX.de_uk.make(d);
+    const all=shuffle(three.concat([odd]));
+    return {k:"choice",head:"Яке слово зайве?",
+      body:'<div class="qsub">Три слова з однієї теми, одне — з іншої.</div>',
+      opts:all.map(w=>w.de), ans:all.indexOf(odd),
+      hint:"Три інші — це «"+th.th+"», а «"+odd.de+"» — з теми «"+other.th+"».",
+      say:odd.de};
+  }};
+
+/* 14. Знайди помилку — псуємо одну річ у правильному реченні */
+const ART_SWAP={der:"die",die:"das",das:"der"};
+EX.error={name:"Знайди помилку",desc:"у реченні щось не так — знайти що",ic:"#E4342F",
+  icon:'<path d="M12 4v10M12 18h.01"/><circle cx="12" cy="12" r="9"/>',
+  need:d=>d.sents.length>0,
+  make(d){
+    const s=rnd(d.sents), w=s.de.split(" ");
+    /* шукаємо, що зіпсувати: артикль, дієслово на -t/-e, або порядок слів */
+    const ai=w.findIndex(x=>ART_SWAP[x.toLowerCase()]);
+    let broken, idx, why;
+    if(ai>=0){
+      broken=w.slice(); const low=w[ai].toLowerCase();
+      const rep=ART_SWAP[low];
+      broken[ai]= w[ai][0]===w[ai][0].toUpperCase() ? rep[0].toUpperCase()+rep.slice(1) : rep;
+      idx=ai; why="Тут потрібен артикль «"+w[ai]+"», а не «"+broken[ai]+"».";
+    } else if(w.length>3){
+      broken=w.slice(); idx=1;
+      [broken[1],broken[2]]=[broken[2],broken[1]];
+      why="Слова стоять не в тому порядку. Правильно: «"+w.slice(0,4).join(" ")+"…».";
+    } else return EX.build.make(d);
+    /* варіанти мають бути різними словами: інакше в реченні з двома «er»
+       виходять дві однакові кнопки й незрозуміло, яку тиснути */
+    const badWord=broken[idx];
+    const others=[];
+    broken.forEach((x,i)=>{ if(i!==idx && x!==badWord && others.indexOf(x)<0) others.push(x); });
+    if(others.length<3) return EX.build.make(d);
+    const all=shuffle([badWord].concat(shuffle(others).slice(0,3)));
+    return {k:"choice",head:"Яке слово тут зайве або не в тій формі?",
+      body:'<div class="qsent">'+esc(broken.join(" "))+'</div>'
+           +'<div class="qsub" style="margin-top:9px">'+esc(s.uk)+'</div>',
+      opts:all, ans:all.indexOf(badWord), hint:why, say:s.de};
+  }};
+
+/* 15. Доклади за змістом — прибираємо значуще слово */
+EX.cloze={name:"За змістом",desc:"яке слово сюди підходить",ic:"#1FB86B",
+  icon:'<path d="M4 7h16M4 12h7M15 12h5M4 17h16"/>',
+  need:d=>d.sents.length>2,
+  make(d){
+    const s=rnd(d.sents), w=s.de.split(" ");
+    /* беремо найдовше слово — воно майже завжди значуще, а не службове */
+    let bi=0; w.forEach((x,i)=>{ if(x.replace(/[.,!?]/g,"").length>w[bi].replace(/[.,!?]/g,"").length) bi=i; });
+    const right=w[bi].replace(/[.,!?]/g,"");
+    if(right.length<4) return EX.gap.make(d);
+    const pool=d.sents.flatMap(x=>x.de.split(" ")).map(x=>x.replace(/[.,!?]/g,""))
+                .filter(x=>x.length>=4 && x!==right);
+    const wrong=distinct(pool,3,right,x=>x);
+    if(wrong.length<3) return EX.gap.make(d);
+    const all=shuffle([right].concat(wrong));
+    const shown=w.slice(); shown[bi]="___";
+    return {k:"choice",head:"Яке слово підходить?",
+      body:'<div class="qsent">'+esc(shown.join(" ")).replace("___","<u> </u>")+'</div>'
+           +'<div class="qsub" style="margin-top:9px">'+esc(s.uk)+'</div>',
+      opts:all, ans:all.indexOf(right), hint:"Повне речення: "+s.de, say:s.de};
+  }};
+
+/* 16. Діалог — обрати природну репліку */
+EX.dialog={name:"Діалог",desc:"що відповісти співрозмовнику",ic:"#2B6FE8",
+  icon:'<path d="M4 5h16v10H9l-5 4z"/>',
+  need:d=>d.dialogs && d.dialogs.length>0,
+  make(d){
+    const dg=rnd(d.dialogs);
+    const all=shuffle([dg.ok].concat(dg.no));
+    return {k:"choice",cols:1,head:esc(dg.scene),
+      body:'<div class="dlg"><div class="dlg__them">'+esc(dg.them)+'</div>'
+           +'<div class="dlg__uk">'+esc(dg.themUk)+'</div></div>'
+           +'<div class="qsub" style="margin-top:12px">Що відповісти?</div>',
+      opts:all, ans:all.indexOf(dg.ok), hint:dg.why, say:dg.them};
+  }};
+
+const EXKEYS=["artikel","uk_de","de_uk","audio","type","plural","pairs","build","gap","listen","artpl","dictate","odd","error","cloze","dialog"];
 
 /* контекст даних для генераторів */
 function ctx(lv,words){
@@ -188,7 +276,7 @@ function ctx(lv,words){
     lv, words:ws, pool,
     nouns: ws.filter(isNoun).map(w=>({art:w.de.split(" ")[0].toLowerCase(),n:w.de.replace(ARTS,""),uk:w.uk,pl:w.pl})),
     plWords: ws.filter(w=>isNoun(w)&&w.pl!=="—"&&w.pl!=="-"),
-    sents:SENTS[lv], gaps:GAPS[lv]
+    sents:SENTS[lv], gaps:GAPS[lv], themes:THEMES[lv], dialogs:DIALOGS[lv]
   };
 }
 
