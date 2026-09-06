@@ -12,8 +12,8 @@ HEAD = '''<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFC814">
-<meta name="description" content="Німецька з нуля до C1 українською: 161 день-урок, 4000 слів із транскрипцією, 75 правил граматики і 12 типів вправ.">
-<title>Deutsch: Von Null bis C1 — 161 день</title>
+<meta name="description" content="Німецька з нуля до C1 українською: 322 дні-уроки, 8000 слів із транскрипцією, 75 правил граматики і 12 типів вправ.">
+<title>Deutsch: Von Null bis C1 — 322 дні</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23FFC814'/%3E%3Ctext x='50' y='72' font-size='62' font-family='Arial Black,sans-serif' font-weight='900' text-anchor='middle' fill='%23221F1A'%3ED%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -18,7 +18,7 @@ from vocab_fill import FILL
 
 LV=['A1','A2','B1','B2','C1']
 SIZE={'A1':20,'A2':20,'B1':30,'B2':30,'C1':30}
-TARGET=800                       # слів на рівень
+TARGET=1600                      # слів на рівень
 
 def themes(p): return re.findall(r'"([^"]+)":`([^`]*)`',p)
 def block(txt,key):
@@ -32,6 +32,7 @@ def read(name):
 old=read('_vocab_old.js')
 new={lv:read('vocab_new_%s.js'%lv.lower()) for lv in LV}
 ext={lv:read('vocab_x_%s.js'%lv.lower())   for lv in LV}
+ext2={lv:read('vocab_y_%s.js'%lv.lower())  for lv in LV}
 
 seen=set()
 OUT=collections.OrderedDict()
@@ -48,7 +49,8 @@ def take(entries, bucket, limit):
 
 for lv in LV:
     OUT[lv]=collections.OrderedDict()
-    sources=[(old,'V.%s = {'%lv), (new[lv],'VN.%s = {'%lv), (ext[lv],'VX.%s = {'%lv)]
+    sources=[(old,'V.%s = {'%lv), (new[lv],'VN.%s = {'%lv),
+             (ext[lv],'VX.%s = {'%lv), (ext2[lv],'VY.%s = {'%lv)]
     order=[]
     for txt,key in sources:
         b=block(txt,key)

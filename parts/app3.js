@@ -430,12 +430,12 @@ const ACH=[
   {ic:"🐣",t:"Перший день",d:"пройти будь-який урок",ok:s=>s.lessons>=1},
   {ic:"🔥",t:"Тиждень",d:"серія 7 днів поспіль",ok:s=>s.best>=7},
   {ic:"💯",t:"Сто слів",d:"позначити 100 слів вивченими",ok:()=>knownCount()>=100},
-  {ic:"📚",t:"Тисяча слів",d:"позначити 1000 слів вивченими",ok:()=>knownCount()>=1000},
-  {ic:"🏁",t:"A1 закрито",d:"пройти всі 40 днів A1",ok:()=>lvlDone("A1")>=DAYS.A1.length},
+  {ic:"📚",t:"Дві тисячі слів",d:"позначити 2000 слів вивченими",ok:()=>knownCount()>=2000},
+  {ic:"🏁",t:"A1 закрито",d:"пройти всі 80 днів A1",ok:()=>lvlDone("A1")>=DAYS.A1.length},
   {ic:"🎧",t:"Вухо",d:"1000 XP",ok:s=>s.xp>=1000},
   {ic:"🥨",t:"Знавець артиклів",d:"200 правильних відповідей",ok:s=>s.correct>=200},
   {ic:"🌙",t:"Марафон",d:"серія 30 днів",ok:s=>s.best>=30},
-  {ic:"👑",t:"Von Null bis C1",d:"пройти всі 161 день",ok:()=>LV.every(l=>lvlDone(l)>=DAYS[l].length)}
+  {ic:"👑",t:"Von Null bis C1",d:"пройти всі 322 дні",ok:()=>LV.every(l=>lvlDone(l)>=DAYS[l].length)}
 ];
 function renderProfile(){
   const total=ALLDAYS.filter(d=>dayDone(d.lv,d.i)).length;

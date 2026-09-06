@@ -194,7 +194,7 @@ function hud(){
   const gn=document.getElementById("goalNote");
   if(gn)gn.textContent = state.xpToday>=GOAL
     ? "Ціль на сьогодні виконана. Серія: "+state.streak+" "+plural(state.streak,"день","дні","днів")+". Далі — за бажанням."
-    : "Один урок ≈ 30 XP — цього вистачає, щоб закрити день. Два уроки на день — і за 161 день ти пройдеш усю програму.";
+    : "Один урок ≈ 30 XP — цього вистачає, щоб закрити день. Два уроки на день — і за 322 дні ти пройдеш усю програму.";
 }
 function plural(n,a,b,c){const n1=n%10,n2=n%100;return n2>=11&&n2<=14?c:n1===1?a:n1>=2&&n1<=4?b:c;}
 
