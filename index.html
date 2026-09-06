@@ -171,7 +171,8 @@ h1 span{display:block}
 .house{border:0;background:none;padding:0;position:relative;width:122px;
   filter:drop-shadow(0 4px 2px rgba(34,31,26,.16));transition:transform .07s}
 .house:active{transform:translateY(4px)}
-.house[disabled]{cursor:not-allowed;opacity:.78}
+.hs--lock .house{opacity:.82}
+.hs--lock .house:hover{opacity:1}
 .house__door{display:block;width:122px;height:132px}
 .house__num{position:absolute;top:-2px;left:50%;transform:translateX(-50%);z-index:3;
   background:var(--panel);border:2px solid var(--ink);border-radius:7px;
@@ -534,6 +535,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .dlg{background:var(--panel-2);border-radius:14px;padding:13px 15px;border-left:5px solid var(--blue)}
 .dlg__them{font-size:clamp(17px,4.6vw,21px);line-height:1.35;font-weight:500}
 .dlg__uk{font-size:14px;color:var(--ink-60);margin-top:5px;font-style:italic}
+
 </style>
 </head>
 <body>
@@ -3068,7 +3070,7 @@ function renderStreet(){
         if(sh){
           const c=CAST[sh];
           return '<div class="hs hs--shop'+(op?"":" hs--lock")+'"'+sty+'>'
-            +'<button class="shop" data-task="'+sh+'"'+(op?"":" disabled")+' style="--c:'+c.color+'" aria-label="'+esc(c.name)+' · '+esc(c.shop)+'">'
+            +'<button class="shop" data-task="'+sh+'" style="--c:'+c.color+'" aria-label="'+esc(c.name)+' · '+esc(c.shop)+'">'
               +'<span class="shop__awning"></span>'
               +'<span class="shop__face">'+c.draw(64)+'</span>'
               +'<span class="shop__sign">'+esc(c.shop)+'</span>'
@@ -3077,7 +3079,7 @@ function renderStreet(){
         }
         return '<div class="hs hs--'+st+'"'+sty+'>'
           +(now?'<span class="now-here">ти тут</span>':'')
-          +'<button class="house" data-lv="'+l+'" data-i="'+i+'"'+(op?"":" disabled")+' aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
+          +'<button class="house" data-lv="'+l+'" data-i="'+i+'" aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
             +'<span class="house__num">'+(i+1)+'</span>'
             +'<span class="house__door">'+houseArt(st,i,l)+'</span>'
           +'</button>'

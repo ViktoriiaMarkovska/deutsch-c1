@@ -31,7 +31,7 @@ function renderStreet(){
         if(sh){
           const c=CAST[sh];
           return '<div class="hs hs--shop'+(op?"":" hs--lock")+'"'+sty+'>'
-            +'<button class="shop" data-task="'+sh+'"'+(op?"":" disabled")+' style="--c:'+c.color+'" aria-label="'+esc(c.name)+' · '+esc(c.shop)+'">'
+            +'<button class="shop" data-task="'+sh+'" style="--c:'+c.color+'" aria-label="'+esc(c.name)+' · '+esc(c.shop)+'">'
               +'<span class="shop__awning"></span>'
               +'<span class="shop__face">'+c.draw(64)+'</span>'
               +'<span class="shop__sign">'+esc(c.shop)+'</span>'
@@ -40,7 +40,7 @@ function renderStreet(){
         }
         return '<div class="hs hs--'+st+'"'+sty+'>'
           +(now?'<span class="now-here">ти тут</span>':'')
-          +'<button class="house" data-lv="'+l+'" data-i="'+i+'"'+(op?"":" disabled")+' aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
+          +'<button class="house" data-lv="'+l+'" data-i="'+i+'" aria-label="День '+(i+1)+': '+esc(d.theme)+'">'
             +'<span class="house__num">'+(i+1)+'</span>'
             +'<span class="house__door">'+houseArt(st,i,l)+'</span>'
           +'</button>'
