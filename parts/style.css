@@ -533,3 +533,5 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .seg button.is-on{background:var(--ink);color:var(--paper)}
 .seg button span{display:block;font-family:var(--ipa);font-weight:400;font-size:12.5px;
   text-transform:none;letter-spacing:0;margin-top:3px;opacity:.75}
+
+.hint__why{display:block;margin-top:6px;font-size:13px;color:var(--ink-60);font-weight:400;line-height:1.4}

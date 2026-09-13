@@ -546,6 +546,8 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .seg button.is-on{background:var(--ink);color:var(--paper)}
 .seg button span{display:block;font-family:var(--ipa);font-weight:400;font-size:12.5px;
   text-transform:none;letter-spacing:0;margin-top:3px;opacity:.75}
+
+.hint__why{display:block;margin-top:6px;font-size:13px;color:var(--ink-60);font-weight:400;line-height:1.4}
 </style>
 </head>
 <body>
@@ -2521,7 +2523,7 @@ EX.type={name:"Впиши слово",desc:"згадати з нуля, без �
       body:'<div class="qword">'+esc(w.uk)+'</div>'
         +(isNoun(w)?'<div class="qsub">не забудь артикль</div>':''),
       ans:w.de, alt:[w.de.replace(ARTS,"")], strictArt:isNoun(w),
-      hint:"Вимова: "+tr(w.de), say:w.de};
+      hint:w.uk, say:w.de};
   }};
 
 /* 6. Множина */
@@ -2632,7 +2634,7 @@ EX.dictate={name:"Диктант",desc:"почути й записати — н�
     return {k:"type",head:"Запиши те, що чуєш",
       body:'<button class="speak" id="bigSpeak" aria-label="Прослухати">'+SPKF+'</button>',
       ans:w.de, alt:[w.de.replace(ARTS,"")], strictArt:false,
-      hint:w.uk+" · "+tr(w.de), say:w.de, autoSay:true};
+      hint:w.uk, say:w.de, autoSay:true};
   }};
 
 
@@ -2754,26 +2756,23 @@ function answerOf(q){
   return q.k==="choice" ? q.opts[q.ans] : (q.ans||"");
 }
 function hintFor(q){
+  /* Підказка показує саме правильну відповідь — так її просила Вікторія.
+     Пояснення правила, якщо воно є, лишається другим рядком.            */
   const a=answerOf(q);
+  const rule=q.hint ? '<span class="hint__why">'+q.hint+'</span>' : '';
+  const show=v=>'Правильна відповідь: <b>'+esc(v)+'</b>'+rule;
   switch(q.ex){
     case "artikel": case "artpl":
-      return q.hint||"Дивись на закінчення слова — воно майже завжди й вирішує рід.";
-    case "uk_de":
-      return "Починається на <b>"+esc(a.replace(ARTS,"").slice(0,2))+"…</b> · вимова: "+esc(tr(a));
-    case "de_uk": case "audio":
-      return "Вимова: <b>"+esc(tr(q.say||a))+"</b>";
-    case "type":
-      return "Вимова: <b>"+esc(tr(a))+"</b> · "+a.replace(ARTS,"").length+" літер у слові";
-    case "dictate":
-      return "Вимова: <b>"+esc(tr(a))+"</b>";
-    case "plural":
-      return q.hint||"Подивись на позначку множини у словнику.";
+      return show(a+" "+String(q.say||"").replace(ARTS,""));
     case "build": case "listen":
-      return "Перше слово: <b>"+esc(String(q.ans).split(" ")[0])+"</b>. Дієслово в простому реченні — на другому місці.";
-    case "gap":
-      return q.hint||"Подивись, якого відмінка вимагає прийменник.";
+      return show(String(q.ans));
+    case "pairs":
+      return q.pairs
+        ? '<b>Пари:</b><span class="hint__why">'
+          +q.pairs.map(p=>esc(p[0])+" — "+esc(p[1])).join("<br>")+'</span>'
+        : show(a);
     default:
-      return q.hint||"Спробуй пригадати корінь слова.";
+      return show(a);
   }
 }
 
