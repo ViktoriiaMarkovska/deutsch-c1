@@ -52,7 +52,7 @@
     <div class="vmeta"><span class="vcount" id="vCount"></span>
       <button class="pill" id="vHideKnown">Сховати вивчені</button></div>
     <div id="vList"></div>
-    <p class="note"><b>Про транскрипцію.</b> Під кожним словом — міжнародний фонетичний алфавіт (IPA), той самий, що в паперових словниках. <b>ˈ</b> перед складом означає наголос: <i>fˈaːtɐ</i> — наголос на «fa». <b>ː</b> після голосної означає, що вона довга. <b>ç</b> — м'яке «х» у <i>ich</i>, <b>x</b> — тверде в <i>Buch</i>. <b>ø, y</b> — це ö та ü, губи трубочкою. <b>ə</b> — невиразне «е» в кінці слова. Транскрипція згенерована espeak-ng і збігається з тим, що ти чуєш у озвучці.</p>
+    <p class="note" id="trNote"></p>
   </div>
 </div></section>
 
@@ -113,6 +113,12 @@
       <input type="range" id="mins" min="20" max="240" step="10" value="60" style="width:100%" aria-label="Хвилин на день">
       <div class="tblwrap" style="margin-top:12px"><table class="tbl" id="forecast"></table></div>
       <p class="note">Пропуски не «доганяються» подвійним заняттям. 30 хвилин щодня сильніші за 4 години в неділю.</p>
+    </div>
+    <div class="tool" style="margin-top:12px">
+      <span class="eyebrow">Транскрипція</span>
+      <p style="font-size:14.5px;margin:8px 0 10px">Як показувати вимову під словами.</p>
+      <div class="seg" id="trSeg"></div>
+      <p class="note" id="trSegNote" style="margin-top:10px"></p>
     </div>
     <div class="tool" style="margin-top:12px">
       <span class="eyebrow">Озвучка</span>

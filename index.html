@@ -537,6 +537,15 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .dlg__them{font-size:clamp(17px,4.6vw,21px);line-height:1.35;font-weight:500}
 .dlg__uk{font-size:14px;color:var(--ink-60);margin-top:5px;font-style:italic}
 
+
+/* ---------- перемикач транскрипції ---------- */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--panel-2);
+  border:2px solid var(--line);border-radius:14px;padding:5px}
+.seg button{border:0;background:none;border-radius:10px;padding:10px 8px;font-family:var(--disp);
+  font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-60)}
+.seg button.is-on{background:var(--ink);color:var(--paper)}
+.seg button span{display:block;font-family:var(--ipa);font-weight:400;font-size:12.5px;
+  text-transform:none;letter-spacing:0;margin-top:3px;opacity:.75}
 </style>
 </head>
 <body>
@@ -594,7 +603,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
     <div class="vmeta"><span class="vcount" id="vCount"></span>
       <button class="pill" id="vHideKnown">Сховати вивчені</button></div>
     <div id="vList"></div>
-    <p class="note"><b>Про транскрипцію.</b> Під кожним словом — міжнародний фонетичний алфавіт (IPA), той самий, що в паперових словниках. <b>ˈ</b> перед складом означає наголос: <i>fˈaːtɐ</i> — наголос на «fa». <b>ː</b> після голосної означає, що вона довга. <b>ç</b> — м'яке «х» у <i>ich</i>, <b>x</b> — тверде в <i>Buch</i>. <b>ø, y</b> — це ö та ü, губи трубочкою. <b>ə</b> — невиразне «е» в кінці слова. Транскрипція згенерована espeak-ng і збігається з тим, що ти чуєш у озвучці.</p>
+    <p class="note" id="trNote"></p>
   </div>
 </div></section>
 
@@ -655,6 +664,12 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
       <input type="range" id="mins" min="20" max="240" step="10" value="60" style="width:100%" aria-label="Хвилин на день">
       <div class="tblwrap" style="margin-top:12px"><table class="tbl" id="forecast"></table></div>
       <p class="note">Пропуски не «доганяються» подвійним заняттям. 30 хвилин щодня сильніші за 4 години в неділю.</p>
+    </div>
+    <div class="tool" style="margin-top:12px">
+      <span class="eyebrow">Транскрипція</span>
+      <p style="font-size:14.5px;margin:8px 0 10px">Як показувати вимову під словами.</p>
+      <div class="seg" id="trSeg"></div>
+      <p class="note" id="trSegNote" style="margin-top:10px"></p>
     </div>
     <div class="tool" style="margin-top:12px">
       <span class="eyebrow">Озвучка</span>
@@ -2128,6 +2143,7 @@ function trUk(s){
 function tr(s){
   s=String(s).trim();
   if(!s) return "";
+  if(state && state.trMode==="uk") return trUk(s);   /* перемикач у профілі */
   const hit=(typeof IPA!=="undefined") ? IPA[fnv1a(s)] : null;
   if(hit) return hit;
   const bare=s.replace(/[.,;:!?]+$/,"");
@@ -2170,7 +2186,7 @@ const ALLDAYS=LV.flatMap(l=>DAYS[l]);
 
 /* ================= СТАН ================= */
 let state={known:{},days:{},xp:0,xpToday:0,xpDate:"",streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
-  mistakes:{},voice:"",rate:0.95,sprintBest:0,wotdSeen:"",
+  mistakes:{},voice:"",rate:0.95,trMode:"ipa",sprintBest:0,wotdSeen:"",
   tod:{date:"",combo:0,days:0,perfect:0,words:0,mistakes:0,lessons:0,listen:0},
   freeze:0,questClaimed:"",miles:{},bestCombo:0};
 const KEY="de-c1-v3";
@@ -3540,6 +3556,40 @@ function showLvl(code){
 }
 
 /* ---- вибір голосу ---- */
+/* ---- перемикач транскрипції: IPA або українські літери ---- */
+const TR_NOTE={
+  ipa:'<b>Про транскрипцію.</b> Під кожним словом — міжнародний фонетичний алфавіт (IPA), '
+     +'той самий, що в паперових словниках. <b>ˈ</b> перед складом означає наголос: '
+     +'<i>ˈfaːtɐ</i> — наголос на «fa». <b>ː</b> після голосної означає, що вона довга. '
+     +'<b>ç</b> — м\'яке «х» у <i>ich</i>, <b>x</b> — тверде в <i>Buch</i>. '
+     +'<b>ø, y</b> — це ö та ü, губи трубочкою. <b>ə</b> — невиразне «е» в кінці слова, '
+     +'<b>ɐ</b> — таке саме невиразне «а» замість кінцевого -er.',
+  uk:'<b>Про транскрипцію.</b> Українські літери передають німецьку приблизно — точних '
+     +'відповідників немає. <b>ґ</b> — це g (ґут = gut). <b>ю</b> після приголосної — це ü, '
+     +'губи трубочкою. <b>ьо</b> — це ö. <b>х</b> після a, o, u — тверде, після e, i — м\'яке. '
+     +'Довгі голосні тут не позначені: у Vater перша <b>а</b> довга. Наголос майже завжди '
+     +'на першому складі, крім префіксів be-, ge-, ver-, ent-, er-, zer- та слів на -ieren.'
+};
+function renderTrSeg(){
+  const seg=document.getElementById("trSeg");
+  const mode=(state.trMode==="uk")?"uk":"ipa";
+  if(seg){
+    seg.innerHTML=
+      '<button data-m="ipa" class="'+(mode==="ipa"?"is-on":"")+'">Фонетична<span>dɛʁ ˈfaːtɐ</span></button>'
+     +'<button data-m="uk" class="'+(mode==="uk"?"is-on":"")+'">Українські літери<span>дер фатер</span></button>';
+    seg.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+      state.trMode=b.dataset.m; save();
+      renderTrSeg(); renderVocab(); renderG();
+    }));
+  }
+  const n1=document.getElementById("trSegNote");
+  if(n1)n1.innerHTML = mode==="ipa"
+    ? "Точніша й однакова зі словниками, але спершу треба звикнути до знаків."
+    : "Читається одразу, але передає звучання лише приблизно — довгі голосні не позначені.";
+  const n2=document.getElementById("trNote");
+  if(n2)n2.innerHTML=TR_NOTE[mode];
+}
+
 function renderVoicePicker(){
   const el=document.getElementById("voicePick"); if(!el)return;
   if(!deVoices.length){ el.innerHTML='<p class="note" style="margin:0">Браузер не дає списку голосів. Озвучка працюватиме системним голосом.</p>'; return; }
@@ -3617,7 +3667,7 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
 (async function(){
   await load();
   pickVoice();                       /* стан уже є — підхопить збережений голос */
-  renderVoicePicker();
+  renderVoicePicker(); renderTrSeg();
   hud(); renderStreet(); renderQuests(); renderVocab(); renderG(); renderDecl();
   renderTrainer(); renderProfile(); planner();
 })();

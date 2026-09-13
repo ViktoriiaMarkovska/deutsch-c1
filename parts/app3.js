@@ -483,6 +483,40 @@ function showLvl(code){
 }
 
 /* ---- вибір голосу ---- */
+/* ---- перемикач транскрипції: IPA або українські літери ---- */
+const TR_NOTE={
+  ipa:'<b>Про транскрипцію.</b> Під кожним словом — міжнародний фонетичний алфавіт (IPA), '
+     +'той самий, що в паперових словниках. <b>ˈ</b> перед складом означає наголос: '
+     +'<i>ˈfaːtɐ</i> — наголос на «fa». <b>ː</b> після голосної означає, що вона довга. '
+     +'<b>ç</b> — м\'яке «х» у <i>ich</i>, <b>x</b> — тверде в <i>Buch</i>. '
+     +'<b>ø, y</b> — це ö та ü, губи трубочкою. <b>ə</b> — невиразне «е» в кінці слова, '
+     +'<b>ɐ</b> — таке саме невиразне «а» замість кінцевого -er.',
+  uk:'<b>Про транскрипцію.</b> Українські літери передають німецьку приблизно — точних '
+     +'відповідників немає. <b>ґ</b> — це g (ґут = gut). <b>ю</b> після приголосної — це ü, '
+     +'губи трубочкою. <b>ьо</b> — це ö. <b>х</b> після a, o, u — тверде, після e, i — м\'яке. '
+     +'Довгі голосні тут не позначені: у Vater перша <b>а</b> довга. Наголос майже завжди '
+     +'на першому складі, крім префіксів be-, ge-, ver-, ent-, er-, zer- та слів на -ieren.'
+};
+function renderTrSeg(){
+  const seg=document.getElementById("trSeg");
+  const mode=(state.trMode==="uk")?"uk":"ipa";
+  if(seg){
+    seg.innerHTML=
+      '<button data-m="ipa" class="'+(mode==="ipa"?"is-on":"")+'">Фонетична<span>dɛʁ ˈfaːtɐ</span></button>'
+     +'<button data-m="uk" class="'+(mode==="uk"?"is-on":"")+'">Українські літери<span>дер фатер</span></button>';
+    seg.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+      state.trMode=b.dataset.m; save();
+      renderTrSeg(); renderVocab(); renderG();
+    }));
+  }
+  const n1=document.getElementById("trSegNote");
+  if(n1)n1.innerHTML = mode==="ipa"
+    ? "Точніша й однакова зі словниками, але спершу треба звикнути до знаків."
+    : "Читається одразу, але передає звучання лише приблизно — довгі голосні не позначені.";
+  const n2=document.getElementById("trNote");
+  if(n2)n2.innerHTML=TR_NOTE[mode];
+}
+
 function renderVoicePicker(){
   const el=document.getElementById("voicePick"); if(!el)return;
   if(!deVoices.length){ el.innerHTML='<p class="note" style="margin:0">Браузер не дає списку голосів. Озвучка працюватиме системним голосом.</p>'; return; }
@@ -560,7 +594,7 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
 (async function(){
   await load();
   pickVoice();                       /* стан уже є — підхопить збережений голос */
-  renderVoicePicker();
+  renderVoicePicker(); renderTrSeg();
   hud(); renderStreet(); renderQuests(); renderVocab(); renderG(); renderDecl();
   renderTrainer(); renderProfile(); planner();
 })();

@@ -73,6 +73,7 @@ function trUk(s){
 function tr(s){
   s=String(s).trim();
   if(!s) return "";
+  if(state && state.trMode==="uk") return trUk(s);   /* перемикач у профілі */
   const hit=(typeof IPA!=="undefined") ? IPA[fnv1a(s)] : null;
   if(hit) return hit;
   const bare=s.replace(/[.,;:!?]+$/,"");
@@ -115,7 +116,7 @@ const ALLDAYS=LV.flatMap(l=>DAYS[l]);
 
 /* ================= СТАН ================= */
 let state={known:{},days:{},xp:0,xpToday:0,xpDate:"",streak:0,lastDay:"",best:0,answered:0,correct:0,lessons:0,
-  mistakes:{},voice:"",rate:0.95,sprintBest:0,wotdSeen:"",
+  mistakes:{},voice:"",rate:0.95,trMode:"ipa",sprintBest:0,wotdSeen:"",
   tod:{date:"",combo:0,days:0,perfect:0,words:0,mistakes:0,lessons:0,listen:0},
   freeze:0,questClaimed:"",miles:{},bestCombo:0};
 const KEY="de-c1-v3";
