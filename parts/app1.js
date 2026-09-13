@@ -45,7 +45,7 @@ var pick=function(a){return a[Math.floor(Math.random()*a.length)];};
 const VEX=["universit","variab","interview","investit","revoluti","evident","validit","prävention","privat","aktiv","positiv","negativ","motiv","servi","konserv","provinz","vision","vulkan","vitamin","video","klavier","vase","villa","vers","verb","vokab","vokal","virus","novemb","silvester","advent","vegetari","devise","provision","version","vitrine","revision","universum","souvenir","niveau","initiativ","alternativ","attraktiv","effektiv","intensiv","relativ","perspektiv","provokat","invest","konversat","reservier","serviert","novelle","villa"];
 const PRE=["aus","ein","vor","auf","mit","ver","ent","über","unter","frei","früh","bahn","haupt","arbeits","hoch","an","um","zu","wieder","zusammen","fest","land","jahres","staats"];
 const ARTS=/^(der|die|das)\s+/i;
-function tr(s){
+function trUk(s){
  var t=String(s).toLowerCase().replace(/[^a-zäöüß\s'\-\/,]/g,"");
  VEX.forEach(function(x){ if(t.indexOf(x)>-1) t=t.split(x).join(x.replace(/v/g,"в")); });
  t=t.replace(new RegExp("("+PRE.join("|")+")(sp|st)","g"),function(m,p,q){return p+(q==="st"?"шт":"шп");});
@@ -67,6 +67,18 @@ function tr(s){
  return t.replace(/[a-z]/g,function(c){return M[c]||c;});
 }
 /* транскрипція БЕЗ артикля — щоб не підказувати відповідь у вправі «der/die/das» */
+/* Транскрипція — справжня IPA від espeak-ng, згенерована наперед
+   (tools/gen_ipa.py -> parts/ipa.js). Ключ той самий FNV-1a, що й для аудіо.
+   Якщо рядка в мапі немає — відкочуємось на приблизні українські літери. */
+function tr(s){
+  s=String(s).trim();
+  if(!s) return "";
+  const hit=(typeof IPA!=="undefined") ? IPA[fnv1a(s)] : null;
+  if(hit) return hit;
+  const bare=s.replace(/[.,;:!?]+$/,"");
+  const hit2=(typeof IPA!=="undefined") ? IPA[fnv1a(bare)] : null;
+  return hit2 || trUk(s);
+}
 function trBare(s){ return tr(String(s).replace(ARTS,"")); }
 
 /* ================= ДАНІ ================= */

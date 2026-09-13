@@ -25,7 +25,7 @@ parts = [
     HEAD, R('parts/style.css'), '</style>\n</head>\n<body>\n',
     R('parts/body.html'),
     '\n<script>\n/* ===== ДАНІ ===== */\n',
-    R('parts/vocab.js'),
+    R('parts/vocab.js'), R('parts/ipa.js'),
     R('parts/_grammar_old.js'),
     R('parts/_levels_old.js'),
     R('parts/sentences.js'),

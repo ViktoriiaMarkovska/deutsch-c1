@@ -11,6 +11,7 @@
   --disp:"Fira Sans Condensed",Arial Narrow,sans-serif;
   --body:"Fira Sans",system-ui,sans-serif;
   --mono:"Fira Mono",ui-monospace,monospace;
+  --ipa:"Fira Sans","Charis SIL","Doulos SIL","Segoe UI",system-ui,sans-serif;
   --pad:clamp(14px,4vw,26px); --r:16px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -220,7 +221,7 @@ h1 span{display:block}
 .qtype{font-family:var(--disp);font-weight:800;font-size:clamp(19px,5.2vw,26px);text-transform:uppercase;letter-spacing:-.01em;margin-bottom:16px}
 .qword{font-family:var(--disp);font-weight:800;font-size:clamp(32px,10vw,58px);line-height:1.02;margin:6px 0}
 .qsub{font-style:italic;color:var(--ink-60);font-size:17px}
-.qtr{font-family:var(--mono);font-size:14px;color:var(--ink-60);letter-spacing:.04em;margin-top:5px}
+.qtr{font-family:var(--ipa);font-size:14px;color:var(--ink-60);letter-spacing:.04em;margin-top:5px}
 .qsent{font-size:clamp(19px,5vw,25px);line-height:1.45;font-weight:500}
 .qsent u{text-decoration:none;border-bottom:3px solid var(--gold);padding:0 22px}
 .opts{display:grid;gap:10px;margin-top:18px}
@@ -290,7 +291,7 @@ h1 span{display:block}
 .w.is-known .w__chk{background:var(--green);border-color:var(--green)}
 .w__de{font-weight:700;font-size:16px}
 .w__pl{font-family:var(--mono);font-size:11px;color:var(--ink-30);margin-left:6px}
-.w__tr{font-family:var(--mono);font-size:12px;color:var(--ink-60);letter-spacing:.03em}
+.w__tr{font-family:var(--ipa);font-size:12px;color:var(--ink-60);letter-spacing:.03em}
 .w__uk{color:#4A443A;font-size:14.5px}
 .w__say{border:2px solid var(--line);background:var(--panel);border-radius:9px;width:32px;height:32px;display:grid;place-items:center;flex:none}
 .w__say svg{width:16px;height:16px;fill:var(--ink-60)}
@@ -309,7 +310,7 @@ h1 span{display:block}
 .rule__body p{margin:0 0 11px}
 .ex{background:var(--panel-2);border-radius:11px;padding:9px 12px;margin-bottom:7px}
 .ex b{display:block;font-size:16px;font-weight:700}
-.ex .tr{font-family:var(--mono);font-size:12px;color:var(--ink-60);letter-spacing:.03em;margin-top:1px}
+.ex .tr{font-family:var(--ipa);font-size:12px;color:var(--ink-60);letter-spacing:.03em;margin-top:1px}
 .ex span{display:block;color:#4A443A;font-size:14px;margin-top:2px}
 .ex__say{float:right;border:0;background:none;padding:2px;margin:-2px -4px 0 6px}
 .ex__say svg{width:17px;height:17px;fill:var(--ink-30)}
@@ -423,7 +424,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 /* Ґрета: слово дня */
 .wotd{background:var(--panel);border:2px solid var(--line);border-radius:var(--r);padding:20px 17px;text-align:center;margin-top:12px}
 .wotd__de{font-family:var(--disp);font-weight:800;font-size:clamp(26px,8vw,44px);line-height:1.05}
-.wotd__tr{font-family:var(--mono);font-size:13.5px;color:var(--ink-60);margin-top:4px}
+.wotd__tr{font-family:var(--ipa);font-size:13.5px;color:var(--ink-60);margin-top:4px}
 .wotd__uk{font-size:18px;color:#4A443A;margin-top:12px}
 .wotd__story{font-size:15px;line-height:1.55;margin:14px 0;text-align:left;
   background:var(--gold-l);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:11px 13px}
@@ -448,7 +449,7 @@ footer p{font-family:var(--mono);font-size:11.5px;color:var(--ink-60);max-width:
 .tw.is-said{background:var(--gold-l)}
 .tw__l b{font-weight:700;font-size:17px}
 .tw__l i{font-family:var(--mono);font-size:10.5px;color:var(--ink-30);font-style:normal;margin-left:7px}
-.tw__tr{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-60);letter-spacing:.03em}
+.tw__tr{display:block;font-family:var(--ipa);font-size:11.5px;color:var(--ink-60);letter-spacing:.03em}
 .tw__uk{font-size:14.5px;color:#4A443A;text-align:right}
 .tw__say{border:0;background:none;padding:3px;flex:none}
 .tw__say svg{width:18px;height:18px;fill:var(--ink-30)}
